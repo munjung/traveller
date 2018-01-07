@@ -1,1 +1,1 @@
-Hi# Nexters 12th# _test
+Hi# Nexters 12th#
