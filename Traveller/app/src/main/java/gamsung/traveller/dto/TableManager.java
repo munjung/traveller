@@ -6,6 +6,9 @@ import java.util.Map;
 
 /**
  * Created by shin on 2018. 1. 8..
+ *
+ * Define. 데이터베이스 테이블 정의 클래스
+ *       . 각 테이블의 명칭 및 컬럼명을 명시한다.
  */
 
 public class TableManager {

@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * Created by shin on 2018. 1. 8..
+ *
+ * Define. 경로 객체 (연결된 Place 객체들의 부모 객체)
  */
 
 public class Route {
