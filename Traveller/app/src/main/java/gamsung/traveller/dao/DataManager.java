@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import gamsung.traveller.model.Topic;
+import gamsung.traveller.model.Route;
 
 /**
  * Created by shin on 2018. 1. 8..
@@ -28,33 +28,38 @@ public class DataManager {
         m_sqlHelper = new SQLiteHelper(context);
     }
 
+
     /*
-     * Topic
+     * Data
      */
-    public List<Topic> getTopics(){
 
-        return TopicManager.getTopics(m_sqlHelper);
-    }
 
-    public void deleteTopic(String name){
 
-        TopicManager.deleteTopic(m_sqlHelper, name);
-    }
-
-    public void insertTopic(Topic topic){
-
-        long id = TopicManager.insertTopic(m_sqlHelper, topic);
-        topic.set_id(id);
-    }
-
-    public void updateTopic(Topic topic){
-
-        TopicManager.updateTopic(m_sqlHelper, topic);
-    }
 
     /*
      * Route
      */
+    public List<Route> getRouteList(){
+
+        return RouteManager.getRouteList(m_sqlHelper);
+    }
+
+    public void deleteRoute(String name){
+
+        RouteManager.deleteRoute(m_sqlHelper, name);
+    }
+
+    public void insertRoute(Route route){
+
+        int id = (int)RouteManager.insertRoute(m_sqlHelper, route);
+        if(id > 0)
+            route.set_id(id);
+    }
+
+    public void updateRoute(Route route){
+
+        RouteManager.updateRoute(m_sqlHelper, route);
+    }
 
 
 

@@ -24,17 +24,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL(TableManager.TopicTable.createQuery);
-        db.execSQL(TableManager.RouteTable.createQuery);
-        db.execSQL(TableManager.PlaceTable.createQuery);
-        db.execSQL(TableManager.SearchTable.createQuery);
-        db.execSQL(TableManager.PictureTable.createQuery);
+        db.execSQL(TableManager.RouteTable.getCreateQuery());
+        db.execSQL(TableManager.PlaceTable.getCreateQuery());
+        db.execSQL(TableManager.SearchTable.getCreateQuery());
+        db.execSQL(TableManager.PictureTable.getCreateQuery());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS " + TableManager.TopicTable.name);
         db.execSQL("DROP TABLE IF EXISTS " + TableManager.RouteTable.name);
         db.execSQL("DROP TABLE IF EXISTS " + TableManager.PlaceTable.name);
         db.execSQL("DROP TABLE IF EXISTS " + TableManager.SearchTable.name);
