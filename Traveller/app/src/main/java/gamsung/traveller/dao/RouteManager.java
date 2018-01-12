@@ -25,19 +25,19 @@ import gamsung.traveller.util.Converter;
 public class RouteManager {
 
     private final String TABLE_NAME = TableManager.RouteTable.name;
-    private HashMap<Integer, Route> m_routeList;
+    private HashMap<Integer, Route> m_routeMap;
 
     public RouteManager(){
 
-        m_routeList = new HashMap<>();
+        m_routeMap = new HashMap<>();
     }
 
     public HashMap<Integer, Route> getRouteList(SQLiteHelper dbHelper){
 
-        m_routeList.clear();
-        m_routeList.putAll(_getRouteList(dbHelper));
+        m_routeMap.clear();
+        m_routeMap.putAll(_getRouteList(dbHelper));
 
-        return m_routeList;
+        return m_routeMap;
     }
 
     public boolean deleteRoute(SQLiteHelper dbHelper, Integer id){
@@ -45,8 +45,8 @@ public class RouteManager {
         if(!_deleteRoute(dbHelper, id))
             return false;
 
-        if (m_routeList.containsKey(id)) {
-            m_routeList.remove(id);
+        if (m_routeMap.containsKey(id)) {
+            m_routeMap.remove(id);
         }
 
         return true;
@@ -65,7 +65,7 @@ public class RouteManager {
 
         int count = _updateRoute(dbHelper, route);
         if(count > 0)
-            m_routeList.put(route.get_id(), route);
+            m_routeMap.put(route.get_id(), route);
 
         return count;
     }
@@ -73,7 +73,7 @@ public class RouteManager {
 
     private HashMap<Integer, Route> _getRouteList(SQLiteHelper dbHelper){
 
-        HashMap<Integer, Route> routeList = new HashMap<>();
+        HashMap<Integer, Route> routeMap = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
@@ -89,13 +89,13 @@ public class RouteManager {
                 route.setFromDate(new Date(c.getLong(2) * 1000));   //from date
                 route.setToDate(new Date(c.getLong(3) * 1000));     //to date
 
-                routeList.put(route.get_id(), route);
+                routeMap.put(route.get_id(), route);
             }
             c.close();
         }
         db.close();
 
-        return routeList;
+        return routeMap;
     }
 
     private boolean _deleteRoute(SQLiteHelper dbHelper, Integer id){
