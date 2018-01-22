@@ -21,12 +21,14 @@ public class TableManager {
         public static final String column_title =       "title";
         public static final String column_from_date =   "from_date";
         public static final String column_to_date =     "to_date";
+        public static final String column_picture_id =  "picture_id";   //대표 사진 id
 
         public static final String[] columns = {
                 column_id,
                 column_title,
                 column_from_date,
-                column_to_date
+                column_to_date,
+                column_picture_id
         };
 
         public static String getCreateQuery(){
@@ -37,6 +39,7 @@ public class TableManager {
             sb.append(column_title      + " TEXT ");
             sb.append(column_from_date  + " DATETIME ");
             sb.append(column_to_date    + " DATETIME ");
+            sb.append(column_picture_id + " INTEGER ");
             sb.append(")");
 
             return sb.toString();
@@ -50,15 +53,18 @@ public class TableManager {
         public static final String column_id =              "place_id";
         public static final String column_route_id =        "route_id";    //route table id
         public static final String column_next_place_id =   "next_place_id";
+        public static final String column_picture_id =      "picture_id";   //대표 사진 id
+        public static final String column_search_id =       "search_id";    //search table id
         public static final String column_mission =         "mission";
         public static final String column_description =     "descripiton";
-        public static final String column_picture_id =      "picture_id";   //picture talbe id
-        public static final String column_search_id =       "search_id";    //search table id
+        public static final String column_picture_list =    "picture_list"; //연결된 사진 리스트
+
         public static final String[] columns = {
                 column_id,
                 column_next_place_id,
                 column_route_id,
                 column_picture_id,
+                column_picture_list,
                 column_search_id,
                 column_mission,
                 column_description
@@ -72,6 +78,7 @@ public class TableManager {
             sb.append(column_route_id       + " INTEGER ");
             sb.append(column_next_place_id  + " INTEGER ");
             sb.append(column_picture_id     + " INTEGER ");
+            sb.append(column_picture_list   + " TEXT ");
             sb.append(column_search_id      + " INTEGER ");
             sb.append(column_mission        + " TEXT ");
             sb.append(column_description    + " TEXT ");
