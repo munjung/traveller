@@ -19,7 +19,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB3FX0jKgidpKZC0vnHY7cP9KL3bX9STsI" />
 
-        <activity android:name=".activity.MainActivity"><intent-filter>
+        <activity android:name=".activity.AddLocationActivity"><intent-filter>
 
             <action android:name="android.intent.action.MAIN" />
 
