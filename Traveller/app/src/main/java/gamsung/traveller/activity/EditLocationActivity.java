@@ -16,7 +16,7 @@ import gamsung.traveller.R;
  * 문정이가 다 만들어줄 6,14,15화면
  */
 
-public class EditPlanActivity extends AppCompatActivity {
+public class EditLocationActivity extends AppCompatActivity {
 
     ToggleButton eatBtn, doBtn, takeBtn, someBtn;
     EditText memoEdit;
@@ -25,7 +25,7 @@ public class EditPlanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_plan);
+        setContentView(R.layout.activity_edit_location);
 
         eatBtn= (ToggleButton)findViewById(R.id.eatToggleBtn);
         doBtn = (ToggleButton)findViewById(R.id.doToggleBtn);

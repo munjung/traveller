@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="gamsung.traveller.activity.TravelViewActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="추가(준규가 예쁘게 꾸며줄 예정)"
+        android:textSize="10dp"
+        android:id="@+id/btnAddLocation"/>
+
 </android.support.constraint.ConstraintLayout>
