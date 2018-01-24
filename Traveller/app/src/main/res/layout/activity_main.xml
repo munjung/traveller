@@ -8,22 +8,36 @@
     android:orientation="vertical"
     tools:context="gamsung.traveller.activity.MainActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="?"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left|center"
+            android:text=" title?"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <include android:id="@+id/layout_template"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/layout_main_template">
+        </include>
 
     </LinearLayout>
 
