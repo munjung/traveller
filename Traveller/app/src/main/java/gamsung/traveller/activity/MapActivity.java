@@ -2,10 +2,18 @@ package gamsung.traveller.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,7 +25,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import gamsung.traveller.R;
 
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, OnConnectionFailedListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, OnConnectionFailedListener, PlaceSelectionListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -26,15 +34,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        mGoogleApiClient = new GoogleApiClient
+  /*      mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+  */      SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(this);
 
     }
 
@@ -53,5 +65,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void onPlaceSelected(Place place) {
 
+    }
+
+    @Override
+    public void onError(Status status) {
+
+    }
 }
+
+
+
