@@ -19,7 +19,7 @@ import gamsung.traveller.R;
 public class EditLocationActivity extends AppCompatActivity {
 
     ToggleButton eatBtn, doBtn, takeBtn, someBtn;
-    EditText memoEdit;
+    EditText memoEdit,editLocation;
     ImageView memoImage;
 
     @Override
@@ -33,6 +33,7 @@ public class EditLocationActivity extends AppCompatActivity {
         someBtn = (ToggleButton)findViewById(R.id.somethingToggleBtn);
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         memoImage = (ImageView)findViewById(R.id.memoImage);
+        editLocation = (EditText)findViewById(R.id.editLocation);
 
         eatBtn.setOnCheckedChangeListener(addMemoListener);
         doBtn.setOnCheckedChangeListener(addMemoListener);
