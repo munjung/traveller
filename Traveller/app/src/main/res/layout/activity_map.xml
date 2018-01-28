@@ -11,7 +11,6 @@
         android:id="@+id/topll"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#ffffff"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible">
@@ -20,7 +19,7 @@
             android:id="@+id/btmsearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="검색하자" />
     </LinearLayout>
 
     <fragment
@@ -64,8 +63,7 @@
                 <TextView
                     android:id="@+id/tvPlaceName"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="NAME" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -75,8 +73,7 @@
                 <TextView
                     android:id="@+id/tvPlaceAddress"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ADDRESS" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 
@@ -86,9 +83,11 @@
         android:id="@+id/mSelectll"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:orientation="vertical"
         android:visibility="gone">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="20dp"
@@ -98,16 +97,18 @@
                 android:id="@+id/tvSelectAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ADDRESS"/>
+                android:text="ADDRESS" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="이 위치로 지정할래요!"/>
+                android:text="이 위치로 지정할래요!" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

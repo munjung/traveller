@@ -78,17 +78,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
- //       PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-//                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-//        autocompleteFragment.setOnPlaceSelectedListener(this);
+
 
         Button bt = findViewById(R.id.btmsearch);
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
-  //              findViewById(R.id.mSelectll).setVisibility(View.GONE);
                 openAutocompleteActivity();
+                mMap.clear();
+                findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
+               findViewById(R.id.mSelectll).setVisibility(View.GONE);
             }
         });
     }
@@ -107,75 +106,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-/*
-    @Override
-    public void onPlaceSelected(final Place place) {
 
-        mPlace = place;
-        TextView PlaceName = (TextView) findViewById(R.id.tvPlaceName);
-        TextView PlaceAddress = (TextView)findViewById(R.id.tvPlaceAddress);
-        final ImageView PlacePhoto = (ImageView)findViewById(R.id.ivPlace);
-        final int ivwidth = PlacePhoto.getWidth();
-        final int ivheight = PlacePhoto.getHeight();
-
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(place.getLatLng())
-                .zoom(10)
-                .build();
-        mMap.clear();
-        mMarker = mMap.addMarker(new MarkerOptions().position(mPlace.getLatLng()).title(mPlace.getName().toString()).snippet(mPlace.getAddress().toString()));
-        mMarker.hideInfoWindow();
-
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        final ResultCallback<PlacePhotoResult> mDisplayPhotoResultCallback = new ResultCallback<PlacePhotoResult>() {
-            @Override
-            public void onResult(PlacePhotoResult placePhotoResult) {
-                if(!placePhotoResult.getStatus().isSuccess()){
-                    return;
-                }
-
-                PlacePhoto.setImageBitmap(placePhotoResult.getBitmap());
-
-            }
-        };
-        Places.GeoDataApi.getPlacePhotos(mGoogleApiClient, mPlace.getId()).setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
-            @Override
-            public void onResult(PlacePhotoMetadataResult photos) {
-                if(!photos.getStatus().isSuccess()){
-                    return;
-                }
-                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                if(photoMetadataBuffer.getCount()>0){
-                    photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient, ivwidth, ivheight).setResultCallback(mDisplayPhotoResultCallback);
-                }
-
-                photoMetadataBuffer.release();
-            }
-        });
-
-        mMarker.setDraggable(true);
-
-       PlaceName.setText(mPlace.getName());
-        PlaceAddress.setText(mPlace.getAddress());
-//        findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
-//        findViewById(R.id.mSelectll).setVisibility(View.GONE);
-
-
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnMarkerDragListener(this);
-    }
-
-    @Override
-    public void onError(Status status) {
-
-    }
-*/
     @Override
     public void onMarkerDragStart(Marker marker) {
         LinearLayout infoll=(LinearLayout)findViewById(R.id.mInfoll);
         LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
- //       infoll.setVisibility(GONE);
- //       selectll.setVisibility(GONE);
+        infoll.setVisibility(View.GONE);
+        selectll.setVisibility(View.GONE);
 
     }
 
@@ -206,8 +143,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         }
         marker.setSnippet(currentLocationAddress);
         marker.hideInfoWindow();
+        TextView tvsel = findViewById(R.id.tvSelectAddress);
+        tvsel.setText(currentLocationAddress);
         LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
- //       selectll.setVisibility(VISIBLE);
+        selectll.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -253,7 +192,7 @@ return true;
                         .target(place.getLatLng())
                         .zoom(10)
                         .build();
-                mMap.clear();
+
                 mMarker = mMap.addMarker(new MarkerOptions().position(mPlace.getLatLng()).title(mPlace.getName().toString()).snippet(mPlace.getAddress().toString()));
                 mMarker.hideInfoWindow();
 
@@ -288,8 +227,14 @@ return true;
 
                 PlaceName.setText(mPlace.getName());
                 PlaceAddress.setText(mPlace.getAddress());
-//        findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
-//        findViewById(R.id.mSelectll).setVisibility(View.GONE);
+/*                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
+                        findViewById(R.id.mSelectll).setVisibility(View.GONE);
+                    }
+                });
+*/
 
 
                 mMap.setOnMarkerClickListener(this);
