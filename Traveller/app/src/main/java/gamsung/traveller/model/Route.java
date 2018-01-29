@@ -19,10 +19,6 @@ public class Route {
         return _id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -45,5 +41,9 @@ public class Route {
 
     public void setToDate(Date toDate) {
         this.toDate = toDate;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
     }
 }
