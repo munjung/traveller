@@ -36,6 +36,7 @@ public class TravelViewActivity extends AppCompatActivity {
     TextView textTitle;
     ViewByPhotosFragment viewByPhotosFragment;
     ViewByScheduleFragment viewByScheduleFragment;
+    android.support.v4.app.Fragment selectedFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -126,13 +127,15 @@ public class TravelViewActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int pos = tab.getPosition();
-                android.support.v4.app.Fragment selectedFrag = null;
+
                 if (pos == 0)
                     selectedFrag = viewByScheduleFragment;
                 else if (pos == 1)
                     selectedFrag = viewByPhotosFragment;
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.containerTravelView, selectedFrag).commit();
+                getSupportFragmentManager().beginTransaction().addToBackStack(null);
+
             }
 
             @Override
