@@ -172,7 +172,6 @@ return true;
             // resolvable.
             String message = "Google Play Services is not available: " +
                     GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
-
         }
     }
 
