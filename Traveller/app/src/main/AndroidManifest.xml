@@ -30,7 +30,7 @@
         <activity android:name=".activity.EditLocationActivity" />
         <activity android:name=".activity.TravelViewActivity" />
         <activity android:name=".activity.SetTravelActivity" />
-        <activity android:name=".activity.MapClusterActivity"></activity>
+        <activity android:name=".activity.MapClusterActivity" />
     </application>
 
 </manifest>
