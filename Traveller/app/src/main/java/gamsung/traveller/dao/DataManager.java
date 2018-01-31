@@ -98,7 +98,38 @@ public class DataManager {
 
     //photograph data interface
 
+    public HashMap<Integer, Photograph> getPhotoList(){
+        return m_photoManager.getPhotoList(m_sqlHelper);
+    }
+
+    public void deletePhoto(Integer id){
+        m_photoManager.deletePhoto(m_sqlHelper, id);
+    }
+
+    public void insertPhoto(Photograph photo){
+        m_photoManager.insertPhoto(m_sqlHelper, photo);
+    }
+
+    public void updatePhoto(Photograph photo){
+        m_photoManager.updatePhoto(m_sqlHelper, photo);
+    }
+
 
     //search place data interface
 
+    public HashMap<Integer, SearchPlace> getSearchPlaceList(){
+        return m_searchManager.getSearchPlaceList(m_sqlHelper);
+    }
+
+    public void deleteSearchPlace(Integer id){
+        m_searchManager.deleteSearchPlace(m_sqlHelper, id);
+    }
+
+    public void insertSearchPlace(SearchPlace searchPlace){
+        m_searchManager.insertSearchPlace(m_sqlHelper, searchPlace);
+    }
+
+    public void updatePhoto(SearchPlace searchPlace){
+        m_searchManager.updateSearchPlace(m_sqlHelper, searchPlace);
+    }
 }

@@ -75,6 +75,7 @@ public class PlaceManager {
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
+        //sb.append("WHERE " + TableManager.PlaceTable.column_route_id + " = " + id);
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
