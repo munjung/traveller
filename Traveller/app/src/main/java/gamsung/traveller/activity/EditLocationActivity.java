@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ToggleButton;
 
 import gamsung.traveller.R;
@@ -21,6 +22,7 @@ public class EditLocationActivity extends AppCompatActivity {
 
     ToggleButton eatBtn, doBtn, takeBtn, someBtn;
     EditText memoEdit,editLocation;
+    ImageView memoImage;
     ViewPager pager;
 
     @Override
@@ -34,8 +36,8 @@ public class EditLocationActivity extends AppCompatActivity {
         doBtn = (ToggleButton)findViewById(R.id.doToggleBtn);
         takeBtn = (ToggleButton)findViewById(R.id.takeToggleBtn);
         someBtn = (ToggleButton)findViewById(R.id.somethingToggleBtn);
- //       memoEdit = (EditText)findViewById(R.id.memoEdit);
-//        memoImage = (ImageView)findViewById(R.id.memoImage);
+        memoEdit = (EditText)findViewById(R.id.memoEdit);
+//     memoImage = (ImageView)findViewById(R.id.memoImage);
         editLocation = (EditText)findViewById(R.id.editLocation);
 
         eatBtn.setOnCheckedChangeListener(addMemoListener);
@@ -52,7 +54,7 @@ public class EditLocationActivity extends AppCompatActivity {
     public void setVisibleMemo(){
         memoEdit.setText(null);
         memoEdit.setVisibility(View.VISIBLE);
-//        memoImage.setVisibility(View.VISIBLE);
+        //memoImage.setVisibility(View.VISIBLE);
     }
 
     ToggleButton.OnCheckedChangeListener addMemoListener  = new CompoundButton.OnCheckedChangeListener() {

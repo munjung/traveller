@@ -59,36 +59,36 @@
 
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/barLayout"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/barLayout"
+        android:layout_above="@+id/tvMission"
+        android:visibility="visible">
 
     </android.support.v4.view.ViewPager>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/pager"
-        android:layout_alignParentBottom="true">
-
         <EditText
+            android:id="@+id/tvMission"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:id="@+id/tvMission"
-            android:hint="일정명"
-            android:layout_above="@+id/layoutLocation"/>
+            android:layout_above="@+id/layoutLocation"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="일정명" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/layoutLocation"
         android:layout_above="@+id/layoutToggle">
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/mapButton"
             android:text="지도"/>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,21 +102,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/layoutToggle"
-        android:layout_above="@+id/btnNextPlan">
+        android:layout_above="@+id/memoEdit">
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/doToggleBtn"
-            android:textOn="하기"
-            android:textOff="하기"/>
-
-        <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutLocation"
+            android:layout_toEndOf="@+id/memoEdit"
+            android:layout_toRightOf="@+id/memoEdit"
+            android:textOff="하기"
+            android:textOn="하기" />
+
+        <ToggleButton
             android:id="@+id/eatToggleBtn"
-            android:textOn="먹기"
-            android:textOff="먹기"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="먹기"
+            android:textOn="먹기" />
 
         <ToggleButton
         android:layout_width="wrap_content"
@@ -134,13 +137,20 @@
 
     </LinearLayout>
 
-        <Button
+        <EditText
+            android:id="@+id/memoEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnNextPlan"
-            android:text="다음 일정 등록"
-            android:layout_alignParentBottom="true"/>
+            android:visibility="gone"
+            android:layout_above="@id/btnNextPlan"/>
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/btnNextPlan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="다음 일정 등록" />
 
 </RelativeLayout>
