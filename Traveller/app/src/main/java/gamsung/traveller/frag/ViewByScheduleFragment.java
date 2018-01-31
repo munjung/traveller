@@ -39,11 +39,10 @@ import gamsung.traveller.R;
  */
 
 public class ViewByScheduleFragment extends Fragment {
-    ArrayList<View> listSchedule = new ArrayList<>();
     ViewGroup rootView;
     NestedScrollView scrollView;
     LinearLayout layoutBase; //layout where lists are being drawn on
-    ScheduleService scheduleService;
+    ScheduleServiceAnimated scheduleService;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,38 +54,37 @@ public class ViewByScheduleFragment extends Fragment {
             layoutBase = rootView.findViewById(R.id.base_layout_schedule);
             scrollView = rootView.findViewById(R.id.scroll_schedule);
 
-            scheduleService = new ScheduleService(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext());
+            scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), true);
             numItem = 0;
             if (numItem == 0) {
-                scheduleService.drawFirstScreen_Coordinator();
-                View circleView = scheduleService.listSchedule.get(0);
-                circleView.setOnClickListener(startScheduling);
+                scheduleService.drawFirstScreen_Coordinator(startScheduling);
             } else {
 
             }
-
-            return rootView;
         }
         return rootView;
-
     }
-
     View.OnClickListener startScheduling = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            ArrayList listSchedule = scheduleService.listSchedule;
-            layoutBase.removeAllViews();
-            listSchedule.remove(0); //remove the empty circle from the view.
+            scheduleService.startSchedule(createNewSchedule, editSchedule);
+        }
+    };
 
-            CoordinatorLayout.LayoutParams coordParms = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
-            coordParms.gravity = Gravity.TOP;
-            scrollView.setLayoutParams(coordParms);
+    View.OnClickListener createNewSchedule = new View.OnClickListener(){
+        @Override
+        public void onClick(View view) {
+            scheduleService.createNewSchedule(createNewSchedule, editSchedule);
+        }
+    };
 
-            for (int i = 0; i < 2; i++) {
-                listSchedule.add(scheduleService.createScheduleView(listSchedule.size()));
-                layoutBase.addView((View)listSchedule.get(i));
-            }
-            scheduleService.setScheduleView(0);
+    View.OnClickListener editSchedule = new View.OnClickListener(){
+        @Override
+        public void onClick(View view) {
+            View viewParent = (View)view.getParent();
+            Toast.makeText(getContext(), "Clicked TagID: " + viewParent.getTag().toString() + " Idx: " +
+                    scheduleService.toListIdx((int)viewParent.getTag()), Toast.LENGTH_SHORT).show();
+            //layoutBase.removeView(viewParent);
         }
     };
 
