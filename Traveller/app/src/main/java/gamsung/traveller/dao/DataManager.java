@@ -78,6 +78,23 @@ public class DataManager {
 
     //place data interface
 
+    public HashMap<Integer, Place> getPlaceList(){
+        return m_placeManager.getPlaceList(m_sqlHelper);
+    }
+
+    public void deletePlace(Integer id){
+        m_placeManager.deletePlace(m_sqlHelper, id);
+    }
+
+    public void insertPlace(Place place){
+        m_placeManager.insertPlace(m_sqlHelper, place);
+    }
+
+    public void updatePlace(Place place){
+        m_placeManager.updatePlace(m_sqlHelper, place);
+    }
+
+
 
     //photograph data interface
 

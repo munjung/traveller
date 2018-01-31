@@ -9,14 +9,20 @@ package gamsung.traveller.model;
 
 public class Place {
 
+
     private int _id;
     private int m_route_id;
     private int m_next_place_id;
-    private String m_mission;
-    private String m_description;
     private int m_picture_id;
+    private String m_mission;
     private int m_search_id;
 
+
+    private int m_section_id;
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
     public int get_id() {
         return _id;
     }
@@ -45,14 +51,6 @@ public class Place {
         this.m_mission = m_mission;
     }
 
-    public String getM_description() {
-        return m_description;
-    }
-
-    public void setM_description(String m_description) {
-        this.m_description = m_description;
-    }
-
     public int getM_picture_id() {
         return m_picture_id;
     }
@@ -68,4 +66,15 @@ public class Place {
     public void setM_search_id(int m_search_id) {
         this.m_search_id = m_search_id;
     }
+
+
+    public int getM_section_id() {
+        return m_section_id;
+    }
+
+    public void setM_section_id(int m_section_id) {
+        this.m_section_id = m_section_id;
+    }
+
+
 }

@@ -55,5 +55,4 @@ public class Route {
         this.toDate = toDate;
     }
 
-
 }
