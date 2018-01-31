@@ -28,7 +28,9 @@
         <activity android:name=".activity.MapActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.EditLocationActivity" />
-        <activity android:name=".activity.TravelViewActivity"></activity>
+        <activity android:name=".activity.TravelViewActivity" />
+        <activity android:name=".activity.SetTravelActivity" />
+        <activity android:name=".activity.MapClusterActivity"></activity>
     </application>
 
 </manifest>
