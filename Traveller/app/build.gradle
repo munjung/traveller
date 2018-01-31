@@ -34,4 +34,5 @@ dependencies {
     implementation 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
     compile 'me.relex:circleindicator:1.2.2@aar'
+    compile files('libs/universal-image-loader-1.9.5.jar')
 }
