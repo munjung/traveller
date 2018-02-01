@@ -1,5 +1,7 @@
 package gamsung.traveller.dto;
 
+import com.google.maps.android.clustering.ClusterItem;
+
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +97,7 @@ public class TableManager {
         }
     }
 
-    public static class SearchTable {
+    public static class SearchTable implements ClusterItem {
 
         public static final String name = "Search";
 
