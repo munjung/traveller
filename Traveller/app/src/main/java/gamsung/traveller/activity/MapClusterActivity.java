@@ -3,6 +3,7 @@ package gamsung.traveller.activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +25,9 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
     private class PlaceRenderer extends DefaultClusterRenderer<TableManager.SearchTable>{
 
         public PlaceRenderer() {
-            super(getApplicationContext(), getMap(), cmClusterManager);
+            super(getApplicationContext(), cmMap, cmClusterManager);
+
+            
         }
     }
     @Override
