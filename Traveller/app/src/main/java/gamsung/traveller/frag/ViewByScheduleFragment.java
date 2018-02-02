@@ -81,11 +81,17 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener editSchedule = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
+            //동그라미 클릭시 일단 삭제 시험
             View viewParent = (View)view.getParent();
             Toast.makeText(getContext(), "Clicked TagID: " + viewParent.getTag().toString() + " Idx: " +
                     scheduleService.toListIdx((int)viewParent.getTag()), Toast.LENGTH_SHORT).show();
-            //layoutBase.removeView(viewParent);
+            layoutBase.removeView(viewParent);
+            scheduleService.listSchedule.remove(scheduleService.toListIdx((int)viewParent.getTag()));
+            for (int i = 0; i < scheduleService.listSchedule.size() - 1; i++){
+                scheduleService.setVisbility(scheduleService.listSchedule.get(i).view, scheduleService.getLeftVisbility(i));
+            }
         }
     };
+
 
 }

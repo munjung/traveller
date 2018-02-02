@@ -62,7 +62,6 @@
         app:layout_constraintTop_toBottomOf="@+id/title_right"
         app:layout_constraintVertical_bias="0.0" />
 
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circleimageview_left"
         android:layout_width="80dp"
@@ -115,6 +114,5 @@
         app:layout_constraintStart_toEndOf="@+id/circleimageview_left"
         app:layout_constraintTop_toBottomOf="@+id/title_left"
         app:layout_constraintVertical_bias="0.0" />
-
 
 </android.support.constraint.ConstraintLayout>

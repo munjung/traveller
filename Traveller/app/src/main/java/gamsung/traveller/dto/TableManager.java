@@ -1,5 +1,6 @@
 package gamsung.traveller.dto;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Dictionary;
@@ -154,6 +155,11 @@ public class TableManager {
             sb.append(")");
 
             return sb.toString();
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return null;
         }
     }
 
