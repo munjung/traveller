@@ -19,16 +19,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB3FX0jKgidpKZC0vnHY7cP9KL3bX9STsI" />
 
-        <activity android:name=".activity.AddLocationActivity"><intent-filter>
-
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-
-        </intent-filter></activity>
-
-        <activity android:name=".activity.MapActivity">
+        <!--<activity android:name=".activity.AddLocationActivity">-->
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
+        <activity android:name=".activity.MapActivity"/>
+        <activity android:name=".activity.AddLocationActivity"/>
     </application>
 
 </manifest>

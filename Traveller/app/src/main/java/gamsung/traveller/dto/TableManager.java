@@ -35,10 +35,10 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_title      + " TEXT ");
-            sb.append(column_from_date  + " DATETIME ");
-            sb.append(column_to_date    + " DATETIME ");
+            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_title      + " TEXT, ");
+            sb.append(column_from_date  + " DATETIME, ");
+            sb.append(column_to_date    + " DATETIME, ");
             sb.append(column_picture_id + " INTEGER ");
             sb.append(")");
 
@@ -74,13 +74,13 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_next_place_id  + " INTEGER ");
-            sb.append(column_picture_id     + " INTEGER ");
-            sb.append(column_picture_list   + " TEXT ");
-            sb.append(column_search_id      + " INTEGER ");
-            sb.append(column_mission        + " TEXT ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_route_id       + " INTEGER, ");
+            sb.append(column_next_place_id  + " INTEGER, ");
+            sb.append(column_picture_id     + " INTEGER, ");
+            sb.append(column_picture_list   + " TEXT, ");
+            sb.append(column_search_id      + " INTEGER, ");
+            sb.append(column_mission        + " TEXT, ");
             sb.append(column_description    + " TEXT ");
             sb.append(")");
 
@@ -128,19 +128,19 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id                     + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_place_unique_id        + " INTEGER ");
-            sb.append(column_place_name             + " TEXT ");
-            sb.append(column_place_address          + " TEXT ");
-            sb.append(column_place_attribution      + " TEXT ");
-            sb.append(column_place_phone            + " TEXT ");
-            sb.append(column_place_locale           + " TEXT ");
-            sb.append(column_place_uri              + " TEXT ");
-            sb.append(column_lat                    + " REAL ");
-            sb.append(column_lon                    + " REAL ");
-            sb.append(column_southwest_lat          + " REAL ");
-            sb.append(column_southwest_lon          + " REAL ");
-            sb.append(column_northeast_lat          + " REAL ");
+            sb.append(column_id                     + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_place_unique_id        + " INTEGER, ");
+            sb.append(column_place_name             + " TEXT, ");
+            sb.append(column_place_address          + " TEXT, ");
+            sb.append(column_place_attribution      + " TEXT, ");
+            sb.append(column_place_phone            + " TEXT, ");
+            sb.append(column_place_locale           + " TEXT, ");
+            sb.append(column_place_uri              + " TEXT, ");
+            sb.append(column_lat                    + " REAL, ");
+            sb.append(column_lon                    + " REAL, ");
+            sb.append(column_southwest_lat          + " REAL, ");
+            sb.append(column_southwest_lon          + " REAL, ");
+            sb.append(column_northeast_lat          + " REAL, ");
             sb.append(column_northeast_lon          + " REAL ");
             sb.append(")");
 
@@ -172,11 +172,11 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_place_id       + " INTEGER ");
-            sb.append(column_search_id      + " INTEGER ");
-            sb.append(column_text           + " TEXT ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_route_id       + " INTEGER, ");
+            sb.append(column_place_id       + " INTEGER, ");
+            sb.append(column_search_id      + " INTEGER, ");
+            sb.append(column_text           + " TEXT, ");
             sb.append(column_date           + " DATETIME ");
             sb.append(")");
 

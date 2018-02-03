@@ -32,11 +32,19 @@ public class RouteManager {
         m_routeMap = new HashMap<>();
     }
 
-    public HashMap<Integer, Route> getRouteList(SQLiteHelper dbHelper){
+    public void doSync(SQLiteHelper dbHelper){
 
         m_routeMap.clear();
         m_routeMap.putAll(_getRouteList(dbHelper));
+    }
 
+    public HashMap<Integer, Route> getRouteList(SQLiteHelper dbHelper){
+
+        if(m_routeMap.size() > 0) {
+            return m_routeMap;
+        }
+
+        m_routeMap.putAll(_getRouteList(dbHelper));
         return m_routeMap;
     }
 
