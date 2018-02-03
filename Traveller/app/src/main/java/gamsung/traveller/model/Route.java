@@ -16,6 +16,7 @@ public class Route {
     private Date fromDate;
     private Date toDate;
     private int pictureId;
+    private String picturPath;
 
     public void set_id(Integer _id) {
         this._id = _id;
@@ -62,5 +63,13 @@ public class Route {
 
     public void setPictureId(int pictureId) {
         this.pictureId = pictureId;
+    }
+
+    public String getPicturPath() {
+        return picturPath;
+    }
+
+    public void setPicturPath(String picturPath) {
+        this.picturPath = picturPath;
     }
 }

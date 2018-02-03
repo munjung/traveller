@@ -82,11 +82,11 @@ public class PhotographManager {
 
                 Photograph photo = new Photograph();
                 photo.set_id(c.getInt(0));
-                photo.setM_route_id(c.getInt(1));
-                photo.setM_place_id(c.getInt(2));
-                photo.setM_search_id(c.getInt(3));
-                photo.setM_tag(c.getString(4));
-                photo.setM_date(new Date(c.getLong(5) * 1000));
+                photo.setRoute_id(c.getInt(1));
+                photo.setPlace_id(c.getInt(2));
+                photo.setSearch_id(c.getInt(3));
+                photo.setTag(c.getString(4));
+                photo.setDate(new Date(c.getLong(5) * 1000));
 
                 photoList.put(photo.get_id(), photo);
             }
@@ -119,11 +119,11 @@ public class PhotographManager {
     private long _insertPhoto(SQLiteHelper dbHelper, Photograph photo){
 
         ContentValues values = new ContentValues();
-        values.put(TableManager.PictureTable.column_route_id, photo.getM_route_id());
-        values.put(TableManager.PictureTable.column_place_id, photo.getM_route_id());
-        values.put(TableManager.PictureTable.column_search_id, photo.getM_search_id());
-        values.put(TableManager.PictureTable.column_tag, photo.getM_tag());
-        values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getM_date()));
+        values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
+        values.put(TableManager.PictureTable.column_place_id, photo.getPlace_id());
+        values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
+        values.put(TableManager.PictureTable.column_tag, photo.getTag());
+        values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
@@ -135,11 +135,11 @@ public class PhotographManager {
     private int _updatePhoto(SQLiteHelper dbHelper, Photograph photo){
 
         ContentValues values = new ContentValues();
-        values.put(TableManager.PictureTable.column_route_id, photo.getM_route_id());
-        values.put(TableManager.PictureTable.column_place_id, photo.getM_route_id());
-        values.put(TableManager.PictureTable.column_search_id, photo.getM_search_id());
-        values.put(TableManager.PictureTable.column_tag, photo.getM_tag());
-        values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getM_date()));
+        values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
+        values.put(TableManager.PictureTable.column_place_id, photo.getPlace_id());
+        values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
+        values.put(TableManager.PictureTable.column_tag, photo.getTag());
+        values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.PictureTable.column_id + " = " + photo.get_id();

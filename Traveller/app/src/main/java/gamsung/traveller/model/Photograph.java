@@ -12,11 +12,12 @@ import java.util.Date;
 public class Photograph {
 
     private int _id;
-    private int m_route_id;
-    private int m_place_id;
-    private int m_search_id;
-    private String m_tag;
-    private Date m_date;
+    private int route_id;
+    private int place_id;
+    private int search_id;
+    private String path;
+    private String tag;
+    private Date date;
 
     public int get_id() {
         return _id;
@@ -26,43 +27,51 @@ public class Photograph {
         this._id = _id;
     }
 
-    public int getM_route_id() {
-        return m_route_id;
+    public int getRoute_id() {
+        return route_id;
     }
 
-    public void setM_route_id(int m_route_id) {
-        this.m_route_id = m_route_id;
+    public void setRoute_id(int route_id) {
+        this.route_id = route_id;
     }
 
-    public int getM_place_id() {
-        return m_place_id;
+    public int getPlace_id() {
+        return place_id;
     }
 
-    public void setM_place_id(int m_place_id) {
-        this.m_place_id = m_place_id;
+    public void setPlace_id(int place_id) {
+        this.place_id = place_id;
     }
 
-    public int getM_search_id() {
-        return m_search_id;
+    public int getSearch_id() {
+        return search_id;
     }
 
-    public void setM_search_id(int m_search_id) {
-        this.m_search_id = m_search_id;
+    public void setSearch_id(int search_id) {
+        this.search_id = search_id;
     }
 
-    public String getM_tag() {
-        return m_tag;
+    public String getPath() {
+        return path;
     }
 
-    public void setM_tag(String m_tag) {
-        this.m_tag = m_tag;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public Date getM_date() {
-        return m_date;
+    public String getTag() {
+        return tag;
     }
 
-    public void setM_date(Date m_date) {
-        this.m_date = m_date;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
