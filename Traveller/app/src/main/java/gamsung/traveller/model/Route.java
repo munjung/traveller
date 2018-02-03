@@ -12,16 +12,17 @@ public class Route {
 
     private int _id;
     private String title;
+    private String area;
     private Date fromDate;
     private Date toDate;
     private int pictureId;
 
-    public int get_id() {
-        return _id;
+    public void set_id(Integer _id) {
+        this._id = _id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public int get_id() {
+        return _id;
     }
 
     public String getTitle() {
@@ -32,6 +33,13 @@ public class Route {
         this.title = title;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
     public Date getFromDate() {
         return fromDate;
     }

@@ -20,12 +20,22 @@
             android:text="?"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:gravity="left|center"
             android:text=" title?"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="8dp"
+            android:id="@+id/btnAddTravel"
+            android:text="추가(네신중평님이 예쁘게 옮겨줄 예정)"/>
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -33,19 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical">
-
     </android.support.v7.widget.RecyclerView>
-
-    <!--<LinearLayout android:id="@+id/main_contents"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <!--<include android:id="@+id/layout_template"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--layout="@layout/layout_main_template">-->
-        <!--</include>-->
-
-    <!--</LinearLayout>-->
 
 </LinearLayout>
