@@ -274,6 +274,7 @@ public class ScheduleService {
     public int getListSize(){
         return listSchedule.size();
     }
+
     public void startSchedule(@Nullable View.OnClickListener clickCreateNew, @Nullable View.OnClickListener clickEdit){
         //첫 시작화면에서 동그라미 생성. 동그라미 하나는 처음 생성된거 + 빈 동그라미까지
         layoutBase.removeAllViews();
