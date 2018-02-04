@@ -27,7 +27,7 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
         public PlaceRenderer() {
             super(getApplicationContext(), cmMap, cmClusterManager);
 
-            
+
         }
     }
     @Override

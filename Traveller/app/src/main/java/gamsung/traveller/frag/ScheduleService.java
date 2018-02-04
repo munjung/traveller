@@ -107,7 +107,7 @@ public class ScheduleService {
                 circleImageView = view.findViewById(R.id.circleimageview_left);
             }
             textTitle.setText("View ID: " + view.getTag().toString());
-            textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + "Circle y: " + getRelativeTop(circleImageView, layoutBase));
+            textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + " Circle y: " + getRelativeTop(circleImageView, layoutBase));
             circleImageView.setImageResource(R.color.colorPrimaryDark);
             circleImageView.setBorderWidth(this.BORDER_WIDTH);
             circleImageView.setOnLongClickListener(longClickedCircle);
@@ -256,7 +256,6 @@ public class ScheduleService {
         }
         for (int i = idxA; i <= idxB; i++)
             setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
-
 
     }
     public int toListIdx(int unique_ID){
