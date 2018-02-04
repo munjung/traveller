@@ -15,6 +15,8 @@ public class Route {
     private String area;
     private Date fromDate;
     private Date toDate;
+    private int pictureId;
+    private String picturPath;
 
     public void set_id(Integer _id) {
         this._id = _id;
@@ -55,4 +57,19 @@ public class Route {
         this.toDate = toDate;
     }
 
+    public int getPictureId() {
+        return pictureId;
+    }
+
+    public void setPictureId(int pictureId) {
+        this.pictureId = pictureId;
+    }
+
+    public String getPicturPath() {
+        return picturPath;
+    }
+
+    public void setPicturPath(String picturPath) {
+        this.picturPath = picturPath;
+    }
 }

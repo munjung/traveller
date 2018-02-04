@@ -138,19 +138,19 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id                     + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_place_unique_id        + " INTEGER ");
-            sb.append(column_place_name             + " TEXT ");
-            sb.append(column_place_address          + " TEXT ");
-            sb.append(column_place_attribution      + " TEXT ");
-            sb.append(column_place_phone            + " TEXT ");
-            sb.append(column_place_locale           + " TEXT ");
-            sb.append(column_place_uri              + " TEXT ");
-            sb.append(column_lat                    + " REAL ");
-            sb.append(column_lon                    + " REAL ");
-            sb.append(column_southwest_lat          + " REAL ");
-            sb.append(column_southwest_lon          + " REAL ");
-            sb.append(column_northeast_lat          + " REAL ");
+            sb.append(column_id                     + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_place_unique_id        + " INTEGER, ");
+            sb.append(column_place_name             + " TEXT, ");
+            sb.append(column_place_address          + " TEXT, ");
+            sb.append(column_place_attribution      + " TEXT, ");
+            sb.append(column_place_phone            + " TEXT, ");
+            sb.append(column_place_locale           + " TEXT, ");
+            sb.append(column_place_uri              + " TEXT, ");
+            sb.append(column_lat                    + " REAL, ");
+            sb.append(column_lon                    + " REAL, ");
+            sb.append(column_southwest_lat          + " REAL, ");
+            sb.append(column_southwest_lon          + " REAL, ");
+            sb.append(column_northeast_lat          + " REAL, ");
             sb.append(column_northeast_lon          + " REAL ");
             sb.append(")");
 

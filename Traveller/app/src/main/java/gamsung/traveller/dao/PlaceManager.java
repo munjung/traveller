@@ -84,11 +84,11 @@ public class PlaceManager {
 
                 Place place = new Place();
                 place.set_id(c.getInt(0));                          //id
-                place.setM_route_id(c.getInt(1));                   //route_id
-                place.setM_next_place_id(c.getInt(2));              //next_place
-                place.setM_picture_id(c.getInt(3));                 //picture
-                place.setM_mission(c.getString(4));                 //mission
-                place.setM_search_id(c.getInt(5));                  //search
+                place.setRoute_id(c.getInt(1));                   //route_id
+                place.setNext_place_id(c.getInt(2));              //next_place
+                place.setPicture_id(c.getInt(3));                 //picture
+                place.setMission(c.getString(4));                 //mission
+                place.setSearch_id(c.getInt(5));                  //search
 
                 placeMap.put(place.get_id(), place);
             }
@@ -121,11 +121,11 @@ public class PlaceManager {
     private long _insertPlace(SQLiteHelper dbHelper, Place place){
 
         ContentValues values = new ContentValues();
-        values.put(TableManager.PlaceTable.column_route_id, place.getM_route_id());
-        values.put(TableManager.PlaceTable.column_next_place_id, place.getM_next_place_id());
-        values.put(TableManager.PlaceTable.column_picture_id, place.getM_picture_id());
-        values.put(TableManager.PlaceTable.column_mission, place.getM_mission());
-        values.put(TableManager.PlaceTable.column_search_id, place.getM_search_id());
+        values.put(TableManager.PlaceTable.column_route_id, place.getRoute_id());
+        values.put(TableManager.PlaceTable.column_next_place_id, place.getNext_place_id());
+        values.put(TableManager.PlaceTable.column_picture_id, place.getPicture_id());
+        values.put(TableManager.PlaceTable.column_mission, place.getMission());
+        values.put(TableManager.PlaceTable.column_search_id, place.getSearch_id());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
@@ -137,11 +137,11 @@ public class PlaceManager {
     private int _updatePlace(SQLiteHelper dbHelper, Place place){
 
         ContentValues values = new ContentValues();
-        values.put(TableManager.PlaceTable.column_route_id, place.getM_route_id());
-        values.put(TableManager.PlaceTable.column_next_place_id, place.getM_next_place_id());
-        values.put(TableManager.PlaceTable.column_picture_id, place.getM_picture_id());
-        values.put(TableManager.PlaceTable.column_mission, place.getM_mission());
-        values.put(TableManager.PlaceTable.column_search_id, place.getM_search_id());
+        values.put(TableManager.PlaceTable.column_route_id, place.getRoute_id());
+        values.put(TableManager.PlaceTable.column_next_place_id, place.getNext_place_id());
+        values.put(TableManager.PlaceTable.column_picture_id, place.getPicture_id());
+        values.put(TableManager.PlaceTable.column_mission, place.getMission());
+        values.put(TableManager.PlaceTable.column_search_id, place.getSearch_id());
 
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();

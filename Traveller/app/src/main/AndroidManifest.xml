@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera" />
+
 
     <application
         android:allowBackup="true"
@@ -31,18 +34,19 @@
         <activity android:name=".activity.TravelViewActivity" />
         <activity android:name=".activity.SetTravelActivity" />
         <activity android:name=".activity.MapClusterActivity" />
-        <activity android:name=".activity.CustomGalleryActivity"/>
-
+        <activity android:name=".activity.CustomGalleryActivity" />
         <activity android:name=".activity.ImageMultiplePickerActivity">
             <intent-filter>
-                <!-- Intent filter action for receiving multiple images  -->
+
+                <!-- Intent filter action for receiving multiple images -->
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <!--  To receive Images set mime type to image -->
+                <!-- To receive Images set mime type to image -->
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activity.CameraActivity"></activity>
     </application>
 
 </manifest>
