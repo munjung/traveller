@@ -7,12 +7,12 @@ package gamsung.traveller.model;
  *       . 연결된 다음 장소는 next_photo_id 를 참조한다.
  */
 
-public class Place {
+public class Spot {
 
 
     private int _id;
     private int route_id;
-    private int next_place_id;
+    private int next_spot_id;
     private int picture_id;
     private String mission;
     private int search_id;
@@ -34,12 +34,12 @@ public class Place {
         this.route_id = route_id;
     }
 
-    public int getNext_place_id() {
-        return next_place_id;
+    public int getNext_spot_id() {
+        return next_spot_id;
     }
 
-    public void setNext_place_id(int next_place_id) {
-        this.next_place_id = next_place_id;
+    public void setNext_place_id(int next_spot_id) {
+        this.next_spot_id = next_spot_id;
     }
 
     public int getPicture_id() {

@@ -55,13 +55,13 @@ public class TableManager {
         }
     }
 
-    public static class PlaceTable {
+    public static class SpotTable {
 
-        public static final String name = "Place";
+        public static final String name = "Spot";
 
         public static final String column_id =              "place_id";
         public static final String column_route_id =        "route_id";    //route table id
-        public static final String column_next_place_id =   "next_place_id";  /////////이전 place_id ?
+        public static final String column_next_spot_id =    "next_spot_id";  /////////이전 place_id ?
         public static final String column_picture_id =      "picture_id";   //대표 사진 id
         public static final String column_picture_list =    "picture_list"; //연결된 사진 리스트
         public static final String column_mission =         "mission";
@@ -72,7 +72,7 @@ public class TableManager {
         public static final String[] columns = {
                 column_id,
                 column_route_id,
-                column_next_place_id,
+                column_next_spot_id,
                 column_picture_id,
                 column_picture_list,
                 column_mission,
@@ -86,12 +86,12 @@ public class TableManager {
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
             sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_next_place_id  + " INTEGER ");
+            sb.append(column_next_spot_id   + " INTEGER ");
             sb.append(column_picture_id     + " INTEGER ");
             sb.append(column_picture_list   + " TEXT ");
             sb.append(column_mission        + " TEXT ");
             sb.append(column_search_id      + " INTEGER ");
-            sb.append(column_section_id      + " INTEGER ");
+            sb.append(column_section_id     + " INTEGER ");
             sb.append(")");
 
             return sb.toString();
@@ -167,12 +167,12 @@ public class TableManager {
 
         public static  final String name = "Picture";
 
-        public static final String column_id = "picture_id";
-        public static final String column_route_id = "route_id";
-        public static final String column_place_id = "place_id";
-        public static final String column_search_id = "search_id";
-        public static final String column_tag = "tag";
-        public static final String column_date = "date";
+        public static final String column_id            = "picture_id";
+        public static final String column_route_id      = "route_id";
+        public static final String column_place_id      = "place_id";
+        public static final String column_search_id     = "search_id";
+        public static final String column_tag           = "tag";
+        public static final String column_date          = "date";
         public static  final String[] columns = {
                 column_id,
                 column_route_id,

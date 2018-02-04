@@ -2,12 +2,10 @@ package gamsung.traveller.dao;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import gamsung.traveller.model.Photograph;
-import gamsung.traveller.model.Place;
+import gamsung.traveller.model.Spot;
 import gamsung.traveller.model.Route;
 import gamsung.traveller.model.SearchPlace;
 
@@ -40,7 +38,7 @@ public class DataManager {
 
     //db data control interface
     private RouteManager m_routeManager;
-    private PlaceManager m_placeManager;
+    private SpotManager m_spotManager;
     private PhotographManager m_photoManager;
     private SearchPlaceManager m_searchManager;
 
@@ -49,7 +47,7 @@ public class DataManager {
         m_sqlHelper = new SQLiteHelper(context);
 
         m_routeManager = new RouteManager();
-        m_placeManager = new PlaceManager();
+        m_spotManager = new SpotManager();
         m_photoManager = new PhotographManager();
         m_searchManager = new SearchPlaceManager();
     }
@@ -78,20 +76,20 @@ public class DataManager {
 
     //place data interface
 
-    public HashMap<Integer, Place> getPlaceList(){
-        return m_placeManager.getPlaceList(m_sqlHelper);
+    public HashMap<Integer, Spot> getPlaceList(){
+        return m_spotManager.getSpotList(m_sqlHelper);
     }
 
     public void deletePlace(Integer id){
-        m_placeManager.deletePlace(m_sqlHelper, id);
+        m_spotManager.deleteSpot(m_sqlHelper, id);
     }
 
-    public void insertPlace(Place place){
-        m_placeManager.insertPlace(m_sqlHelper, place);
+    public void insertPlace(Spot spot){
+        m_spotManager.insertSpot(m_sqlHelper, spot);
     }
 
-    public void updatePlace(Place place){
-        m_placeManager.updatePlace(m_sqlHelper, place);
+    public void updatePlace(Spot spot){
+        m_spotManager.updateSpot(m_sqlHelper, spot);
     }
 
 
