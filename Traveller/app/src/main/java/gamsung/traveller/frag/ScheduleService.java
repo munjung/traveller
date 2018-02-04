@@ -107,7 +107,7 @@ public class ScheduleService {
                 circleImageView = view.findViewById(R.id.circleimageview_left);
             }
             textTitle.setText("View ID: " + view.getTag().toString());
-            textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + "Circle y: " + getRelativeTop(circleImageView, layoutBase));
+            textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + " Circle y: " + getRelativeTop(circleImageView, layoutBase));
             circleImageView.setImageResource(R.color.colorPrimaryDark);
             circleImageView.setBorderWidth(this.BORDER_WIDTH);
             circleImageView.setOnLongClickListener(longClickedCircle);
@@ -257,7 +257,6 @@ public class ScheduleService {
         for (int i = idxA; i <= idxB; i++)
             setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
 
-
     }
     public int toListIdx(int unique_ID){
         //ID 값으로 어레이 리스트의 순서를 찾아 리턴
@@ -274,6 +273,7 @@ public class ScheduleService {
     public int getListSize(){
         return listSchedule.size();
     }
+
     public void startSchedule(@Nullable View.OnClickListener clickCreateNew, @Nullable View.OnClickListener clickEdit){
         //첫 시작화면에서 동그라미 생성. 동그라미 하나는 처음 생성된거 + 빈 동그라미까지
         layoutBase.removeAllViews();

@@ -6,14 +6,14 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,9 +43,12 @@ class CoordViews{
     int titleY[] = new int[2];
     int contentsX[] = new int[2];
     int contentsY[] = new int[2];
+
+    boolean isLeft; //optional
 }
 
 public class ScheduleServiceAnimated extends ScheduleService {
+    long DRAGDROP_ANIMATION_DURATION;
     ArrayList<CoordViews> coordViewsList = new ArrayList<>(); //뷰의 위치 저장
     Queue<View> queueView= new LinkedList<>();
     Queue<Integer> queueIdxHistory = new LinkedList<>();
@@ -54,6 +57,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
         super(rootView, layoutSingle, scrollView, layoutBase, appContext, isDragDrop);
         super.longClickedCircle = this.longClickListener;
         super.dragListener = this.scheduleDragListener;
+        DRAGDROP_ANIMATION_DURATION = 400;
     }
 
     @Override
@@ -84,28 +88,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
             coordViewsList.add(coordViews);
         }
 
-        /*
-        View circleImage, textContents, textTitle, layout;
-        for (int i = 0; i < listSchedule.size(); i++){
-            boolean isLeft = getLeftVisbility(i);
-            layout = listSchedule.get(i).view;
-            if (isLeft){
-                circleImage = layout.findViewById(R.id.circleimageview_left);
-                textTitle = layout.findViewById(R.id.title_left);
-                textContents = layout.findViewById(R.id.contents_left);
-            }else{
-                circleImage = layout.findViewById(R.id.circleimageview_right);
-                textTitle = layout.findViewById(R.id.title_right);
-                textContents = layout.findViewById(R.id.contents_right);
-            }
-            circleImage.animate().x(coordCircleX[isLeft? 1 : 0]);
-            textTitle.animate().x(coordTitleX[isLeft? 1 : 0]);
-            textContents.animate().x(coordContentsX[isLeft? 1 : 0]);
-        }*/
         super.createNewSchedule(clickCreateNew, clickEdit);
     }
-
-
     View.OnDragListener scheduleDragListener = new View.OnDragListener(){
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
@@ -123,7 +107,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     //queueIdxHistory.add(toListIdx(Integer.parseInt(view.getTag().toString())));
                     //Toast.makeText(appContext, toListIdx(Integer.parseInt(view.getTag().toString())) + ".", Toast.LENGTH_SHORT).show();
                     queueIdxHistory.add(toListIdx(Integer.parseInt(view.getTag().toString())));
-                    dragEntered(view, Integer.parseInt(localParent.getTag().toString()));
+                    view.setVisibility(View.INVISIBLE);
+                    dragEntered(view);
                     Log.d("Entered", view.getTag().toString());
                     return true;
                 case DragEvent.ACTION_DRAG_LOCATION:
@@ -146,19 +131,26 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     return true;
                 case DragEvent.ACTION_DRAG_EXITED:
                     //cancel animation if necessary
+                    view.setVisibility(View.VISIBLE);
                     Log.d("DragDrop", "Exited entered");
                     return true;
                 case DragEvent.ACTION_DROP:
                     //switch of data happens
+                    view.setVisibility(View.VISIBLE);
                     ClipData.Item item = dragEvent.getClipData().getItemAt(0);
                     String dragData =item.getText().toString();
+
                     //swapSchedules(Integer.parseInt(dragData) - 1, Integer.parseInt(view.getTag().toString()) - 1);
+                    Log.d("DragDrop", "Ended entered");
+                    for (int i = 0; i < listSchedule.size(); i++){
+                        listSchedule.get(i).view.findViewById(R.id.circleimageview_left).clearAnimation();
+                        listSchedule.get(i).view.findViewById(R.id.circleimageview_right).clearAnimation();
+                    }
                     moveSchedule(Integer.parseInt(dragData), (int)view.getTag());
                     Log.d("selected data index: ", dragData);
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //cancel animaton if necessary
-                    Log.d("DragDrop", "Ended entered");
                     queueIdxHistory.clear();
                     return true;
 
@@ -169,11 +161,12 @@ public class ScheduleServiceAnimated extends ScheduleService {
         }
     };
 
-    private void dragEntered(View view, int itemIdx){ //view is the drop zone, item holds the info of ID
+    private void dragEntered(View view){ //view is the drop zone, item holds the info of ID
         int idxView, idxDrag; //move idxView to idxDrag location
         //draw ==> drop (queue delete)
-        boolean isLeft;
-        CoordViews coordDrag, coordView;
+        //moving 0 to 1
+        CoordViews coordItems[] = new CoordViews[2];
+
         idxView = toListIdx((int)view.getTag()); //index of drop zone view; idxView is being moved to idxDrag
 
         if (queueIdxHistory.peek() == idxView) {
@@ -183,65 +176,71 @@ public class ScheduleServiceAnimated extends ScheduleService {
         idxDrag = queueIdxHistory.remove(); //the previous location where the cursor was
 
         if (idxView < idxDrag){
-            coordDrag = coordViewsList.get(idxView + 1); //move down
+            coordItems[1] = coordViewsList.get(idxView + 1); //move down
         }
         else
-            coordDrag = coordViewsList.get(idxView - 1); //move up
+            coordItems[1] = coordViewsList.get(idxView - 1); //move up
+        coordItems[0] = coordViewsList.get(idxView);
 
-        coordView = coordViewsList.get(idxView);
+        CircleImageView circleCopy = new CircleImageView(appContext);
 
-        //draw on idxView and move to idxDrag
-        isLeft = getLeftVisbility(idxView);
+        Boolean isLeft = getLeftVisbility(idxView);
 
-        CircleImageView copyCircleView = new CircleImageView(appContext);
+        if (queueView.size() > 0){ //if theres an animation in motion, set delay
+            circleCopy.animate().setStartDelay((DRAGDROP_ANIMATION_DURATION + 150) * (queueView.size() - 1));
+        }
+        circleCopy.setX(coordItems[0].circleX[isLeft ? 0 : 1]);
+        circleCopy.setY(coordItems[0].circleY[isLeft ? 0 : 1]);
+        circleCopy.setBorderWidth(BORDER_WIDTH);
+        circleCopy.setBorderColor(Color.BLACK);
+        circleCopy.setImageResource(R.color.cardview_light_background);
+        LinearLayout.LayoutParams circleSize = new LinearLayout.LayoutParams((int)toDp(IMAGE_SIZE), (int)toDp(IMAGE_SIZE));
+        circleCopy.setLayoutParams(circleSize);
+        circleCopy.setVisibility(View.INVISIBLE);
 
-        copyCircleView.setX(coordView.circleX[isLeft ? 0:1]);
-        copyCircleView.setY(coordView.circleY[isLeft ? 0:1]);
-        copyCircleView.setBorderWidth(super.BORDER_WIDTH);
-        copyCircleView.setBorderColor(Color.BLACK);
-        copyCircleView.setImageResource(R.color.cardview_light_background);
-        LinearLayout.LayoutParams circleSize = new LinearLayout.LayoutParams((int)toDp(this.IMAGE_SIZE), (int)toDp(this.IMAGE_SIZE));
-        copyCircleView.setLayoutParams(circleSize);
+        layoutBase.addView(circleCopy);
+        queueView.add(circleCopy);
 
-        layoutBase.addView(copyCircleView);
-        queueView.add(copyCircleView);
+        circleCopy.animate().setListener(animatorListener);
+        circleCopy.animate().setDuration(DRAGDROP_ANIMATION_DURATION);
 
-        copyCircleView.animate().setListener(animatorListener);
-        copyCircleView.animate().setDuration(500);
-
-
-        copyCircleView.animate().x(coordDrag.circleX[isLeft ? 1 : 0]);
-        copyCircleView.animate().y(coordDrag.circleY[isLeft ? 1 : 0]);
-
-        Toast.makeText(appContext, "IdxView: " + idxView + ", idxDrag: " + idxDrag + ", idxDragonLayout: " + toListIdx(idxDrag), Toast.LENGTH_SHORT).show();
+        circleCopy.animate().x(coordItems[1].circleX[isLeft? 1 : 0]).y(coordItems[1].circleY[isLeft? 1 : 0]);
+        circleCopy.setVisibility(View.VISIBLE);
+        //Toast.makeText(appContext, "IdxView: " + idxView + ", idxDrag: " + idxDrag + ", idxDragonLayout: " + toListIdx(idxDrag), Toast.LENGTH_SHORT).show();
         //when idxDragonLayout is smaller move to idxView - 1, when idxView is greater move to idxView + 1
     }
 
 
-    Animator.AnimatorListener animatorListener =  new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animator) {
-
+    class AnimatedMovingTask extends AsyncTask<View, Void, Void>{
+        CoordViews coordViews;
+        public AnimatedMovingTask(CoordViews coordViews) {
+            this.coordViews = coordViews;
         }
 
         @Override
-        public void onAnimationEnd(Animator animator) {
-            layoutBase.removeView(queueView.remove());
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
         @Override
-        public void onAnimationCancel(Animator animator) {
+        protected Void doInBackground(View... views) {
 
+            return null;
         }
 
         @Override
-        public void onAnimationRepeat(Animator animator) {
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Toast.makeText(appContext, "Animation fin.", Toast.LENGTH_SHORT).show();
+            super.onProgressUpdate(values);
 
         }
-    };
 
-
-
+    }
     View.OnLongClickListener longClickListener = new View.OnLongClickListener(){
         @Override
         public boolean onLongClick(View view) {
@@ -255,7 +254,41 @@ public class ScheduleServiceAnimated extends ScheduleService {
             View.DragShadowBuilder dragShadowBuilder = new View.DragShadowBuilder(view);
 
             view.startDrag(data, dragShadowBuilder, view, 0);
+
+            Animation aniShake = AnimationUtils.loadAnimation(appContext, R.anim.shake);
+            for (ListSchedule listViews: listSchedule){
+                CircleImageView circleImageView;
+                if (getLeftVisbility(toListIdx(listViews.view_ID)))
+                    circleImageView = listViews.view.findViewById(R.id.circleimageview_left);
+                else
+                    circleImageView = listViews.view.findViewById(R.id.circleimageview_right);
+
+                circleImageView.startAnimation(aniShake);
+                //listViews.view.startAnimation(aniShake);
+            }
             return true;
+        }
+    };
+
+    Animator.AnimatorListener animatorListener =  new Animator.AnimatorListener() {
+
+        @Override
+        public void onAnimationStart(Animator animator) {
+            //queueView.peek().setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animator) {
+            layoutBase.removeView(queueView.remove());
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
         }
     };
 }
