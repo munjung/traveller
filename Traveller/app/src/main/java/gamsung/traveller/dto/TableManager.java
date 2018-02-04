@@ -42,11 +42,11 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_title      + " TEXT ");
-            sb.append(column_area       + " TEXT ");
-            sb.append(column_from_date  + " DATETIME ");
-            sb.append(column_to_date    + " DATETIME ");
+            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_title      + " TEXT, ");
+            sb.append(column_area       + " TEXT, ");
+            sb.append(column_from_date  + " DATETIME, ");
+            sb.append(column_to_date    + " DATETIME, ");
             sb.append(column_picture_id + " INTEGER ");
 
             sb.append(")");
@@ -59,7 +59,7 @@ public class TableManager {
 
         public static final String name = "Spot";
 
-        public static final String column_id =              "place_id";
+        public static final String column_id =              "spot_id";
         public static final String column_route_id =        "route_id";    //route table id
         public static final String column_next_spot_id =    "next_spot_id";  /////////이전 place_id ?
         public static final String column_picture_id =      "picture_id";   //대표 사진 id
@@ -84,13 +84,13 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_next_spot_id   + " INTEGER ");
-            sb.append(column_picture_id     + " INTEGER ");
-            sb.append(column_picture_list   + " TEXT ");
-            sb.append(column_mission        + " TEXT ");
-            sb.append(column_search_id      + " INTEGER ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_route_id       + " INTEGER, ");
+            sb.append(column_next_spot_id   + " INTEGER, ");
+            sb.append(column_picture_id     + " INTEGER, ");
+            sb.append(column_picture_list   + " TEXT, ");
+            sb.append(column_mission        + " TEXT, ");
+            sb.append(column_search_id      + " INTEGER, ");
             sb.append(column_section_id     + " INTEGER ");
             sb.append(")");
 
@@ -187,11 +187,11 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_place_id       + " INTEGER ");
-            sb.append(column_search_id      + " INTEGER ");
-            sb.append(column_tag            + " TEXT ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_route_id       + " INTEGER, ");
+            sb.append(column_place_id       + " INTEGER, ");
+            sb.append(column_search_id      + " INTEGER, ");
+            sb.append(column_tag            + " TEXT, ");
             sb.append(column_date           + " DATETIME ");
             sb.append(")");
 

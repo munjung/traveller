@@ -2,7 +2,9 @@ package gamsung.traveller.dao;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
@@ -76,19 +78,19 @@ public class DataManager {
 
     //place data interface
 
-    public HashMap<Integer, Spot> getPlaceList(){
+    public HashMap<Integer, Spot> getSpotList(){
         return m_spotManager.getSpotList(m_sqlHelper);
     }
 
-    public void deletePlace(Integer id){
+    public void deleteSpot(Integer id){
         m_spotManager.deleteSpot(m_sqlHelper, id);
     }
 
-    public void insertPlace(Spot spot){
+    public void insertSpot(Spot spot){
         m_spotManager.insertSpot(m_sqlHelper, spot);
     }
 
-    public void updatePlace(Spot spot){
+    public void updateSpot(Spot spot){
         m_spotManager.updateSpot(m_sqlHelper, spot);
     }
 
@@ -110,6 +112,14 @@ public class DataManager {
 
     public void updatePhoto(Photograph photo){
         m_photoManager.updatePhoto(m_sqlHelper, photo);
+    }
+
+    public List<String> getPhotoListWithSpot(int spot_id){
+        return new ArrayList<>();
+    }
+
+    public List<String> getPhotoListWithRoute(int route_id){
+        return new ArrayList<>();
     }
 
 

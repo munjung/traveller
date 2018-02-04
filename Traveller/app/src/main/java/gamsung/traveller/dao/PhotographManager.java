@@ -78,8 +78,6 @@ public class PhotographManager {
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
-
-
                 Photograph photo = new Photograph();
                 photo.set_id(c.getInt(0));
                 photo.setRoute_id(c.getInt(1));

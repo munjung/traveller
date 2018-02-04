@@ -80,7 +80,7 @@ public class SpotManager {
                 Spot spot = new Spot();
                 spot.set_id(c.getInt(0));                          //id
                 spot.setRoute_id(c.getInt(1));                   //route_id
-                spot.setNext_place_id(c.getInt(2));              //next_place
+                spot.setNext_spot_id(c.getInt(2));              //next_place
                 spot.setPicture_id(c.getInt(3));                 //picture
                 spot.setMission(c.getString(4));                 //mission
                 spot.setSearch_id(c.getInt(5));                  //search

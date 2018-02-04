@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="gamsung.traveller.activity.MainActivity">
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/layout_main_top"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true">
 
         <Button android:id="@+id/btn_sample"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_margin="5dp"
             android:text="?"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_margin="5dp"
             android:gravity="left|center"
             android:text=" title?"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_margin="5dp"
             android:textSize="8dp"
             android:id="@+id/btnAddTravel"
             android:text="추가(네신중평님이 예쁘게 옮겨줄 예정)"/>
 
     </LinearLayout>
 
+    <ImageView android:id="@+id/image_main_temp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_main_top"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:layout_below="@id/layout_main_top">
     </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+</RelativeLayout>
