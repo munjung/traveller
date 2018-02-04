@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+//View Holder Adaper
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RouteViewHolder> {
 
     private Context _context;
@@ -209,7 +209,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_main_route, viewGroup, false);
 
-        return new RouteViewHolder(itemView);
+        return new RouteViewHolder(_context, itemView);
     }
 
     @Override
@@ -222,7 +222,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
             Glide.with(_context).load(item.getPicturPath()).into(viewHolder.imageView);
         }
-        viewHolder.itemView.setTag(item);
+//        viewHolder.itemView.setTag(item);
     }
 
     @Override
@@ -251,14 +251,19 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     }
 
 
+    //View Holder
     public static class RouteViewHolder extends RecyclerView.ViewHolder {
+
+        private Context _context;
 
         public ImageView imageView;
         public TextView textView;
         public Button btn;
 
-        public RouteViewHolder(View itemView) {
+        public RouteViewHolder(Context context, View itemView) {
             super(itemView);
+
+            _context = context;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_history);
             textView = (TextView) itemView.findViewById(R.id.tv_history);
@@ -267,15 +272,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
+                    DebugToast.show(_context, "image clicked");
                 }
             });
 
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    DebugToast.show(_context, "button clicked");
                 }
             });
         }
