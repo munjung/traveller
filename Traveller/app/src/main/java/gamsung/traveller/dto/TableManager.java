@@ -1,7 +1,6 @@
 package gamsung.traveller.dto;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -66,7 +65,7 @@ public class TableManager {
         public static final String column_picture_list =    "picture_list"; //연결된 사진 리스트
         public static final String column_mission =         "mission";
         public static final String column_search_id =       "search_id";    //search table id
-        public static final String column_section_id =      "section_id";
+        public static final String column_category_id =     "category_id";
 
 
         public static final String[] columns = {
@@ -77,7 +76,7 @@ public class TableManager {
                 column_picture_list,
                 column_mission,
                 column_search_id,
-                column_section_id
+                column_category_id
         };
 
         public static String getCreateQuery(){
@@ -91,14 +90,14 @@ public class TableManager {
             sb.append(column_picture_list   + " TEXT, ");
             sb.append(column_mission        + " TEXT, ");
             sb.append(column_search_id      + " INTEGER, ");
-            sb.append(column_section_id     + " INTEGER ");
+            sb.append(column_category_id    + " INTEGER ");
             sb.append(")");
 
             return sb.toString();
         }
     }
 
-    public static class SearchTable implements ClusterItem {
+    public static class SearchTable {
 
         public static final String name = "Search";
 
@@ -155,11 +154,6 @@ public class TableManager {
             sb.append(")");
 
             return sb.toString();
-        }
-
-        @Override
-        public LatLng getPosition() {
-            return null;
         }
     }
 
