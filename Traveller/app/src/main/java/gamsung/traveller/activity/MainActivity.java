@@ -6,9 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -17,11 +14,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +26,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +41,7 @@ import gamsung.traveller.util.DebugToast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImageView _imageView;
 
     private RecyclerView _recyclerView;
     private RecyclerViewAdapter _recyclerAdapter;
@@ -74,11 +68,18 @@ public class MainActivity extends AppCompatActivity {
         temp = images.get(1);
 
 
-        this.setRecyclerView();
-        this.setRegisterEvent();
-        this.tryPermCheck();
+        this.tryPermCheck();        //권한체크
+        this.setRecyclerView();     //여행기록화면 세팅
+        this.setImageView();        //빈화면 세팅
+        this.endOperation();        //모든 세팅 완료후 동작 함수 실행
+        this.setRegisterEvent();    //버튼 이벤트 등록
     }
 
+
+
+    /*
+     * initiazlie
+     */
     private void setRecyclerView(){
 
         _recyclerAdapter = new RecyclerViewAdapter(this, _routeList);
@@ -88,23 +89,24 @@ public class MainActivity extends AppCompatActivity {
         _recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
 
+    private void setImageView(){
+
+        _imageView = (ImageView) findViewById(R.id.image_main_temp);
+        _imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
     private void setRegisterEvent(){
 
         Button btnSample = (Button)findViewById(R.id.btn_sample);
         btnSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //temp code
-                int idx = _recyclerAdapter.getItemCount() + 1;
-
-                Route route = new Route();
-                route.setTitle(String.valueOf(idx));
-                route.setPicturPath(temp);
-
-                _recyclerAdapter.addItem(route);
-
-                DebugToast.show(MainActivity.this, "add");
+                addRouteItem();
             }
         });
 
@@ -160,6 +162,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+    /*
+     * UI Operation
+     */
+    private void addRouteItem(){
+
+        //temp code
+        int idx = _recyclerAdapter.getItemCount() + 1;
+
+        Route route = new Route();
+        route.setTitle(String.valueOf(idx));
+        route.setPicturPath(temp);
+
+        _recyclerAdapter.addItem(route);
+
+        this.endOperation();
+
+        DebugToast.show(MainActivity.this, "add : " + idx);
+    }
+
+    private void removeRouteItem(int position){
+
+        _recyclerAdapter.removeItem(position);
+
+        this.endOperation();
+    }
+
+    private void updateRouteItem(int position, Route route){
+
+        Route routeItem = _recyclerAdapter.getItem(position);
+        //
+        //
+
+        _recyclerAdapter.updateItem();
+    }
+
+    private void endOperation(){
+
+        if(_recyclerAdapter.getItemCount() > 0) {
+            _imageView.setVisibility(View.INVISIBLE);
+        }
+        else{
+            _imageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+
+
     //temp func
     private ArrayList<String> getPathOfAllImages()
     {
@@ -188,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+//View Holder Adaper
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RouteViewHolder> {
 
     private Context _context;
@@ -207,9 +259,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     @Override
     public RouteViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_main_route, viewGroup, false);
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_main_route_item, viewGroup, false);
 
-        return new RouteViewHolder(itemView);
+        return new RouteViewHolder(_context, itemView);
     }
 
     @Override
@@ -218,11 +270,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         Route item = _items.get(position);
         viewHolder.textView.setText(item.getTitle());
 
-        if (!TextUtils.isEmpty(item.getPicturPath())) {
+        if (!TextUtils.isEmpty(item.getPicturePath())) {
 
-            Glide.with(_context).load(item.getPicturPath()).into(viewHolder.imageView);
+            Glide.with(_context).load(item.getPicturePath()).into(viewHolder.imageView);
         }
-        viewHolder.itemView.setTag(item);
     }
 
     @Override
@@ -251,14 +302,19 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     }
 
 
+    //View Holder
     public static class RouteViewHolder extends RecyclerView.ViewHolder {
+
+        private Context _context;
 
         public ImageView imageView;
         public TextView textView;
         public Button btn;
 
-        public RouteViewHolder(View itemView) {
+        public RouteViewHolder(Context context, View itemView) {
             super(itemView);
+
+            _context = context;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_history);
             textView = (TextView) itemView.findViewById(R.id.tv_history);
@@ -267,15 +323,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
+                    DebugToast.show(_context, "image clicked");
                 }
             });
 
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    DebugToast.show(_context, "button clicked");
                 }
             });
         }

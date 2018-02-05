@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.squareup.timessquare.CalendarPickerView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,9 +45,15 @@ public class CalendarFragment extends Fragment {
             public void onDateSelected(Date date) {
                 //for(Date da: calendar.getSelectedDates()){
                 //  Log.d("잘나오냐", da.toString());
-                int month = date.getMonth()+1;
-                int day = date.getDay(); //얘 어떻게 해결할지 고민좀!!!!!
-                int year = date.getYear()+1900;
+
+                //이건 안될까?
+                String month = (String)android.text.format.DateFormat.format("MM", date);
+                String day = (String)android.text.format.DateFormat.format("dd", date);
+                String year = (String)android.text.format.DateFormat.format("yyyy", date);
+
+//                int month = date.getMonth()+1;
+//                int day = date.getDay(); //얘 어떻게 해결할지 고민좀!!!!!
+//                int year = date.getYear()+1900;
                 Toast.makeText(getContext(), year+"년"+month+"월"+day+"일",Toast.LENGTH_SHORT).show();
             }
 

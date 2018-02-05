@@ -121,7 +121,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     @Override
                     public void onResult(PlaceBuffer places) {
                         if (places.getStatus().isSuccess()) {
-                            final Place iniplace = places.get(0);
+                            final Spot iniplace = places.get(0);
                             mMap.addMarker(new MarkerOptions().position(iniplace.getLatLng()));
                             tvname.setText(iniplace.getName());
                             final CharSequence thirdPartyAttributions = places.getAttributions();

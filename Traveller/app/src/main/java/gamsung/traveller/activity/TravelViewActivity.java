@@ -3,6 +3,7 @@ package gamsung.traveller.activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,10 +20,15 @@ import android.widget.ViewSwitcher;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.frag.ViewByPhotosFragment;
 import gamsung.traveller.frag.ViewByScheduleFragment;
+import gamsung.traveller.model.Spot;
 
 public class TravelViewActivity extends AppCompatActivity {
 
@@ -30,18 +36,40 @@ public class TravelViewActivity extends AppCompatActivity {
      * 준규가 다 만들어줄 9,13화면
      */
 
-    public Button btnAddLocation, btnHome;
-    ViewSwitcher viewSwitcher;
-    EditText editTitle;
-    TextView textTitle;
-    ViewByPhotosFragment viewByPhotosFragment;
-    ViewByScheduleFragment viewByScheduleFragment;
-    android.support.v4.app.Fragment selectedFrag;
+    private Button btnAddLocation, btnHome;
+    private ViewSwitcher viewSwitcher;
+    private EditText editTitle;
+    private TextView textTitle;
+    private ViewByPhotosFragment viewByPhotosFragment;
+    private ViewByScheduleFragment viewByScheduleFragment;
+    private android.support.v4.app.Fragment selectedFrag;
+
+
+    //temp code activity<->fragment
+    private List<Spot> tempSpotList;
+    private DataManager dataManager;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_view);
+
+        dataManager = DataManager.getInstance(this);
+
+        //*temp code
+        Spot spot = new Spot();
+        spot.setMission("gamsung misson");
+        Spot spot1 = new Spot();
+        spot1.setMission("jk gamsung misson");
+
+        tempSpotList = new ArrayList<>();
+        tempSpotList.add(spot);
+        tempSpotList.add(spot1);
+
+
 
         findViews();
         implementEvents();
@@ -60,6 +88,7 @@ public class TravelViewActivity extends AppCompatActivity {
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
     }
+
     private void implementEvents(){
         btnAddLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,5 +185,17 @@ public class TravelViewActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "floating clicked", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+
+    /*
+     * Activity <-> Fragment
+     */
+    public List<Spot> getSpotList(){
+        return tempSpotList;
+    }
+
+    public List<String> getImageListWithSpot(int spot_id){
+        return dataManager.getPhotoListWithSpot(spot_id);
     }
 }

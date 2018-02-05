@@ -14,7 +14,7 @@ import gamsung.traveller.dto.TableManager;
 public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "Traveller";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
 
     public SQLiteHelper(Context context) {
@@ -25,7 +25,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(TableManager.RouteTable.getCreateQuery());
-        db.execSQL(TableManager.PlaceTable.getCreateQuery());
+        db.execSQL(TableManager.SpotTable.getCreateQuery());
         db.execSQL(TableManager.SearchTable.getCreateQuery());
         db.execSQL(TableManager.PictureTable.getCreateQuery());
     }
@@ -34,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS " + TableManager.RouteTable.name);
-        db.execSQL("DROP TABLE IF EXISTS " + TableManager.PlaceTable.name);
+        db.execSQL("DROP TABLE IF EXISTS " + TableManager.SpotTable.name);
         db.execSQL("DROP TABLE IF EXISTS " + TableManager.SearchTable.name);
         db.execSQL("DROP TABLE IF EXISTS " + TableManager.PictureTable.name);
 

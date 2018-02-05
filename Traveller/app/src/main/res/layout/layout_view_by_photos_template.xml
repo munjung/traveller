@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout android:id="@+id/top_view_by_photos"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true">
+
+        <TextView android:id="@+id/txt_view_by_photos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@id/btn_view_by_photos"
+            android:gravity="center|left"
+            android:text="misson"/>
+
+        <Button android:id="@+id/btn_view_by_photos"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/top_view_by_photos">
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_by_photos"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/top_view_by_photos"
+        android:scrollbars="horizontal">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

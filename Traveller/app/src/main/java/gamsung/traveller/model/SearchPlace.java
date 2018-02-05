@@ -1,5 +1,8 @@
 package gamsung.traveller.model;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 import java.util.Date;
 
 /**
@@ -9,7 +12,7 @@ import java.util.Date;
  *       . 검색으로 저장된 정보의 좌표 및 지역명 정보를 place와 연결한다.
  */
 
-public class SearchPlace {
+public class SearchPlace implements ClusterItem {
     private int _id;
     private int place_unique_id;
     private String place_name;
@@ -138,4 +141,8 @@ public class SearchPlace {
         this.northeast_lon = northeast_lon;
     }
 
+    @Override
+    public LatLng getPosition() {
+        return null;
+    }
 }

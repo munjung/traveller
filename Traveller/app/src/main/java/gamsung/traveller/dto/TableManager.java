@@ -1,7 +1,6 @@
 package gamsung.traveller.dto;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -42,11 +41,11 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_title      + " TEXT ");
-            sb.append(column_area       + " TEXT ");
-            sb.append(column_from_date  + " DATETIME ");
-            sb.append(column_to_date    + " DATETIME ");
+            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_title      + " TEXT, ");
+            sb.append(column_area       + " TEXT, ");
+            sb.append(column_from_date  + " DATETIME, ");
+            sb.append(column_to_date    + " DATETIME, ");
             sb.append(column_picture_id + " INTEGER ");
 
             sb.append(")");
@@ -55,50 +54,50 @@ public class TableManager {
         }
     }
 
-    public static class PlaceTable {
+    public static class SpotTable {
 
-        public static final String name = "Place";
+        public static final String name = "Spot";
 
-        public static final String column_id =              "place_id";
+        public static final String column_id =              "spot_id";
         public static final String column_route_id =        "route_id";    //route table id
-        public static final String column_next_place_id =   "next_place_id";  /////////이전 place_id ?
+        public static final String column_next_spot_id =    "next_spot_id";  /////////이전 place_id ?
         public static final String column_picture_id =      "picture_id";   //대표 사진 id
         public static final String column_picture_list =    "picture_list"; //연결된 사진 리스트
         public static final String column_mission =         "mission";
         public static final String column_search_id =       "search_id";    //search table id
-        public static final String column_section_id =      "section_id";
+        public static final String column_category_id =     "category_id";
 
 
         public static final String[] columns = {
                 column_id,
                 column_route_id,
-                column_next_place_id,
+                column_next_spot_id,
                 column_picture_id,
                 column_picture_list,
                 column_mission,
                 column_search_id,
-                column_section_id
+                column_category_id
         };
 
         public static String getCreateQuery(){
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_next_place_id  + " INTEGER ");
-            sb.append(column_picture_id     + " INTEGER ");
-            sb.append(column_picture_list   + " TEXT ");
-            sb.append(column_mission        + " TEXT ");
-            sb.append(column_search_id      + " INTEGER ");
-            sb.append(column_section_id      + " INTEGER ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_route_id       + " INTEGER, ");
+            sb.append(column_next_spot_id   + " INTEGER, ");
+            sb.append(column_picture_id     + " INTEGER, ");
+            sb.append(column_picture_list   + " TEXT, ");
+            sb.append(column_mission        + " TEXT, ");
+            sb.append(column_search_id      + " INTEGER, ");
+            sb.append(column_category_id    + " INTEGER ");
             sb.append(")");
 
             return sb.toString();
         }
     }
 
-    public static class SearchTable implements ClusterItem {
+    public static class SearchTable {
 
         public static final String name = "Search";
 
@@ -156,23 +155,18 @@ public class TableManager {
 
             return sb.toString();
         }
-
-        @Override
-        public LatLng getPosition() {
-            return null;
-        }
     }
 
     public static class PictureTable {
 
         public static  final String name = "Picture";
 
-        public static final String column_id = "picture_id";
-        public static final String column_route_id = "route_id";
-        public static final String column_place_id = "place_id";
-        public static final String column_search_id = "search_id";
-        public static final String column_tag = "tag";
-        public static final String column_date = "date";
+        public static final String column_id            = "picture_id";
+        public static final String column_route_id      = "route_id";
+        public static final String column_place_id      = "place_id";
+        public static final String column_search_id     = "search_id";
+        public static final String column_tag           = "tag";
+        public static final String column_date          = "date";
         public static  final String[] columns = {
                 column_id,
                 column_route_id,
@@ -187,11 +181,11 @@ public class TableManager {
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT ");
-            sb.append(column_route_id       + " INTEGER ");
-            sb.append(column_place_id       + " INTEGER ");
-            sb.append(column_search_id      + " INTEGER ");
-            sb.append(column_tag            + " TEXT ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_route_id       + " INTEGER, ");
+            sb.append(column_place_id       + " INTEGER, ");
+            sb.append(column_search_id      + " INTEGER, ");
+            sb.append(column_tag            + " TEXT, ");
             sb.append(column_date           + " DATETIME ");
             sb.append(")");
 

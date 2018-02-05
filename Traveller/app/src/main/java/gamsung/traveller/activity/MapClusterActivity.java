@@ -17,12 +17,15 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import gamsung.traveller.R;
 import gamsung.traveller.dto.TableManager;
+import gamsung.traveller.model.SearchPlace;
 
-public class MapClusterActivity extends FragmentActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<TableManager.SearchTable>, ClusterManager.OnClusterInfoWindowClickListener<TableManager.SearchTable>, ClusterManager.OnClusterItemClickListener<TableManager.SearchTable>, ClusterManager.OnClusterItemInfoWindowClickListener<TableManager.SearchTable>{
+public class MapClusterActivity extends FragmentActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<SearchPlace>, ClusterManager.OnClusterInfoWindowClickListener<SearchPlace>, ClusterManager.OnClusterItemClickListener<SearchPlace>, ClusterManager.OnClusterItemInfoWindowClickListener<SearchPlace>{
 
     GoogleMap cmMap;
-    private ClusterManager<TableManager.SearchTable> cmClusterManager;
-    private class PlaceRenderer extends DefaultClusterRenderer<TableManager.SearchTable>{
+    private ClusterManager<SearchPlace> cmClusterManager;
+
+
+    private class PlaceRenderer extends DefaultClusterRenderer<SearchPlace>{
 
         public PlaceRenderer() {
             super(getApplicationContext(), cmMap, cmClusterManager);
@@ -49,22 +52,23 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     @Override
-    public boolean onClusterClick(Cluster<TableManager.SearchTable> cluster) {
+    public boolean onClusterClick(Cluster<SearchPlace> cluster) {
         return false;
     }
 
     @Override
-    public void onClusterInfoWindowClick(Cluster<TableManager.SearchTable> cluster) {
+    public void onClusterInfoWindowClick(Cluster<SearchPlace> cluster) {
 
     }
 
+
     @Override
-    public boolean onClusterItemClick(TableManager.SearchTable searchTable) {
+    public boolean onClusterItemClick(SearchPlace searchPlace) {
         return false;
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(TableManager.SearchTable searchTable) {
+    public void onClusterItemInfoWindowClick(SearchPlace searchPlace) {
 
     }
 }
