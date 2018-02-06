@@ -94,6 +94,5 @@
         android:layout_height="70dp"
         android:layout_gravity="bottom|right|end"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/icn_btn_take_photos" />
+        android:layout_marginBottom="15dp" />
 </android.support.design.widget.CoordinatorLayout>
