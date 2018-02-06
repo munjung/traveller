@@ -50,7 +50,6 @@ public class TravelViewActivity extends AppCompatActivity {
     private DataManager dataManager;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,8 +67,6 @@ public class TravelViewActivity extends AppCompatActivity {
         tempSpotList = new ArrayList<>();
         tempSpotList.add(spot);
         tempSpotList.add(spot1);
-
-
 
         findViews();
         implementEvents();
@@ -182,7 +179,8 @@ public class TravelViewActivity extends AppCompatActivity {
         fabTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "floating clicked", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(TravelViewActivity.this, CameraActivity.class);
+                startActivity(i);
             }
         });
     }

@@ -59,7 +59,7 @@ public class ScheduleService {
         this.longClickedCircle = this.longClickedListener;
         this.dragListener = this.scheduleDragListener;
         unique_ID = 0;
-        BORDER_WIDTH = 5;
+        BORDER_WIDTH = 3;
         IMAGE_SIZE = 80;
         FIRST_CIRCLE_BIGGER = 40;
     }
@@ -109,6 +109,7 @@ public class ScheduleService {
             textTitle.setText("View ID: " + view.getTag().toString());
             textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + " Circle y: " + getRelativeTop(circleImageView, layoutBase));
             circleImageView.setImageResource(R.color.colorPrimaryDark);
+            //circleImageView.setImageResource(R.drawable.cheeze);
             circleImageView.setBorderWidth(this.BORDER_WIDTH);
             circleImageView.setOnLongClickListener(longClickedCircle);
             if (clickEdit != null)
@@ -239,8 +240,7 @@ public class ScheduleService {
         //move idxA to idxB; idxA + 1 ~ idxB layouts move one layout up
         //given unique IDs of the views
         if (idxA == idxB) return; //같을경우 리턴
-        idxA = toListIdx(idxA);
-        idxB = toListIdx(idxB);
+
         ListSchedule lsTemp = new ListSchedule(listSchedule.get(idxA).view, listSchedule.get(idxA).view_ID);
 
         layoutBase.removeView(listSchedule.get(idxA).view);

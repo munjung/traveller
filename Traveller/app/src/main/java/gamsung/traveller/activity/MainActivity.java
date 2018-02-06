@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         _dataManager = DataManager.getInstance(this);
         _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
 
-
         //temp code
         List<String> images = getPathOfAllImages();
         temp = images.get(1);
