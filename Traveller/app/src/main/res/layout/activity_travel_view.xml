@@ -89,8 +89,11 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabTakePic"
         app:fabSize="normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:backgroundTint="#79abff"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="bottom|right|end"
-        android:layout_margin="16dp"/>
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/icn_btn_take_photos" />
 </android.support.design.widget.CoordinatorLayout>
