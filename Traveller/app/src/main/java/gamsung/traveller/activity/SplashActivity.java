@@ -8,7 +8,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import gamsung.traveller.R;
 
@@ -24,8 +26,11 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.splashLinear);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.splashRelative);
         layout.setBackgroundDrawable(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.bg)));
+
+        Drawable alpha = ((ImageView)findViewById(R.id.circle)).getDrawable();
+        alpha.setAlpha(99);
 
         Handler handler = new Handler();
         handler.postDelayed(new SplashHandler(), 1000);
@@ -43,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        recycleView(findViewById(R.id.splashLinear));
+        recycleView(findViewById(R.id.splashRelative));
         System.gc();
     }
 
