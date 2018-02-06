@@ -1,34 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    card_view:cardCornerRadius="10dp"
+    android:layout_margin="10dp">
 
-    <ImageView android:id="@+id/img_history"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"/>
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView android:id="@+id/image_route_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"/>
+            
+            <Button android:id="@+id/btn_delete_route_item"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="x"/>
+        </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
-        <TextView android:id="@+id/tv_history"
+        <TextView android:id="@+id/txt_route_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@id/btn_history"
+            android:layout_toLeftOf="@id/btn_edit_route_item"
+            android:textColor="#212121"
+            android:textSize="13sp"
             android:text="gamsung"
             android:gravity="left|center"/>
 
-        <Button android:id="@+id/btn_history"
+        <Button android:id="@+id/btn_edit_route_item"
             android:layout_width="40dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:text="="/>
 
     </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

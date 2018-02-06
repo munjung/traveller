@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -83,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
         _recyclerAdapter = new RecyclerViewAdapter(this, _routeList);
 
-        _recyclerView = (RecyclerView)findViewById(R.id.recycler_history);
+        _recyclerView = (RecyclerView)findViewById(R.id.recycler_main_content);
         _recyclerView.setAdapter(_recyclerAdapter);
         _recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
 
     private void setImageView(){
 
-        _imageView = (ImageView) findViewById(R.id.image_main_temp);
+        _imageView = (ImageView) findViewById(R.id.image_empty_main);
         _imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRegisterEvent(){
 
-        Button btnSample = (Button)findViewById(R.id.btn_sample);
-        btnSample.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fbtnAddItem = (FloatingActionButton)findViewById(R.id.fbtn_add_main);
+        fbtnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addRouteItem();
@@ -308,16 +309,18 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         public ImageView imageView;
         public TextView textView;
-        public Button btn;
+        private Button btnEdit;
+        private Button btnDelete;
 
         public RouteViewHolder(Context context, View itemView) {
             super(itemView);
 
             _context = context;
 
-            imageView = (ImageView) itemView.findViewById(R.id.img_history);
-            textView = (TextView) itemView.findViewById(R.id.tv_history);
-            btn = (Button) itemView.findViewById(R.id.btn_history);
+            imageView = (ImageView) itemView.findViewById(R.id.image_route_item);
+            textView = (TextView) itemView.findViewById(R.id.txt_route_item);
+            btnEdit = (Button) itemView.findViewById(R.id.btn_edit_route_item);
+            btnDelete = (Button) itemView.findViewById(R.id.btn_delete_route_item);
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -326,7 +329,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                 }
             });
 
-            btn.setOnClickListener(new View.OnClickListener() {
+            btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DebugToast.show(_context, "button clicked");
+                }
+            });
+
+            btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     DebugToast.show(_context, "button clicked");

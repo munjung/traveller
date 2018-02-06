@@ -1,51 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="gamsung.traveller.activity.MainActivity">
 
-    <LinearLayout android:id="@+id/layout_main_top"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true">
+        android:layout_height="match_parent">
 
-        <Button android:id="@+id/btn_sample"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:text="?"/>
+        <!--top view-->
+        <RelativeLayout android:id="@+id/layout_top_main"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:gravity="left|center"
-            android:text=" title?"/>
+            <!--search bar-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/btnAddTravel">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textSize="8dp"
-            android:id="@+id/btnAddTravel"
-            android:text="추가(네신중평님이 예쁘게 옮겨줄 예정)"/>
+                <!--search button-->
+                <Button android:id="@+id/btn_search_main"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"/>
 
-    </LinearLayout>
+                <!--search text-->
+                <EditText android:id="@+id/txt_search_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/btn_search_main"
+                    android:maxLines="1"
+                    android:hint="어떤 여행기를 찾으세요?"
+                    android:textSize="15sp"
+                    android:textColor="#212121"/>
+            </RelativeLayout>
 
-    <ImageView android:id="@+id/image_main_temp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/layout_main_top"/>
+            <Button
+                android:id="@+id/btnAddTravel"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_history"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_below="@id/layout_main_top">
-    </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
 
-</RelativeLayout>
+        <!--empty image-->
+        <ImageView android:id="@+id/image_empty_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/layout_top_main"/>
+
+        <!--item view-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:layout_below="@id/layout_top_main">
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+    <!--add new item button-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fbtn_add_main"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right|end"
+        android:layout_margin="16dp"/>
+
+</android.support.design.widget.CoordinatorLayout>
