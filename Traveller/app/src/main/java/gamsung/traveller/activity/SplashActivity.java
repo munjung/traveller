@@ -1,12 +1,14 @@
 package gamsung.traveller.activity;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import gamsung.traveller.R;
 
@@ -22,6 +24,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        LinearLayout layout = (LinearLayout) findViewById(R.id.splashLinear);
+        layout.setBackgroundDrawable(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.bg)));
+
         Handler handler = new Handler();
         handler.postDelayed(new SplashHandler(), 1000);
     }
@@ -29,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private class SplashHandler implements Runnable {
         public void run() {
-            Intent i = new Intent(SplashActivity.this, TravelViewActivity.class);
+            Intent i = new Intent(SplashActivity.this,TravelViewActivity.class);
             startActivity(i);
             SplashActivity.this.finish();
         }

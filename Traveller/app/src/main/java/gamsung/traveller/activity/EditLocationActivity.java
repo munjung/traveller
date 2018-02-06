@@ -12,6 +12,7 @@ import android.widget.ToggleButton;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomPagerAdapter;
+import gamsung.traveller.dao.DataManager;
 
 /**
  * Created by mj on 2018-01-24.
@@ -24,6 +25,8 @@ public class EditLocationActivity extends AppCompatActivity {
     EditText memoEdit,editLocation;
     ImageView memoImage;
     ViewPager pager;
+
+    private DataManager _dataManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class EditLocationActivity extends AppCompatActivity {
 
         CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater());
         pager.setAdapter(adapter);
+
+        _dataManager = DataManager.getInstance(this);
 
     }
 
