@@ -1,12 +1,15 @@
 package gamsung.traveller.adapter;
 
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import gamsung.traveller.R;
+import gamsung.traveller.activity.CustomGalleryActivity;
 
 /**
  * Created by Jiwon on 2018-01-30.
@@ -15,7 +18,6 @@ import gamsung.traveller.R;
 public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
 
     LayoutInflater inflater;
-
     public CustomPagerAdapter(LayoutInflater inflater) {
 
         // TODO Auto-generated constructor stub
@@ -56,7 +58,6 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
         //만들어진 View안에 있는 ImageView 객체 참조
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야 하는 것에 주의.
         ImageView img= (ImageView)view.findViewById(R.id.img_viewpager_childimage);
-
         //ImageView에 현재 position 번째에 해당하는 이미지를 보여주기 위한 작업
         //현재 position에 해당하는 이미지를 setting
 //        img.setImageResource(R.drawable.gametitle_01+position);
