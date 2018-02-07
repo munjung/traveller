@@ -59,14 +59,6 @@ public class Photograph {
         this.path = path;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public Date getDate() {
         return date;
     }

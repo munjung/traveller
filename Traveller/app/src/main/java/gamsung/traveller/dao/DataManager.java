@@ -67,8 +67,8 @@ public class DataManager {
         //delete photo table > 삭제하지 않는 것이 좋음, 사진에 연결된 장소 정보를 잃어버림
     }
 
-    public void insertRoute(Route route){
-        m_routeManager.insertRoute(m_sqlHelper, route);
+    public long insertRoute(Route route){
+        return m_routeManager.insertRoute(m_sqlHelper, route);
     }
 
     public void updateRoute(Route route){
