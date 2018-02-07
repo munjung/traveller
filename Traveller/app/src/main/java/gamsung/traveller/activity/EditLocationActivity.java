@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import gamsung.traveller.R;
@@ -21,8 +23,9 @@ import gamsung.traveller.dao.DataManager;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    ToggleButton eatBtn, doBtn, takeBtn, someBtn;
-    EditText memoEdit,editLocation;
+    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn;
+    EditText memoEdit,tvMission;
+    TextView editLocation;
     ImageView memoImage;
     ViewPager pager;
 
@@ -35,21 +38,76 @@ public class EditLocationActivity extends AppCompatActivity {
 
         pager= (ViewPager)findViewById(R.id.pager);
 
-        eatBtn= (ToggleButton)findViewById(R.id.eatToggleBtn);
-        doBtn = (ToggleButton)findViewById(R.id.doToggleBtn);
-        takeBtn = (ToggleButton)findViewById(R.id.takeToggleBtn);
-        someBtn = (ToggleButton)findViewById(R.id.somethingToggleBtn);
+        eatBtn= (ImageButton)findViewById(R.id.eatBtn);
+        buyBtn = (ImageButton)findViewById(R.id.buyBtn);
+        takeBtn = (ImageButton)findViewById(R.id.takeBtn);
+        visitBtn = (ImageButton)findViewById(R.id.visitBtn);
+        anythingBtn = (ImageButton)findViewById(R.id.anythingBtn);
         memoEdit = (EditText)findViewById(R.id.memoEdit);
 //     memoImage = (ImageView)findViewById(R.id.memoImage);
-        editLocation = (EditText)findViewById(R.id.editLocation);
+        editLocation = (TextView)findViewById(R.id.editLocation);
+        tvMission = (EditText)findViewById(R.id.tvMission);
 
-        eatBtn.setOnCheckedChangeListener(addMemoListener);
-        doBtn.setOnCheckedChangeListener(addMemoListener);
-        takeBtn.setOnCheckedChangeListener(addMemoListener);
-        someBtn.setOnCheckedChangeListener(addMemoListener);
+        eatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eatBtn.setVisibility(View.VISIBLE);
+                buyBtn.setVisibility(View.GONE);
+                takeBtn.setVisibility(View.GONE);
+                visitBtn.setVisibility(View.GONE);
+                anythingBtn.setVisibility(View.GONE);
+            }
+        });
+
+        buyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eatBtn.setVisibility(View.GONE);
+                buyBtn.setVisibility(View.VISIBLE);
+                takeBtn.setVisibility(View.GONE);
+                visitBtn.setVisibility(View.GONE);
+                anythingBtn.setVisibility(View.GONE);
+            }
+        });
+
+        takeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eatBtn.setVisibility(View.GONE);
+                buyBtn.setVisibility(View.GONE);
+                takeBtn.setVisibility(View.VISIBLE);
+                visitBtn.setVisibility(View.GONE);
+                anythingBtn.setVisibility(View.GONE);
+            }
+        });
+
+        visitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eatBtn.setVisibility(View.GONE);
+                buyBtn.setVisibility(View.GONE);
+                takeBtn.setVisibility(View.GONE);
+                visitBtn.setVisibility(View.VISIBLE);
+                anythingBtn.setVisibility(View.GONE);
+            }
+        });
+
+        anythingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eatBtn.setVisibility(View.GONE);
+                buyBtn.setVisibility(View.GONE);
+                takeBtn.setVisibility(View.GONE);
+                visitBtn.setVisibility(View.GONE);
+                anythingBtn.setVisibility(View.VISIBLE);
+            }
+        });
 
         CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater());
         pager.setAdapter(adapter);
+
+        memoEdit.clearFocus();
+        tvMission.clearFocus();
 
         _dataManager = DataManager.getInstance(this);
 
@@ -62,11 +120,13 @@ public class EditLocationActivity extends AppCompatActivity {
         //memoImage.setVisibility(View.VISIBLE);
     }
 
+    /*
+
     ToggleButton.OnCheckedChangeListener addMemoListener  = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             if(compoundButton.isChecked()){
-                switch (compoundButton.getId()){
+                switch (compoundButton.getId()) {
                     case R.id.eatToggleBtn:
                         doBtn.setChecked(false);
                         takeBtn.setChecked(false);
@@ -98,4 +158,5 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         }
     };
+    */
 }
