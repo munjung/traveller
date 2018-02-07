@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center_horizontal"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/barLayout"
+        android:focusable="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
@@ -39,6 +45,7 @@
                         android:text="나의 여행기록"
                         android:textSize="15sp"
                         android:gravity="center"
+                        android:textColor="#5d5d5d"
                         android:layout_centerInParent="true"
                         android:layout_toLeftOf="@id/btnSave"
                         android:layout_toRightOf="@id/btnHome"/>
@@ -58,102 +65,317 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <EditText
-        android:id="@+id/tvMission"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/pager"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp"
-        android:textColor="#5d5d5d"
-        android:textSize="15sp" />
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layoutLocation"
-        android:layout_above="@+id/layoutToggle">
+        android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/mapButton"
-            android:text="지도"/>
-
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editLocation"
-            android:text="여행 위치/좌표"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/layoutToggle"
-        android:layout_above="@+id/memoEdit">
-
-        <ToggleButton
-            android:id="@+id/doToggleBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layoutLocation"
-            android:layout_toEndOf="@+id/memoEdit"
-            android:layout_toRightOf="@+id/memoEdit"
-            android:textOff="하기"
-            android:textOn="하기" />
-
-        <ToggleButton
-            android:id="@+id/eatToggleBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOff="먹기"
-            android:textOn="먹기" />
-
-        <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/takeToggleBtn"
-        android:textOn="찍기"
-        android:textOff="찍기"/>
-
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/somethingToggleBtn"
-            android:textOn="뭐하지"
-            android:textOff="뭐하지"/>
-
-    </LinearLayout>
-
-        <EditText
-            android:id="@+id/memoEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_above="@id/btnNextPlan"/>
-
-        <Button
-            android:id="@+id/btnNextPlan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="다음 일정 등록" />
+            android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
 
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:layout_below="@+id/barLayout"
-        android:layout_toEndOf="@+id/memoEdit"
-        android:layout_toRightOf="@+id/memoEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:visibility="visible">
 
     </android.support.v4.view.ViewPager>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+    <EditText
+        android:id="@+id/tvMission"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#5d5d5d"
+        android:gravity="center"
+        android:singleLine="true"
+        android:hint="할일 입력"
+        android:background="@null"
+        android:layout_above="@id/layoutLocation"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_btn_adress_map"
+        android:gravity="center_vertical"
+        android:id="@+id/layoutLocation"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_above="@+id/layoutToggle">
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/mapButton"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/icn_marker_map"
+            android:text="지도"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editLocation"
+            android:textSize="12sp"
+            android:background="@android:color/transparent"
+            android:hint="여행 위치/좌표"/>
+
+    </LinearLayout>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:text="To do list"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="20dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="#79abff"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#79abff"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layoutToggle"
+        android:gravity="center"
+        android:layout_above="@+id/memoEdit">
+        
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:paddingBottom="5dp">
+
+        <ImageButton
+            android:id="@+id/eatBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/icn_btn_eat"
+            android:layout_below="@+id/layoutLocation"
+            android:layout_toEndOf="@+id/memoEdit"
+            android:layout_toRightOf="@+id/memoEdit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#79abff"
+                android:text="eat"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:paddingBottom="5dp">
+
+            <ImageButton
+                android:id="@+id/buyBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/icn_btn_buy"
+                android:layout_below="@+id/layoutLocation"
+                android:layout_toEndOf="@+id/memoEdit"
+                android:layout_toRightOf="@+id/memoEdit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#79abff"
+                android:text="buy"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:paddingBottom="5dp">
+
+            <ImageButton
+                android:id="@+id/takeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/icn_btn_take_photos"
+                android:layout_below="@+id/layoutLocation"
+                android:layout_toEndOf="@+id/memoEdit"
+                android:layout_toRightOf="@+id/memoEdit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#79abff"
+                android:text="photo"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:paddingBottom="5dp">
+
+            <ImageButton
+                android:id="@+id/visitBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/icn_btn_visit"
+                android:layout_below="@+id/layoutLocation"
+                android:layout_toEndOf="@+id/memoEdit"
+                android:layout_toRightOf="@+id/memoEdit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#79abff"
+                android:text="visit"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:paddingBottom="5dp">
+
+            <ImageButton
+                android:id="@+id/anythingBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/icn_btn_anything"
+                android:layout_below="@+id/layoutLocation"
+                android:layout_toEndOf="@+id/memoEdit"
+                android:layout_toRightOf="@+id/memoEdit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#79abff"
+                android:text="anything"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#79abff"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="35dp"
+                android:paddingRight="35dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/eat"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icn_eat_on_list"
+                    android:layout_centerVertical="true"/>
+                
+                <EditText
+                    android:id="@+id/memoEdit"
+                    android:layout_toRightOf="@+id/eat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5d5d5d"
+                    android:paddingLeft="15dp"
+                    android:textSize="14sp"
+                    android:background="@null"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/buy"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icn_buy_on_list"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/photo"
+                    android:visibility="gone"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icn_take_photos_on_list"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/visit"
+                    android:visibility="gone"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icn_visit_on_list"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/anything"
+                    android:visibility="gone"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icn_anything_on_list"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
