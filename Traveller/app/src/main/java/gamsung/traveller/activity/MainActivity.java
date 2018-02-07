@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
 
         //temp code
-        List<String> images = getPathOfAllImages();
-        temp = images.get(1);
+//        List<String> images = getPathOfAllImages();
+//        temp = images.get(1);
 
 
         this.tryPermCheck();        //권한체크
@@ -174,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
 
         Route route = new Route();
         route.setTitle(String.valueOf(idx));
-        route.setPicturPath(temp);
+        if(temp != null)
+            route.setPicturPath(temp);
 
         _recyclerAdapter.addItem(route);
 
