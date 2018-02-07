@@ -65,6 +65,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
     <android.support.v4.view.ViewPager
 
         android:id="@+id/pager"
@@ -72,14 +81,9 @@
         android:layout_height="240dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/barLayout"
         android:visibility="visible">
 
     </android.support.v4.view.ViewPager>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -328,6 +332,9 @@
                     android:layout_toRightOf="@+id/eat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="#5d5d5d"
+                    android:paddingLeft="15dp"
+                    android:textSize="14sp"
                     android:background="@null"
                     android:layout_centerVertical="true"/>
 
@@ -364,6 +371,8 @@
                     android:layout_centerVertical="true"/>
 
             </RelativeLayout>
+
+        </LinearLayout>
 
         </LinearLayout>
 

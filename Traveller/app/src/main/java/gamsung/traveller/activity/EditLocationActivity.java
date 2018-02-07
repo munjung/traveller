@@ -26,7 +26,7 @@ public class EditLocationActivity extends AppCompatActivity {
     ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn;
     EditText memoEdit,tvMission;
     TextView editLocation;
-    ImageView memoImage;
+    ImageView memoImage,eat,buy,take,visit,anything;
     ViewPager pager;
 
     private DataManager _dataManager;
@@ -48,58 +48,65 @@ public class EditLocationActivity extends AppCompatActivity {
         editLocation = (TextView)findViewById(R.id.editLocation);
         tvMission = (EditText)findViewById(R.id.tvMission);
 
+        eat = (ImageView) findViewById(R.id.eat);
+        buy = (ImageView)findViewById(R.id.buy);
+        take = (ImageView)findViewById(R.id.photo);
+        visit = (ImageView)findViewById(R.id.visit);
+        anything = (ImageView)findViewById(R.id.anything);
+
+
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eatBtn.setVisibility(View.VISIBLE);
-                buyBtn.setVisibility(View.GONE);
-                takeBtn.setVisibility(View.GONE);
-                visitBtn.setVisibility(View.GONE);
-                anythingBtn.setVisibility(View.GONE);
+                eat.setVisibility(View.VISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
             }
         });
 
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eatBtn.setVisibility(View.GONE);
-                buyBtn.setVisibility(View.VISIBLE);
-                takeBtn.setVisibility(View.GONE);
-                visitBtn.setVisibility(View.GONE);
-                anythingBtn.setVisibility(View.GONE);
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.VISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
             }
         });
 
         takeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eatBtn.setVisibility(View.GONE);
-                buyBtn.setVisibility(View.GONE);
-                takeBtn.setVisibility(View.VISIBLE);
-                visitBtn.setVisibility(View.GONE);
-                anythingBtn.setVisibility(View.GONE);
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.VISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
             }
         });
 
         visitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eatBtn.setVisibility(View.GONE);
-                buyBtn.setVisibility(View.GONE);
-                takeBtn.setVisibility(View.GONE);
-                visitBtn.setVisibility(View.VISIBLE);
-                anythingBtn.setVisibility(View.GONE);
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.VISIBLE);
+                anything.setVisibility(View.INVISIBLE);
             }
         });
 
         anythingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eatBtn.setVisibility(View.GONE);
-                buyBtn.setVisibility(View.GONE);
-                takeBtn.setVisibility(View.GONE);
-                visitBtn.setVisibility(View.GONE);
-                anythingBtn.setVisibility(View.VISIBLE);
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
             }
         });
 
