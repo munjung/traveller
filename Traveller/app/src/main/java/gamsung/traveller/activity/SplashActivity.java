@@ -29,9 +29,6 @@ public class SplashActivity extends AppCompatActivity {
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.splashRelative);
         layout.setBackgroundDrawable(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.bg)));
 
-        Drawable alpha = ((ImageView)findViewById(R.id.circle)).getDrawable();
-        alpha.setAlpha(99);
-
         Handler handler = new Handler();
         handler.postDelayed(new SplashHandler(), 1000);
     }
