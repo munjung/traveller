@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     final int PERMISSION_CODE = 0;
 
-    private String temp;
+    private List<String> photoList;
+    private int temp_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
 
         //temp code
-//        List<String> images = getPathOfAllImages();
-//        temp = images.get(1);
+        photoList = getPathOfAllImages();
+
 
 
         this.tryPermCheck();        //권한체크
@@ -174,8 +175,11 @@ public class MainActivity extends AppCompatActivity {
 
         Route route = new Route();
         route.setTitle(String.valueOf(idx));
-        if(temp != null)
-            route.setPicturPath(temp);
+        if(photoList.size() > 0){
+
+            route.setPicturPath(photoList.get(temp_id++));
+        }
+
 
         _recyclerAdapter.addItem(route);
 
