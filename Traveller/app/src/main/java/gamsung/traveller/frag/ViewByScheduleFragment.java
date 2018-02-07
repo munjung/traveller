@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import gamsung.traveller.R;
 
@@ -19,7 +20,7 @@ import gamsung.traveller.R;
 public class ViewByScheduleFragment extends Fragment {
     ViewGroup rootView;
     NestedScrollView scrollView;
-    LinearLayout layoutBase; //layout where lists are being drawn on
+    RelativeLayout layoutBase; //layout where lists are being drawn on
     ScheduleServiceAnimated scheduleService;
     @Nullable
     @Override
@@ -60,6 +61,9 @@ public class ViewByScheduleFragment extends Fragment {
         @Override
         public void onClick(View view) {
             //동그라미 클릭시 일단 삭제 시험
+            /*
+
+
             View viewParent = (View)view.getParent();
             Toast.makeText(getContext(), "Clicked TagID: " + viewParent.getTag().toString() + " Idx: " +
                     scheduleService.toListIdx((int)viewParent.getTag()), Toast.LENGTH_SHORT).show();
@@ -67,6 +71,18 @@ public class ViewByScheduleFragment extends Fragment {
             scheduleService.listSchedule.remove(scheduleService.toListIdx((int)viewParent.getTag()));
             for (int i = 0; i < scheduleService.listSchedule.size() - 1; i++){
                 scheduleService.setVisbility(scheduleService.listSchedule.get(i).view, scheduleService.getLeftVisbility(i));
+            }
+            *//*
+            if (scheduleService.listSchedule.size() <= 2){
+                layoutBase.removeAllViews();
+                scheduleService.startSchedule(createNewSchedule, editSchedule);
+            }
+            else*/
+
+            if(!scheduleService.removeSchedule(((View)view.getParent()).getId())){ //if less than 2 remaining
+                layoutBase.removeAllViews();
+                scheduleService.listSchedule.clear();
+                scheduleService.drawFirstScreen_Coordinator(startScheduling);
             }
         }
     };
