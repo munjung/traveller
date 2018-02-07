@@ -1,5 +1,6 @@
 package gamsung.traveller.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
@@ -21,14 +22,16 @@ import gamsung.traveller.activity.CustomGalleryActivity;
 public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
 
     LayoutInflater inflater;
-    ImageButton addImgBtn;
+    public static ImageButton addImgBtn;
     Context context;
-    public CustomPagerAdapter(LayoutInflater inflater, Context context) {
+
+    public CustomPagerAdapter(LayoutInflater inflater) {
 
         // TODO Auto-generated constructor stub
         //전달 받은 LayoutInflater를 멤버변수로 전달
         this.inflater=inflater;
-        this.context = context;
+
+      //  this.context = context;
 
     }
 
@@ -51,7 +54,7 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
     //두번째 파라미터 : ViewPager가 보여줄 View의 위치(가장 처음부터 0,1,2,3...)
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(final ViewGroup container, int position) {
 
         // TODO Auto-generated method stub
 
@@ -65,11 +68,15 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야 하는 것에 주의.
         ImageView img= (ImageView)view.findViewById(R.id.img_viewpager_childimage);
         addImgBtn = (ImageButton)view.findViewById(R.id.addImgBtn);
+        //사진 추가 버튼 클릭시
+        context = container.getContext();
+        addImgBtn = (ImageButton)view.findViewById(R.id.addImgBtn);
         addImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //갤러리 이동
-                context.startActivity(new Intent(context, CustomGalleryActivity.class));
+                Intent intent = new Intent(context, CustomGalleryActivity.class);
+                ((Activity) context).startActivityForResult(intent, 1);
             }
         });
         //ImageView에 현재 position 번째에 해당하는 이미지를 보여주기 위한 작업
@@ -109,5 +116,8 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
         // TODO Auto-generated method stub
         return v==obj;
     }
+
+
+
 }
 

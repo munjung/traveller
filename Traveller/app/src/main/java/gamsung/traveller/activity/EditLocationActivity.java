@@ -13,11 +13,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomPagerAdapter;
 import gamsung.traveller.dao.DataManager;
+
 
 /**
  * Created by mj on 2018-01-24.
@@ -26,7 +28,7 @@ import gamsung.traveller.dao.DataManager;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn;
+    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, addImgBtn;
     EditText memoEdit,tvMission;
     TextView editLocation;
     ImageView memoImage,eat,buy,take,visit,anything;
@@ -113,7 +115,7 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
+        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater());
         pager.setAdapter(adapter);
 
         memoEdit.clearFocus();

@@ -72,7 +72,7 @@ public class ImageMultiplePickerActivity extends AppCompatActivity implements Vi
                     //Convert string array into List by splitting by ',' and substring after '[' and before ']'
                     List<String> selectedImages = Arrays.asList(imagesArray.substring(1, imagesArray.length() - 1).split(", "));
                     for(int i=0; i<selectedImages.size(); i++){
-                        Log.d(selectedImages.get(i),"선택된 사진 경로인가???");
+                        Log.d(selectedImages.get(i),"선택된 사진 경로");
                     }
                     loadGridView(new ArrayList<String>(selectedImages));//call load gridview method by passing converted list into arrayList
                 }
