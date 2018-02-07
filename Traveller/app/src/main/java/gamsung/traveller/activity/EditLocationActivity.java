@@ -109,7 +109,7 @@ public class EditLocationActivity extends AppCompatActivity {
                 buy.setVisibility(View.INVISIBLE);
                 take.setVisibility(View.INVISIBLE);
                 visit.setVisibility(View.INVISIBLE);
-                anything.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.VISIBLE);
             }
         });
 
