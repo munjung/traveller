@@ -13,60 +13,69 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="@color/colorPrimaryDark"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             android:elevation="1dp"
             android:id="@+id/toolTitle"
             app:contentInsetStart="0dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center">
 
-                <ImageButton
+                <Button
                     android:id="@+id/btnHome"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/btn_back"
-                    android:layout_alignParentLeft="true"
-                    android:backgroundTint="@android:color/transparent"
-                    android:layout_centerVertical="true"/>
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="&lt;"
+                    android:textSize="20sp"
+                    android:layout_weight="2"/>
 
                     <TextView
                         android:id="@+id/textTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="나의 여행기록"
-                        android:textSize="15sp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Trip_Name"
                         android:gravity="center"
-                        android:layout_centerInParent="true"
-                        android:layout_toLeftOf="@id/btnSave"
-                        android:layout_toRightOf="@id/btnHome"/>
+                        android:textSize="16dp"
+                        android:layout_weight="6"/>
 
-                <ImageButton
+                <Button
                     android:id="@+id/btnSave"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:backgroundTint="@android:color/transparent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/btn_check_save"/>
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="저장"
+                    android:layout_weight="2"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <EditText
-        android:id="@+id/tvMission"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/pager"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp"
-        android:textColor="#5d5d5d"
-        android:textSize="15sp" />
+    <android.support.v4.view.ViewPager
+
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/barLayout"
+        android:layout_above="@+id/tvMission"
+        android:visibility="visible">
+
+    </android.support.v4.view.ViewPager>
+
+        <EditText
+            android:id="@+id/tvMission"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_above="@+id/layoutLocation"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="일정명" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -143,17 +152,5 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:text="다음 일정 등록" />
-
-    <android.support.v4.view.ViewPager
-
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_below="@+id/barLayout"
-        android:layout_toEndOf="@+id/memoEdit"
-        android:layout_toRightOf="@+id/memoEdit"
-        android:visibility="visible">
-
-    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>
