@@ -1,12 +1,15 @@
 package gamsung.traveller.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.CustomGalleryActivity;
@@ -18,11 +21,14 @@ import gamsung.traveller.activity.CustomGalleryActivity;
 public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
 
     LayoutInflater inflater;
-    public CustomPagerAdapter(LayoutInflater inflater) {
+    ImageButton addImgBtn;
+    Context context;
+    public CustomPagerAdapter(LayoutInflater inflater, Context context) {
 
         // TODO Auto-generated constructor stub
         //전달 받은 LayoutInflater를 멤버변수로 전달
         this.inflater=inflater;
+        this.context = context;
 
     }
 
@@ -58,6 +64,14 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
         //만들어진 View안에 있는 ImageView 객체 참조
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야 하는 것에 주의.
         ImageView img= (ImageView)view.findViewById(R.id.img_viewpager_childimage);
+        addImgBtn = (ImageButton)view.findViewById(R.id.addImgBtn);
+        addImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //갤러리 이동
+                context.startActivity(new Intent(context, CustomGalleryActivity.class));
+            }
+        });
         //ImageView에 현재 position 번째에 해당하는 이미지를 보여주기 위한 작업
         //현재 position에 해당하는 이미지를 setting
 //        img.setImageResource(R.drawable.gametitle_01+position);

@@ -1,9 +1,12 @@
 package gamsung.traveller.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -37,7 +40,6 @@ public class EditLocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_location);
 
         pager= (ViewPager)findViewById(R.id.pager);
-
         eatBtn= (ImageButton)findViewById(R.id.eatBtn);
         buyBtn = (ImageButton)findViewById(R.id.buyBtn);
         takeBtn = (ImageButton)findViewById(R.id.takeBtn);
@@ -53,6 +55,7 @@ public class EditLocationActivity extends AppCompatActivity {
         take = (ImageView)findViewById(R.id.photo);
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
+
 
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +113,7 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater());
+        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
         pager.setAdapter(adapter);
 
         memoEdit.clearFocus();
