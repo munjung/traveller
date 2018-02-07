@@ -11,11 +11,11 @@
         android:fillViewport="true"
         android:layout_gravity="top">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/base_layout_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        </LinearLayout>
+        </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

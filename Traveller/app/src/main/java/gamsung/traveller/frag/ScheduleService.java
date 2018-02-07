@@ -1,9 +1,11 @@
 package gamsung.traveller.frag;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,13 +18,37 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
+
+class ViewIdGenerator {
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
+    @SuppressLint("NewApi")
+    public static int generateViewId() {
+
+        if (Build.VERSION.SDK_INT < 17) {
+            for (;;) {
+                final int result = sNextGeneratedId.get();
+                // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+                int newValue = result + 1;
+                if (newValue > 0x00FFFFFF)
+                    newValue = 1; // Roll over to 1, not 0.
+                if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                    return result;
+                }
+            }
+        } else {
+            return View.generateViewId();
+        }
+    }
+}
 
 public class ScheduleService {
     /**
@@ -43,13 +69,13 @@ public class ScheduleService {
     ViewGroup rootView;
     NestedScrollView scrollView;
     Context appContext;
-    LinearLayout layoutBase;
+    RelativeLayout layoutBase;
     View.OnLongClickListener longClickedCircle;
     View.OnDragListener dragListener;
     int layoutSingle;
 
     public ScheduleService(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
-                           LinearLayout layoutBase, Context appContext, boolean isDragDrop) {
+                           RelativeLayout layoutBase, Context appContext, boolean isDragDrop) {
         this.rootView = rootView;
         this.scrollView = scrollView;
         this.layoutSingle = layoutSingle;
@@ -58,7 +84,7 @@ public class ScheduleService {
         this.isDragDrop= isDragDrop;
         this.longClickedCircle = this.longClickedListener;
         this.dragListener = this.scheduleDragListener;
-        unique_ID = 0;
+        unique_ID = 1;
         BORDER_WIDTH = 3;
         IMAGE_SIZE = 80;
         FIRST_CIRCLE_BIGGER = 40;
@@ -81,10 +107,12 @@ public class ScheduleService {
         circleImageView.setBorderWidth(0);
         circleImageView.setOnClickListener(onClickListener);
 
-        layoutSchedule.setTag(unique_ID);
+        int viewID = ViewIdGenerator.generateViewId();
+        layoutSchedule.setTag(viewID);
+        layoutSchedule.setId(viewID); //불안쓰
 
         scrollView.smoothScrollBy(0, 30);
-
+        layoutSchedule.setBackgroundColor(Color.TRANSPARENT);
         return layoutSchedule;
     }
 
@@ -106,18 +134,19 @@ public class ScheduleService {
                 textContents = view.findViewById(R.id.contents_left);
                 circleImageView = view.findViewById(R.id.circleimageview_left);
             }
-            textTitle.setText("View ID: " + view.getTag().toString());
+            textTitle.setText("View ID: " + view.getId());
             textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + " Circle y: " + getRelativeTop(circleImageView, layoutBase));
             circleImageView.setImageResource(R.color.colorPrimaryDark);
-            //circleImageView.setImageResource(R.drawable.cheeze);
             circleImageView.setBorderWidth(this.BORDER_WIDTH);
             circleImageView.setOnLongClickListener(longClickedCircle);
             if (clickEdit != null)
                 circleImageView.setOnClickListener(clickEdit);
-
         }
+
         if (isDragDrop)
             view.setOnDragListener(this.dragListener);
+
+
         setVisbility(view, getLeftVisbility(idx));
     }
 
@@ -239,22 +268,47 @@ public class ScheduleService {
         //A 레이아웃을 B로 이동. A + 1 ~ B는 위로 한칸 이동
         //move idxA to idxB; idxA + 1 ~ idxB layouts move one layout up
         //given unique IDs of the views
+        //moveSchedule 수정 + 삭제 수정
         if (idxA == idxB) return; //같을경우 리턴
-
-        ListSchedule lsTemp = new ListSchedule(listSchedule.get(idxA).view, listSchedule.get(idxA).view_ID);
-
-        layoutBase.removeView(listSchedule.get(idxA).view);
-        layoutBase.addView(listSchedule.get(idxA).view, idxB);
-
-        listSchedule.remove(idxA);
-        listSchedule.add(idxB, lsTemp);
-        //refresh vis.
-        if (idxA > idxB){ //swap
-            int temp = idxA;
-            idxA = idxB;
-            idxB = temp;
+        int idxLow, idxHigh;
+        idxLow = idxA;
+        idxHigh = idxB;
+        if (idxLow > idxHigh){
+            idxLow = idxB;
+            idxHigh = idxA;
         }
-        for (int i = idxA; i <= idxB; i++)
+        RelativeLayout.LayoutParams layoutParams;
+
+        ListSchedule lsTempA = new ListSchedule(listSchedule.get(idxA).view, listSchedule.get(idxA).view.getId());
+        listSchedule.remove(idxA);
+        listSchedule.add(idxB, lsTempA);
+
+        if (idxLow == 0){
+            //when the very top is being removed, next layout is aligned to the parent top
+            //assumed that there are at least two list schedules present.
+            //in circumstances when only one schedule is present, first screen is drawn.
+            layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idxLow).view.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.BELOW, 0);
+            listSchedule.get(idxLow).view.setLayoutParams(layoutParams);
+        }else{
+            layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idxLow).view.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idxLow - 1).view.getId());
+            listSchedule.get(idxLow).view.setLayoutParams(layoutParams);
+        }
+
+        layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idxLow + 1).view.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idxLow).view.getId());
+        listSchedule.get(idxLow + 1).view.setLayoutParams(layoutParams);
+
+        layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idxHigh).view.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idxHigh - 1).view.getId());
+        listSchedule.get(idxHigh).view.setLayoutParams(layoutParams);
+        layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idxHigh + 1).view.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idxHigh).view.getId());
+        listSchedule.get(idxHigh + 1).view.setLayoutParams(layoutParams);
+
+        //refresh vis.
+        for (int i = idxLow; i <= idxHigh; i++)
             setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
 
     }
@@ -262,7 +316,7 @@ public class ScheduleService {
         //ID 값으로 어레이 리스트의 순서를 찾아 리턴
         int total = listSchedule.size() - 1;
         for (int i = 0; i < total; i++){
-            if (listSchedule.get(i).view_ID == unique_ID)
+            if (listSchedule.get(i).view.getId() == unique_ID)
                 return i;
         }
         return 0; //if failed
@@ -284,8 +338,19 @@ public class ScheduleService {
         scrollView.setLayoutParams(coordParms);
 
         for (int i = 0; i < 2; i++) {
-            listSchedule.add(new ListSchedule(createScheduleView(clickCreateNew), unique_ID++));
-            layoutBase.addView((View)listSchedule.get(i).view, listSchedule.size() - 1);
+            View createdView = createScheduleView(clickCreateNew);
+            listSchedule.add(new ListSchedule(createdView , createdView .getId()));
+
+            RelativeLayout.LayoutParams relParms = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            //RelativeLayout.LayoutParams relParms = (RelativeLayout.LayoutParams) listSchedule.get(i).view.getLayoutParams();
+            //if (i == 0)
+                //relParms.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+            //else
+            if (i != 0)
+                relParms.addRule(RelativeLayout.BELOW, (int)listSchedule.get(i - 1).view.getTag());
+
+            listSchedule.get(i).view.setLayoutParams(relParms);
+            layoutBase.addView((View)listSchedule.get(i).view);
         }
 
         setScheduleView(clickEdit, 0);
@@ -293,8 +358,19 @@ public class ScheduleService {
 
     public void createNewSchedule(@Nullable View.OnClickListener clickCreateNew, @Nullable View.OnClickListener clickEdit){
         //점선 동그라미에 내용을 넣고, 점선 동그라미를 하나 더 만듬
-        listSchedule.add(new ListSchedule(createScheduleView(clickCreateNew), unique_ID++));
+        RelativeLayout.LayoutParams layoutParams;
+        View createdView = createScheduleView(clickCreateNew);
+        listSchedule.add(new ListSchedule(createdView, createdView.getId()));
         layoutBase.addView(listSchedule.get(getLastIdx()).view, listSchedule.size() - 1);
+        if (listSchedule.size() > 1){
+            layoutParams = (RelativeLayout.LayoutParams)listSchedule.get(listSchedule.size() - 1).view.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(listSchedule.size() - 2).view.getId());
+            listSchedule.get(listSchedule.size() - 1).view.setLayoutParams(layoutParams);
+        }
+        else{ //return error
+
+        }
+
         setScheduleView(clickEdit, listSchedule.size() - 2);
         for (int i = 0; i < listSchedule.size() - 1; i++)
             setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
@@ -311,13 +387,14 @@ public class ScheduleService {
         emptyCircle.setBorderWidth(this.BORDER_WIDTH);
         emptyCircle.setBorderColor(Color.BLACK);
         emptyCircle.setImageResource(R.color.cardview_light_background);
-        LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams((int)toDp(this.IMAGE_SIZE) + this.FIRST_CIRCLE_BIGGER, (int)toDp(this.IMAGE_SIZE) + this.FIRST_CIRCLE_BIGGER);
-        linearParams.gravity = Gravity.CENTER;
-
+        RelativeLayout.LayoutParams linearParams = new RelativeLayout.LayoutParams((int)toDp(this.IMAGE_SIZE) + this.FIRST_CIRCLE_BIGGER, (int)toDp(this.IMAGE_SIZE) + this.FIRST_CIRCLE_BIGGER);
+        //linearParams.gravity = Gravity.CENTER;
+        linearParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+        emptyCircle.setId(ViewIdGenerator.generateViewId());
         emptyCircle.setLayoutParams(linearParams);
         layoutBase.addView(emptyCircle);
         //listSchedule.add((View)emptyCircle, unique_ID++); //add an emptycircle
-        listSchedule.add(new ListSchedule(emptyCircle, unique_ID));
+        listSchedule.add(new ListSchedule(emptyCircle, emptyCircle.getId()));
         emptyCircle.setOnClickListener(onClickListener);
 
         TextView textView = new TextView(appContext);
@@ -325,8 +402,13 @@ public class ScheduleService {
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(Color.BLACK);
-        layoutBase.addView(textView);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.BELOW, emptyCircle.getId());
+        textView.setLayoutParams(layoutParams);
+        layoutBase.addView(textView, layoutParams);
     }
+
     public int getRelativeLeft(View  view, View root){
         if (view.getParent() == root)
             return view.getLeft();
@@ -338,5 +420,29 @@ public class ScheduleService {
             return view.getTop();
         else
             return view.getTop() + getRelativeTop((View)view.getParent(), root);
+    }
+
+    public boolean removeSchedule(int view_id){
+        if (listSchedule.size() > 2){
+            int idx = toListIdx(view_id);
+            if (idx != 0) {
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idx + 1).view.getLayoutParams();
+                layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idx - 1).view.getId());
+                listSchedule.get(idx + 1).view.setLayoutParams(layoutParams);
+            }
+            layoutBase.removeView(listSchedule.get(idx).view);
+            listSchedule.remove(idx);
+
+            for (int i = 0; i < listSchedule.size() - 1; i++) //refresh views
+                setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
+            return true;
+        }
+        else{
+            return false;
+            //layoutBase.removeAllViews();
+            //drawFirstScreen_Coordinator(null);
+        }
+
+
     }
 }

@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -174,6 +175,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
             }
         });
+
 
         FloatingActionButton fabTakePic = findViewById(R.id.fabTakePic);
         fabTakePic.setOnClickListener(new View.OnClickListener() {
