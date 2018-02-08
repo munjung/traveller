@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,8 +68,14 @@ public class PhotographManager {
         return count;
     }
 
-    public List<Photograph> selectOnRoute(int routeID){
-        return null;
+
+
+    public List<String> getPhotoListWithSpot(int spot_id){
+        return new ArrayList<>();
+    }
+
+    public List<String> getPhotoListWithRoute(int route_id){
+        return new ArrayList<>();
     }
 
 

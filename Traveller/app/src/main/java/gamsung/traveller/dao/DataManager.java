@@ -60,8 +60,8 @@ public class DataManager {
         return m_routeManager.getRouteList(m_sqlHelper);
     }
 
-    public void deleteRoute(Integer id){
-        m_routeManager.deleteRoute(m_sqlHelper, id);
+    public boolean deleteRoute(Integer id){
+       return m_routeManager.deleteRoute(m_sqlHelper, id);
 
         //delete place table > DELETE FROM PLACE WHERE ROUTE_ID = id;
         //delete photo table > 삭제하지 않는 것이 좋음, 사진에 연결된 장소 정보를 잃어버림
@@ -71,8 +71,8 @@ public class DataManager {
         return m_routeManager.insertRoute(m_sqlHelper, route);
     }
 
-    public void updateRoute(Route route){
-        m_routeManager.updateRoute(m_sqlHelper, route);
+    public int updateRoute(Route route){
+        return m_routeManager.updateRoute(m_sqlHelper, route);
     }
 
 
@@ -82,36 +82,36 @@ public class DataManager {
         return m_spotManager.getSpotList(m_sqlHelper);
     }
 
-    public void deleteSpot(Integer id){
-        m_spotManager.deleteSpot(m_sqlHelper, id);
+    public boolean deleteSpot(Integer id){
+       return m_spotManager.deleteSpot(m_sqlHelper, id);
     }
 
-    public void insertSpot(Spot spot){
-        m_spotManager.insertSpot(m_sqlHelper, spot);
+    public long insertSpot(Spot spot){
+       return  m_spotManager.insertSpot(m_sqlHelper, spot);
     }
 
-    public void updateSpot(Spot spot){
-        m_spotManager.updateSpot(m_sqlHelper, spot);
+    public int updateSpot(Spot spot){
+        return m_spotManager.updateSpot(m_sqlHelper, spot);
     }
-
-
 
     //photograph data interface
+
+
 
     public HashMap<Integer, Photograph> getPhotoList(){
         return m_photoManager.getPhotoList(m_sqlHelper);
     }
 
-    public void deletePhoto(Integer id){
-        m_photoManager.deletePhoto(m_sqlHelper, id);
+    public boolean deletePhoto(Integer id){
+        return m_photoManager.deletePhoto(m_sqlHelper, id);
     }
 
-    public void insertPhoto(Photograph photo){
-        m_photoManager.insertPhoto(m_sqlHelper, photo);
+    public long insertPhoto(Photograph photo){
+        return m_photoManager.insertPhoto(m_sqlHelper, photo);
     }
 
-    public void updatePhoto(Photograph photo){
-        m_photoManager.updatePhoto(m_sqlHelper, photo);
+    public int updatePhoto(Photograph photo){
+       return m_photoManager.updatePhoto(m_sqlHelper, photo);
     }
 
     public List<String> getPhotoListWithSpot(int spot_id){
@@ -129,15 +129,15 @@ public class DataManager {
         return m_searchManager.getSearchPlaceList(m_sqlHelper);
     }
 
-    public void deleteSearchPlace(Integer id){
-        m_searchManager.deleteSearchPlace(m_sqlHelper, id);
+    public boolean deleteSearchPlace(Integer id){
+       return m_searchManager.deleteSearchPlace(m_sqlHelper, id);
     }
 
-    public void insertSearchPlace(SearchPlace searchPlace){
-        m_searchManager.insertSearchPlace(m_sqlHelper, searchPlace);
+    public long insertSearchPlace(SearchPlace searchPlace){
+        return m_searchManager.insertSearchPlace(m_sqlHelper, searchPlace);
     }
 
-    public void updatePhoto(SearchPlace searchPlace){
-        m_searchManager.updateSearchPlace(m_sqlHelper, searchPlace);
+    public int updatePhoto(SearchPlace searchPlace){
+       return m_searchManager.updateSearchPlace(m_sqlHelper, searchPlace);
     }
 }
