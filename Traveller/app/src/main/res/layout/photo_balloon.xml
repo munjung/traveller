@@ -19,6 +19,7 @@
         android:layout_height="26dp"
         android:layout_gravity="right"
         android:background="@drawable/round"
+        android:textColor="#FFFFFF"
         android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"

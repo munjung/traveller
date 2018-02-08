@@ -1,18 +1,12 @@
 package gamsung.traveller.activity;
-
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,11 +21,10 @@ import com.google.maps.android.ui.IconGenerator;
 import java.util.Random;
 
 import gamsung.traveller.R;
-import gamsung.traveller.model.Photograph;
 
-public class MapClusterActivity extends FragmentActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<PhotoCluster>, ClusterManager.OnClusterInfoWindowClickListener<PhotoCluster>, ClusterManager.OnClusterItemClickListener<PhotoCluster>, ClusterManager.OnClusterItemInfoWindowClickListener<PhotoCluster>{
+public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<PhotoCluster>, ClusterManager.OnClusterInfoWindowClickListener<PhotoCluster>, ClusterManager.OnClusterItemClickListener<PhotoCluster>, ClusterManager.OnClusterItemInfoWindowClickListener<PhotoCluster>{
 
-    GoogleMap cmMap;
+
     private ClusterManager<PhotoCluster> mClusterManager;
     private Random mRandom = new Random(1984);
 
@@ -43,7 +36,7 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
         private final int mDimension;
 
         public PhotoRenderer(){
-            super(getApplicationContext(), cmMap, mClusterManager);
+            super(getApplicationContext(), getMap(), mClusterManager);
 
             View Photoballoon = getLayoutInflater().inflate(R.layout.photo_balloon,null);
             mClusterIconGenerator.setContentView(Photoballoon);
@@ -83,6 +76,11 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            // Always render clusters.
+            return cluster.getSize() > 1;
+        }
     }
 
     @Override
@@ -104,30 +102,30 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
     public void onClusterItemInfoWindowClick(PhotoCluster photoCluster) {
 
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_cluster);
-        SupportMapFragment cmapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.cmap);
-        cmapFragment.getMapAsync(this);
-    }
+
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        cmMap = googleMap;
+    protected void startmap() {
 
-        cmMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
 
-        mClusterManager = new ClusterManager<PhotoCluster>(this, cmMap);
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
+
+        findViewById(R.id.topll).setVisibility(View.GONE);
+        UiSettings uiSettings = getMap().getUiSettings();
+        uiSettings.setRotateGesturesEnabled(false);
+        uiSettings.setTiltGesturesEnabled(false);
+        uiSettings.setMapToolbarEnabled(false);
+        uiSettings.setIndoorLevelPickerEnabled(false);
+        uiSettings.setCompassEnabled(false);
+        mClusterManager = new ClusterManager<PhotoCluster>(this, getMap());
         mClusterManager.setRenderer(new PhotoRenderer());
-        cmMap.setOnCameraIdleListener(mClusterManager);
-        cmMap.setOnMarkerClickListener(mClusterManager);
-        cmMap.setOnInfoWindowClickListener(mClusterManager);
+        getMap().setOnCameraIdleListener(mClusterManager);
+        getMap().setOnMarkerClickListener(mClusterManager);
+        getMap().setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
-
         addItems();
         mClusterManager.cluster();
     }
@@ -146,7 +144,6 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
         mClusterManager.addItem(new PhotoCluster(position(), "11",R.drawable.test_11));
         mClusterManager.addItem(new PhotoCluster(position(), "12",R.drawable.test_12));
 
-
     }
 
     private LatLng position() {
@@ -157,7 +154,7 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
         return mRandom.nextDouble() * (max - min) + min;
     }
 }
-class PhotoCluster extends Photograph implements ClusterItem{
+class PhotoCluster implements ClusterItem {
     public  final String name;
     public final int source;
     private final LatLng mPosition;
@@ -168,6 +165,6 @@ class PhotoCluster extends Photograph implements ClusterItem{
     }
     @Override
     public LatLng getPosition() {
-        return null;
+        return mPosition;
     }
 }
