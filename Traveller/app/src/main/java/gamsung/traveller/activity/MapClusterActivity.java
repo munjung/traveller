@@ -23,20 +23,17 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import java.util.Random;
 
 import gamsung.traveller.R;
-import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.model.Photograph;
-import gamsung.traveller.model.SearchPlace;
 
 public class MapClusterActivity extends FragmentActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<PhotoCluster>, ClusterManager.OnClusterInfoWindowClickListener<PhotoCluster>, ClusterManager.OnClusterItemClickListener<PhotoCluster>, ClusterManager.OnClusterItemInfoWindowClickListener<PhotoCluster>{
 
     GoogleMap cmMap;
     private ClusterManager<PhotoCluster> mClusterManager;
+    private Random mRandom = new Random(1984);
 
     private class PhotoRenderer extends DefaultClusterRenderer<PhotoCluster>{
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
@@ -111,18 +108,53 @@ public class MapClusterActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_cluster);
-        SupportMapFragment cmapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment cmapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.cmap);
         cmapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         cmMap = googleMap;
-        UiSettings uiSettings = cmMap.getUiSettings();
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        cmMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        cmMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
+
+        mClusterManager = new ClusterManager<PhotoCluster>(this, cmMap);
+        mClusterManager.setRenderer(new PhotoRenderer());
+        cmMap.setOnCameraIdleListener(mClusterManager);
+        cmMap.setOnMarkerClickListener(mClusterManager);
+        cmMap.setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+        addItems();
+        mClusterManager.cluster();
+    }
+
+    private void addItems(){
+        mClusterManager.addItem(new PhotoCluster(position(), "1",R.drawable.test_1));
+        mClusterManager.addItem(new PhotoCluster(position(), "2",R.drawable.test_2));
+        mClusterManager.addItem(new PhotoCluster(position(), "3",R.drawable.test_3));
+        mClusterManager.addItem(new PhotoCluster(position(), "4",R.drawable.test_4));
+        mClusterManager.addItem(new PhotoCluster(position(), "5",R.drawable.test_5));
+        mClusterManager.addItem(new PhotoCluster(position(), "6",R.drawable.test_6));
+        mClusterManager.addItem(new PhotoCluster(position(), "7",R.drawable.test_7));
+        mClusterManager.addItem(new PhotoCluster(position(), "8",R.drawable.test_8));
+        mClusterManager.addItem(new PhotoCluster(position(), "9",R.drawable.test_9));
+        mClusterManager.addItem(new PhotoCluster(position(), "10",R.drawable.test_10));
+        mClusterManager.addItem(new PhotoCluster(position(), "11",R.drawable.test_11));
+        mClusterManager.addItem(new PhotoCluster(position(), "12",R.drawable.test_12));
+
+
+    }
+
+    private LatLng position() {
+        return new LatLng(random(51.6723432, 51.38494009999999), random(0.148271, -0.3514683));
+    }
+
+    private double random(double min, double max) {
+        return mRandom.nextDouble() * (max - min) + min;
     }
 }
 class PhotoCluster extends Photograph implements ClusterItem{
@@ -139,4 +171,3 @@ class PhotoCluster extends Photograph implements ClusterItem{
         return null;
     }
 }
-

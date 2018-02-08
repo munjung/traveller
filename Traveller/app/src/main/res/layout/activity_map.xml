@@ -7,29 +7,31 @@
     tools:context=".activity.MapActivity">
 
 
-    <LinearLayout
-        android:id="@+id/topll"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="visible">
-
-        <Button
-            android:id="@+id/btmsearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="검색하자" />
-    </LinearLayout>
-
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topll"
         tools:context="gamsung.traveller.activity.MapActivity" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:id="@+id/topll"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/btmsearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="검색하자" />
+        </LinearLayout>
+    </FrameLayout>
     <LinearLayout
         android:id="@+id/mInfoll"
         android:layout_width="match_parent"
