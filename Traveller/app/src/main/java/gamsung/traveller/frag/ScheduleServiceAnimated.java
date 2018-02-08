@@ -23,14 +23,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
 
 
-
 class CoordViews{
     int circleX[] = new int[2];
     int circleY[] = new int[2];
-    int titleX[] = new int[2];
-    int titleY[] = new int[2];
-    int contentsX[] = new int[2];
-    int contentsY[] = new int[2];
 }
 
 /**
@@ -38,21 +33,21 @@ class CoordViews{
  */
 public class ScheduleServiceAnimated extends ScheduleService {
     long DRAGDROP_ANIMATION_DURATION, DRAGDROP_WAITING_TIME;
+    public View.OnClickListener clickEditSchedule, clickRemoveSchedule;
+
     private ArrayList<CoordViews> coordViewsList = new ArrayList<>(); //뷰의 위치 저장
     private Queue<View> queueCircleAnimated= new LinkedList<>();
-
     private int startID, endID;
     private boolean isScheduleMoved;
-    private Handler visHandler = new Handler();
     private Handler tHandler = new Handler();
-    private RunnableVisOff runnableVisOff = new RunnableVisOff();
     private int single_height;
 
     public ScheduleServiceAnimated(ViewGroup rootView, int layoutSingle, NestedScrollView scrollView, RelativeLayout layoutBase, Context appContext, boolean isDragDrop) {
         super(rootView, layoutSingle, scrollView, layoutBase, appContext, isDragDrop);
-        super.longClickedCircle = this.longClickListener;
+        super.longClickedCircle = this.longClickStartEditing;
         super.dragListener = this.scheduleDragListener;
-        DRAGDROP_ANIMATION_DURATION = 1500;
+        clickEditSchedule = null;
+        DRAGDROP_ANIMATION_DURATION = 3000;
         DRAGDROP_WAITING_TIME = 1000;
         isScheduleMoved = false;
         single_height = 0;
@@ -72,249 +67,14 @@ public class ScheduleServiceAnimated extends ScheduleService {
 
             coordViews.circleX[0] = getRelativeLeft(viewReference.findViewById(R.id.circleimageview_left), layoutBase);
             coordViews.circleX[1] = getRelativeLeft(viewReference.findViewById(R.id.circleimageview_right), layoutBase);
-            coordViews.contentsX[0] = getRelativeLeft(viewReference.findViewById(R.id.contents_left), layoutBase);
-            coordViews.contentsX[1] = getRelativeLeft(viewReference.findViewById(R.id.contents_right), layoutBase);
-            coordViews.titleX[0] = getRelativeLeft(viewReference.findViewById(R.id.title_left), layoutBase);
-            coordViews.titleX[1] = getRelativeLeft(viewReference.findViewById(R.id.title_right), layoutBase);
-
             coordViews.circleY[0] = getRelativeTop(viewReference.findViewById(R.id.circleimageview_left), layoutBase);
             coordViews.circleY[1] = getRelativeTop(viewReference.findViewById(R.id.circleimageview_right), layoutBase);
-            coordViews.contentsY[0] = getRelativeTop(viewReference.findViewById(R.id.contents_left), layoutBase);
-            coordViews.contentsY[1] = getRelativeTop(viewReference.findViewById(R.id.contents_right), layoutBase);
-            coordViews.titleY[0] = getRelativeTop(viewReference.findViewById(R.id.title_left), layoutBase);
-            coordViews.titleY[1] = getRelativeTop(viewReference.findViewById(R.id.title_right), layoutBase);
 
             coordViewsList.add(coordViews);
         }
 
         super.createNewSchedule(clickCreateNew, clickEdit);
     }
-
-    @Override
-    public void moveSchedule(int idxA, int idxB) {
-        int low, high;
-        boolean isMoveDown;
-        TextsFadeOutAnimationListener textsFadeOutAnimationListener = new TextsFadeOutAnimationListener();
-        Toast.makeText(appContext, "Start: " + (startID) + ", " + "End: " + (endID), Toast.LENGTH_SHORT).show();
-        if (startID == - 1 || idxA == idxB) {
-            return;
-        }
-        if (startID < endID){
-            low = startID;
-            high = endID;
-            isMoveDown = false;
-        }
-        else{
-            low = endID;
-            high = startID;
-            isMoveDown = true;
-        }
-
-        Boolean isLeft;
-        textsFadeOutAnimationListener.setData(idxA, idxB, low, high, isMoveDown);
-        for (int i = 0; i < listSchedule.size() - 1; i++)
-            listSchedule.get(i).view.setOnDragListener(null); //ignore drag drop during animation
-
-        for (int idx = low; idx <= high; idx++){
-            /*Start of drawing views*/
-            CircleImageView circleCopy = new CircleImageView(appContext);
-            isLeft = getLeftVisbility(idx);
-            View referenceView = listSchedule.get(idx).view;
-            if (idx == low)
-                referenceView.animate().setListener(textsFadeOutAnimationListener);
-            referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION/2).alpha(0);
-
-            if (isMoveDown && idx == high) continue; //no circle animation
-            if (!isMoveDown && idx == low) continue; //no circle animation
-
-            //start of copying circle image//
-            circleCopy.setX(coordViewsList.get(idx).circleX[isLeft ? 0 : 1]);;
-            circleCopy.setY(coordViewsList.get(idx).circleY[isLeft ? 0 : 1]);
-            circleCopy.setBorderWidth(BORDER_WIDTH);
-            circleCopy.setBorderColor(Color.BLACK);
-            circleCopy.setImageResource(R.color.colorPrimaryDark);
-            RelativeLayout.LayoutParams circleSize = new RelativeLayout.LayoutParams((int)toDp(IMAGE_SIZE), (int)toDp(IMAGE_SIZE));
-            circleCopy.setLayoutParams(circleSize);
-            circleCopy.setVisibility(View.GONE);
-            //end of copying circle image//
-            layoutBase.addView(circleCopy);
-            queueCircleAnimated.add(circleCopy);
-
-            /*end of drawing views*/
-
-            //start of setting destination coordinates//
-
-            //setting circle animations
-            circleCopy.animate().setListener(circleAnimationListener).setDuration(DRAGDROP_ANIMATION_DURATION);
-            if (isMoveDown){ //if moving down
-                circleCopy.animate().y(coordViewsList.get(idx + 1).circleY[isLeft ? 1 : 0]).x(coordViewsList.get(idx + 1).circleX[isLeft ? 1 : 0]);
-            }
-            else{
-                circleCopy.animate().y(coordViewsList.get(idx - 1).circleY[isLeft ? 1 : 0]).x(coordViewsList.get(idx - 1).circleX[isLeft ? 1 : 0]);
-            }
-            //end of setting destination coordinates//
-        }
-        runnableVisOff.setData(low, high, isMoveDown);
-        //super.moveSchedule(idxA, idxB);
-    }
-    private Runnable runnableTimeCounter = new Runnable() {
-        @Override
-        public void run() {
-            if (startID == endID) //no necessary animation needs to be made.
-                return;
-            moveSchedule(startID, endID);
-            isScheduleMoved = true;
-            startID = endID;
-        }
-    };
-
-    class RunnableVisOff implements Runnable{
-        private int start,  end;
-        private boolean isMoveDown;
-        public void setData(int start, int end, boolean isMoveDown){
-            this.start = start;
-            this.end = end;
-            this.isMoveDown = isMoveDown;
-        }
-        @Override
-        public void run() {
-            for (int idx = start; idx <= end; idx++) {
-                if (isMoveDown && idx == end)
-                    continue;
-                if (!isMoveDown && idx == start)
-                    continue;
-                listSchedule.get(idx).view.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
-                listSchedule.get(idx).view.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    class TextsFadeOutAnimationListener implements Animator.AnimatorListener{
-        int idxStart, idxEnd, low, high;
-        boolean isMoveDown;
-        public void setData(int idxStart, int idxEnd, int low, int high, boolean isMoveDown){
-            this.idxStart = idxStart;
-            this.idxEnd = idxEnd;
-            this.low = low;
-            this.high = high;
-            this.isMoveDown = isMoveDown;
-        }
-
-        @Override
-        public void onAnimationStart(Animator animator) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animator) {
-            TextsFadeInAnimationListener textsFadeInAnimationListener = new TextsFadeInAnimationListener();
-
-            ScheduleServiceAnimated.super.moveSchedule(idxStart, idxEnd);
-
-            for (int idx = low; idx <= high; idx++) {
-                View referenceView = listSchedule.get(idx).view;
-                 if (getLeftVisbility(idx)) {
-                    referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
-                    referenceView.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
-                    if (idx == low)
-                        referenceView.animate().setListener(textsFadeInAnimationListener);
-                } else {
-                    referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE); //can be ignored
-                    referenceView.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
-                    if (idx == low)
-                        referenceView.animate().setListener(textsFadeInAnimationListener);
-                }
-
-                if (isMoveDown && idx == low){
-                     if (getLeftVisbility(idx))
-                         referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
-                     else
-                         referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
-                }
-                else if (!isMoveDown && idx == high){
-                    if (getLeftVisbility(idx))
-                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
-                    else
-                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
-                }
-            }
-
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animator) {
-
-        }
-        @Override
-        public void onAnimationRepeat(Animator animator) {
-
-        }
-
-    }
-
-    class TextsFadeInAnimationListener implements Animator.AnimatorListener{
-
-        @Override
-        public void onAnimationStart(Animator animator) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animator) { //this is the end of animation
-            //remove animations from layout
-            for (int idx = 0; idx < listSchedule.size() - 1; idx++) {
-                if (getLeftVisbility(idx)) {
-                    listSchedule.get(idx).view.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
-                    listSchedule.get(idx).view.animate().setListener(null);
-                }
-                else {
-                    listSchedule.get(idx).view.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
-                    listSchedule.get(idx).view.animate().setListener(null);
-                }
-                listSchedule.get(idx).view.setOnDragListener(scheduleDragListener); //reactivate drag drop listener
-            }
-            while(queueCircleAnimated.size() > 0){
-                queueCircleAnimated.peek().clearAnimation();
-                layoutBase.removeView(queueCircleAnimated.remove());
-            }
-
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animator) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animator) {
-
-        }
-    }
-
-    Animator.AnimatorListener circleAnimationListener =  new Animator.AnimatorListener() {
-
-        @Override
-        public void onAnimationStart(Animator animator) {
-            for (View view : queueCircleAnimated){
-                view.setVisibility(View.VISIBLE);
-            }
-            visHandler.post(runnableVisOff);
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animator) {
-
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animator) {
-
-        }
-        @Override
-        public void onAnimationRepeat(Animator animator) {
-
-        }
-    };
 
     View.OnDragListener scheduleDragListener = new View.OnDragListener(){
         @Override
@@ -378,7 +138,108 @@ public class ScheduleServiceAnimated extends ScheduleService {
             return false;
         }
     };
-    View.OnLongClickListener longClickListener = new View.OnLongClickListener(){
+
+
+    View.OnLongClickListener longClickStartEditing = new View.OnLongClickListener(){
+        @Override
+        public boolean onLongClick(View view) { //Start Editing
+            for (int idx = 0; idx < listSchedule.size() - 1; idx++){ //show delete buttons
+                View referenceView = listSchedule.get(idx).view;
+                if (getLeftVisbility(idx)){
+                    referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.VISIBLE);
+                    referenceView.findViewById(R.id.circleimageview_left).setOnLongClickListener(clickStartDragging);
+                }
+                else {
+                    referenceView.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.VISIBLE);
+                    referenceView.findViewById(R.id.circleimageview_right).setOnLongClickListener(clickStartDragging);
+                }
+            }
+            /*start shaking
+            Animation aniShake = AnimationUtils.loadAnimation(appContext, R.anim.shake);
+            for (int idx = 0; idx < listSchedule.size() - 1; idx++){
+                CircleImageView circleImageView;
+                if (getLeftVisbility(idx))
+                    circleImageView = listSchedule.get(idx).view.findViewById(R.id.circleimageview_left);
+                else
+                    circleImageView = listSchedule.get(idx).view.findViewById(R.id.circleimageview_right);
+                circleImageView.startAnimation(aniShake);
+                circleImageView.animate().
+            }
+*/
+            return true;
+        }
+    };
+
+    private CircleImageView createCircleImage(int idxOriginal){
+        Boolean isLeft = getLeftVisbility(idxOriginal);
+        CircleImageView circleCopy = new CircleImageView(appContext);
+        circleCopy.setX(coordViewsList.get(idxOriginal).circleX[isLeft ? 0 : 1]);;
+        circleCopy.setY(coordViewsList.get(idxOriginal).circleY[isLeft ? 0 : 1]);
+        circleCopy.setBorderWidth(BORDER_WIDTH);
+        circleCopy.setBorderColor(Color.BLACK);
+        circleCopy.setImageResource(R.color.colorPrimaryDark);
+        RelativeLayout.LayoutParams circleSize = new RelativeLayout.LayoutParams((int)toDp(IMAGE_SIZE), (int)toDp(IMAGE_SIZE));
+        circleCopy.setLayoutParams(circleSize);
+
+        return circleCopy;
+    }
+    int TEMP_ID;
+    @Override
+    public boolean removeSchedule(int view_id) {
+        /*
+        Lower than the selected index
+        -Texts: fade out --> fade in
+        -Circle Images: left -> right OR right - left
+        The selected index
+        -fade out --> delete
+        Higher than the selected index
+        -Move STRAIGHT UP and replace the selected index.
+        */
+        boolean isLeft;
+        int total = listSchedule.size();
+        TEMP_ID = view_id;
+        int delete_idx = toListIdx(view_id);
+        int height = listSchedule.get(0).view.getHeight();
+        for (int i = 0; i < total; i++){
+            View referenceView = listSchedule.get(i).view;
+            isLeft = getLeftVisbility(i);
+            if (i < delete_idx) {
+                CircleImageView circleCopy = createCircleImage(i);
+                layoutBase.addView(circleCopy);
+                queueCircleAnimated.add(circleCopy);
+                //setting circle animations
+                circleCopy.animate().x(coordViewsList.get(i).circleX[isLeft ? 1 : 0]).setDuration(DRAGDROP_ANIMATION_DURATION);
+
+                //setting text animations
+                if (isLeft) {
+                    referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
+                } else {
+                    referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
+                }
+                referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION/2).alpha(0);
+
+                if (i == 0){
+                    TextsFadeOutAnimationListener fadeOut = new TextsFadeOutAnimationListener();
+                    fadeOut.setData(0, 0, 0, delete_idx - 1, true);
+                    referenceView.animate().setListener(fadeOut);
+                }
+            }
+            else if (i == delete_idx){ //if the target
+                FinishRemoveAnimation fin = new FinishRemoveAnimation(view_id);
+                referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION).setListener(fin).alpha(0);
+            }
+            else if (i > delete_idx){
+                referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION).yBy(-height);
+            }
+        }
+        if (listSchedule.size() > 2)
+            return true;
+        else
+            return false;
+        //return super.removeSchedule(view_id);
+    }
+
+    View.OnLongClickListener clickStartDragging = new View.OnLongClickListener(){
         @Override
         public boolean onLongClick(View view) {
             View parentView = (View) view.getParent();
@@ -388,24 +249,233 @@ public class ScheduleServiceAnimated extends ScheduleService {
             ClipData data = new ClipData(parentView.getTag().toString(), mimeType, item); //pass on the tag of the selected layout
 
             view.setBackgroundColor(Color.TRANSPARENT);
+
             View.DragShadowBuilder dragShadowBuilder = new View.DragShadowBuilder(view);
             view.startDrag(data, dragShadowBuilder, view, 0);
-
-/*
-            Animation aniShake = AnimationUtils.loadAnimation(appContext, R.anim.shake);
-
-            for (int idx = 0; idx < listSchedule.size() - 1; idx++){
-                CircleImageView circleImageView;
-                if (getLeftVisbility(idx))
-                    circleImageView = listSchedule.get(idx).view.findViewById(R.id.circleimageview_left);
-                else
-                    circleImageView = listSchedule.get(idx).view.findViewById(R.id.circleimageview_right);
-                circleImageView.startAnimation(aniShake);
-            }*/
-
             return true;
         }
     };
 
+    @Override
+    public void moveSchedule(int idxA, int idxB) {
+        int low, high;
+        boolean isMoveDown;
+        TextsFadeOutAnimationListener textsFadeOutAnimationListener = new TextsFadeOutAnimationListener();
+        Toast.makeText(appContext, "Start: " + (startID) + ", " + "End: " + (endID), Toast.LENGTH_SHORT).show();
+        if (startID == - 1 || idxA == idxB) {
+            return;
+        }
+        if (startID < endID){
+            low = startID;
+            high = endID;
+            isMoveDown = false;
+        }
+        else{
+            low = endID;
+            high = startID;
+            isMoveDown = true;
+        }
 
+        Boolean isLeft;
+        textsFadeOutAnimationListener.setData(idxA, idxB, low, high, isMoveDown);
+        for (int i = 0; i < listSchedule.size() - 1; i++)
+            listSchedule.get(i).view.setOnDragListener(null); //ignore drag drop during animation
+
+        for (int idx = low; idx <= high; idx++){
+            /*Start of drawing views*/
+
+            isLeft = getLeftVisbility(idx);
+            View referenceView = listSchedule.get(idx).view;
+
+            //setting view animation
+            if (idx == low)
+                referenceView.animate().setListener(textsFadeOutAnimationListener);
+            referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION/2).alpha(0);
+
+            if (isMoveDown && idx == high) continue; //no circle animation for the target that is being moved
+            if (!isMoveDown && idx == low) continue; //no circle animation
+
+            if (isLeft)
+                referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
+            else
+                referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
+
+
+            CircleImageView circleCopy = createCircleImage(idx);
+            layoutBase.addView(circleCopy);
+            queueCircleAnimated.add(circleCopy);
+
+            //setting circle animations
+            circleCopy.animate().setDuration(DRAGDROP_ANIMATION_DURATION);
+            if (isMoveDown){ //if moving down
+                circleCopy.animate().y(coordViewsList.get(idx + 1).circleY[isLeft ? 1 : 0]).x(coordViewsList.get(idx + 1).circleX[isLeft ? 1 : 0]);
+            }
+            else{
+                circleCopy.animate().y(coordViewsList.get(idx - 1).circleY[isLeft ? 1 : 0]).x(coordViewsList.get(idx - 1).circleX[isLeft ? 1 : 0]);
+            }
+            //end of setting destination coordinates//
+        }
+
+
+        for (int idx = 0; idx < listSchedule.size() - 1; idx++){
+            View referenceView = listSchedule.get(idx).view;
+            if (getLeftVisbility(idx))
+                referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.INVISIBLE);
+            else
+                referenceView.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.INVISIBLE);
+        }
+        //super.moveSchedule(idxA, idxB);
+    }
+
+    private Runnable runnableTimeCounter = new Runnable() {
+        @Override
+        public void run() {
+            if (startID == endID) //no necessary animation needs to be made.
+                return;
+            moveSchedule(startID, endID);
+            isScheduleMoved = true;
+            startID = endID;
+        }
+    };
+
+
+    class TextsFadeOutAnimationListener implements Animator.AnimatorListener{
+        int idxStart, idxEnd, low, high;
+        boolean isMoveDown;
+        public void setData(int idxStart, int idxEnd, int low, int high, boolean isMoveDown){
+            this.idxStart = idxStart;
+            this.idxEnd = idxEnd;
+            this.low = low;
+            this.high = high;
+            this.isMoveDown = isMoveDown;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animator) {
+
+        }
+        @Override
+        public void onAnimationEnd(Animator animator) {
+            //assumed that editing is on.
+            TextsFadeInAnimationListener textsFadeInAnimationListener = new TextsFadeInAnimationListener();
+
+            //if same, the animation is implementing removal.
+            if (idxStart != idxEnd )ScheduleServiceAnimated.super.moveSchedule(idxStart, idxEnd);
+
+            for (int idx = low; idx <= high; idx++) {
+                View referenceView = listSchedule.get(idx).view;
+                if (getLeftVisbility(idx)) {
+                    referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
+                    referenceView.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
+                    if (idx == low)
+                        referenceView.animate().setListener(textsFadeInAnimationListener);
+                } else {
+                    referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE); //can be ignored
+                    referenceView.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
+                    if (idx == low)
+                        referenceView.animate().setListener(textsFadeInAnimationListener);
+                }
+
+                if (idxStart == idxEnd){
+                    ScheduleServiceAnimated.super.setVisbility(referenceView, !getLeftVisbility(idx));
+                    if (!getLeftVisbility(idx))
+                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
+                    else
+                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
+                    continue;
+                }
+
+                //Specific animation for changing orders
+                if (isMoveDown && idx == low){
+                    if (getLeftVisbility(idx))
+                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
+                    else
+                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
+                }
+                else if (!isMoveDown && idx == high){
+                    if (getLeftVisbility(idx))
+                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
+                    else
+                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
+                }
+            }
+
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
+        }
+
+    }
+
+    class TextsFadeInAnimationListener implements Animator.AnimatorListener{
+
+        @Override
+        public void onAnimationStart(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animator) { //this is the end of animation
+            //remove animations from layout
+            for (int idx = 0; idx < listSchedule.size() - 1; idx++) {
+                if (getLeftVisbility(idx)) {
+                    listSchedule.get(idx).view.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
+                    listSchedule.get(idx).view.animate().setListener(null);
+                }
+                else {
+                    listSchedule.get(idx).view.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
+                    listSchedule.get(idx).view.animate().setListener(null);
+                }
+                listSchedule.get(idx).view.setOnDragListener(scheduleDragListener); //reactivate drag drop listener
+                listSchedule.get(idx).view.setOnClickListener(clickEditSchedule);
+            }
+            while(queueCircleAnimated.size() > 0){ //clearing queue after its use
+                queueCircleAnimated.peek().clearAnimation();
+                layoutBase.removeView(queueCircleAnimated.remove());
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
+        }
+    }
+
+    class FinishRemoveAnimation implements Animator.AnimatorListener{
+        final int view_id;
+        public FinishRemoveAnimation(int selectedData) {
+            this.view_id = selectedData;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
+        }
+    }
 }
