@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,7 +63,6 @@ public class ScheduleService {
             this.view_ID = view_ID;
         }
     }
-    private int unique_ID;
     int BORDER_WIDTH, IMAGE_SIZE, FIRST_CIRCLE_BIGGER;
     final boolean isDragDrop;
     ArrayList<ListSchedule> listSchedule = new ArrayList<>();
@@ -72,6 +72,7 @@ public class ScheduleService {
     RelativeLayout layoutBase;
     View.OnLongClickListener longClickedCircle;
     View.OnDragListener dragListener;
+    View.OnClickListener clickRemoveSelectedSchedule;
     int layoutSingle;
 
     public ScheduleService(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
@@ -84,9 +85,8 @@ public class ScheduleService {
         this.isDragDrop= isDragDrop;
         this.longClickedCircle = this.longClickedListener;
         this.dragListener = this.scheduleDragListener;
-        unique_ID = 1;
-        BORDER_WIDTH = 3;
-        IMAGE_SIZE = 80;
+        BORDER_WIDTH = 5;
+        IMAGE_SIZE = 100;
         FIRST_CIRCLE_BIGGER = 40;
     }
 
@@ -94,6 +94,7 @@ public class ScheduleService {
         //점선으로 되있는 빈 동그라미 생성
         LayoutInflater layoutInflater = (LayoutInflater) appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layoutSchedule = layoutInflater.inflate(layoutSingle, null);
+        layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
 
         layoutSchedule.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
         layoutSchedule.findViewById(R.id.contents_right).setVisibility(View.INVISIBLE);
@@ -109,7 +110,7 @@ public class ScheduleService {
 
         int viewID = ViewIdGenerator.generateViewId();
         layoutSchedule.setTag(viewID);
-        layoutSchedule.setId(viewID); //불안쓰
+        layoutSchedule.setId(viewID);
 
         scrollView.smoothScrollBy(0, 30);
         layoutSchedule.setBackgroundColor(Color.TRANSPARENT);
@@ -119,6 +120,7 @@ public class ScheduleService {
     public void setScheduleView(@Nullable View.OnClickListener clickEdit, int idx){
         //점선으로 되있는 동그라미에 생기를 넣어줌
         //make an empty dotted circle to an actual schedule view.
+        Button btnDelete;
         TextView textTitle, textContents;
         CircleImageView circleImageView;
         View view = listSchedule.get(idx).view;
@@ -128,17 +130,20 @@ public class ScheduleService {
                 textTitle = view.findViewById(R.id.title_right);
                 textContents = view.findViewById(R.id.contents_right);
                 circleImageView = view.findViewById(R.id.circleimageview_right);
+                btnDelete = view.findViewById(R.id.btn_delete_schedule_right);
             }
             else{
                 textTitle = view.findViewById(R.id.title_left);
                 textContents = view.findViewById(R.id.contents_left);
                 circleImageView = view.findViewById(R.id.circleimageview_left);
+                btnDelete = view.findViewById(R.id.btn_delete_schedule_left);
             }
             textTitle.setText("View ID: " + view.getId());
             textContents.setText("Circle x: " + getRelativeLeft(circleImageView, layoutBase) + " Circle y: " + getRelativeTop(circleImageView, layoutBase));
             circleImageView.setImageResource(R.color.colorPrimaryDark);
             circleImageView.setBorderWidth(this.BORDER_WIDTH);
             circleImageView.setOnLongClickListener(longClickedCircle);
+            btnDelete.setOnClickListener(clickRemoveSelectedSchedule);
             if (clickEdit != null)
                 circleImageView.setOnClickListener(clickEdit);
         }
@@ -160,6 +165,7 @@ public class ScheduleService {
             view.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.title_right).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.contents_right).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.INVISIBLE);
         }else{
             view.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
             view.findViewById(R.id.title_right).setVisibility(View.VISIBLE);
@@ -167,7 +173,9 @@ public class ScheduleService {
             view.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.title_left).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.contents_left).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.INVISIBLE);
         }
+
     }
 
     public float toDp(int dp){
@@ -348,6 +356,8 @@ public class ScheduleService {
             //else
             if (i != 0)
                 relParms.addRule(RelativeLayout.BELOW, (int)listSchedule.get(i - 1).view.getTag());
+            //else
+                //relParms.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); //?
 
             listSchedule.get(i).view.setLayoutParams(relParms);
             layoutBase.addView((View)listSchedule.get(i).view);
@@ -422,27 +432,47 @@ public class ScheduleService {
             return view.getTop() + getRelativeTop((View)view.getParent(), root);
     }
 
+
     public boolean removeSchedule(int view_id){
         if (listSchedule.size() > 2){
             int idx = toListIdx(view_id);
-            if (idx != 0) {
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idx + 1).view.getLayoutParams();
-                layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idx - 1).view.getId());
-                listSchedule.get(idx + 1).view.setLayoutParams(layoutParams);
-            }
             layoutBase.removeView(listSchedule.get(idx).view);
             listSchedule.remove(idx);
+            for (int i = 0; i < listSchedule.size(); i++){
+                if (i < listSchedule.size() - 1) {
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(i).view.getLayoutParams();
+                    if (i > 0) layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(i - 1).view_ID);
+                    listSchedule.get(i).view.setLayoutParams(layoutParams);
+                }
+                else
+                    setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
+            }
 
-            for (int i = 0; i < listSchedule.size() - 1; i++) //refresh views
+            /*
+            RelativeLayout.LayoutParams layoutParams;
+            int idx = toListIdx(view_id);
+            layoutBase.removeView(listSchedule.get(idx).view);
+            listSchedule.remove(idx);
+            if (idx != 0) {
+                layoutParams = (RelativeLayout.LayoutParams) listSchedule.get(idx).view.getLayoutParams();
+                layoutParams.addRule(RelativeLayout.BELOW, listSchedule.get(idx - 1).view.getId());
+                listSchedule.get(idx).view.setLayoutParams(layoutParams);
+            }
+            else{
+
+            }
+
+
+            for (int i = 0; i < listSchedule.size() - 1; i++) { //refresh views
                 setVisbility(listSchedule.get(i).view, getLeftVisbility(i));
+            }
+            */
             return true;
         }
         else{
             return false;
-            //layoutBase.removeAllViews();
-            //drawFirstScreen_Coordinator(null);
         }
-
 
     }
 }
+

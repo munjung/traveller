@@ -1,6 +1,7 @@
 package gamsung.traveller.frag;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import gamsung.traveller.R;
+import gamsung.traveller.activity.EditLocationActivity;
+import gamsung.traveller.activity.MainActivity;
+import gamsung.traveller.activity.SplashActivity;
 
 /**
  * Created by JKPark on 2018-01-25.
@@ -34,6 +38,8 @@ public class ViewByScheduleFragment extends Fragment {
             scrollView = rootView.findViewById(R.id.scroll_schedule);
 
             scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), true);
+            scheduleService.clickEditSchedule = editSchedule;
+            scheduleService.clickRemoveSelectedSchedule = clickRemoveSchedule;
             numItem = 0;
             if (numItem == 0) {
                 scheduleService.drawFirstScreen_Coordinator(startScheduling);
@@ -78,14 +84,25 @@ public class ViewByScheduleFragment extends Fragment {
                 scheduleService.startSchedule(createNewSchedule, editSchedule);
             }
             else*/
+            /*
 
+            */
+            Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
+            Toast.makeText(rootView.getContext(), "View ID: " + ((View)view.getParent()).getId(), Toast.LENGTH_SHORT).show();
+            startActivity(i);
+        }
+    };
+
+    View.OnClickListener clickRemoveSchedule = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
             if(!scheduleService.removeSchedule(((View)view.getParent()).getId())){ //if less than 2 remaining
+                //removeSchedule returns false when the first screen needs to be drawn.
                 layoutBase.removeAllViews();
                 scheduleService.listSchedule.clear();
                 scheduleService.drawFirstScreen_Coordinator(startScheduling);
             }
         }
     };
-
 
 }
