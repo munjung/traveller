@@ -57,7 +57,9 @@ import java.util.List;
 
 import gamsung.traveller.R;
 
-
+/**
+ * 7, 8번 화면. 구글맵 정책 문제로 10번화면과 레이아웃은 같이 씀
+ */
 
 public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
 

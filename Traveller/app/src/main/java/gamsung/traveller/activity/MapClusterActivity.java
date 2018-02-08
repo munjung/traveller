@@ -16,11 +16,15 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-
-
 import java.util.Random;
-
 import gamsung.traveller.R;
+
+/**
+ *  10번 화면. 구글맵 정책상 레이아웃은 7,8번 화면과 공유함
+ */
+
+
+
 
 public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<PhotoCluster>, ClusterManager.OnClusterInfoWindowClickListener<PhotoCluster>, ClusterManager.OnClusterItemClickListener<PhotoCluster>, ClusterManager.OnClusterItemInfoWindowClickListener<PhotoCluster>{
 
