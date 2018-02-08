@@ -1,20 +1,25 @@
 package gamsung.traveller.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomPagerAdapter;
 import gamsung.traveller.dao.DataManager;
+
 
 /**
  * Created by mj on 2018-01-24.
@@ -23,7 +28,7 @@ import gamsung.traveller.dao.DataManager;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn;
+    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, addImgBtn;
     EditText memoEdit,tvMission;
     TextView editLocation;
     ImageView memoImage,eat,buy,take,visit,anything;
@@ -37,7 +42,6 @@ public class EditLocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_location);
 
         pager= (ViewPager)findViewById(R.id.pager);
-
         eatBtn= (ImageButton)findViewById(R.id.eatBtn);
         buyBtn = (ImageButton)findViewById(R.id.buyBtn);
         takeBtn = (ImageButton)findViewById(R.id.takeBtn);
@@ -53,6 +57,7 @@ public class EditLocationActivity extends AppCompatActivity {
         take = (ImageView)findViewById(R.id.photo);
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
+
 
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +111,7 @@ public class EditLocationActivity extends AppCompatActivity {
                 buy.setVisibility(View.INVISIBLE);
                 take.setVisibility(View.INVISIBLE);
                 visit.setVisibility(View.INVISIBLE);
-                anything.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.VISIBLE);
             }
         });
 

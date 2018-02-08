@@ -52,7 +52,7 @@ public class CalendarFragment extends Fragment {
                 String year = (String)android.text.format.DateFormat.format("yyyy", date);
 
 //                int month = date.getMonth()+1;
-//                int day = date.getDay(); //얘 어떻게 해결할지 고민좀!!!!!
+//                int day = date.getDay();
 //                int year = date.getYear()+1900;
                 Toast.makeText(getContext(), year+"년"+month+"월"+day+"일",Toast.LENGTH_SHORT).show();
             }

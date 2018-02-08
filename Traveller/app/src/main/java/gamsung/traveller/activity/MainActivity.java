@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +28,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -55,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     final int PERMISSION_CODE = 0;
 
-    private String temp;
+    private List<String> photoList;
+    private int temp_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +64,10 @@ public class MainActivity extends AppCompatActivity {
         _dataManager = DataManager.getInstance(this);
         _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
 
-       // temp code
-        List<String> images = getPathOfAllImages();
-        if(images.size() > 0)
-            temp = images.get(0);
+        //temp code
+        photoList = getPathOfAllImages();
 
 
-//        Route r = new Route();
-//        r.set_id(1);
-//        r.setTitle("test");
-//        r.setFromDate(new Date());
-//        r.setToDate(new Date());
-//        long key = _dataManager.insertRoute(r);
-//
-//        List<Route> routeList = new ArrayList<>(_dataManager.getRouteList().values());
-//        DebugToast.show(this, "" + routeList.size());
 
         this.tryPermCheck();        //권한체크
         this.setRecyclerView();     //여행기록화면 세팅
@@ -188,8 +175,11 @@ public class MainActivity extends AppCompatActivity {
 
         Route route = new Route();
         route.setTitle(String.valueOf(idx));
-        if(temp != null)
-            route.setPicturPath(temp);
+        if(photoList.size() > 0){
+
+            route.setPicturPath(photoList.get(temp_id++));
+        }
+
 
         _recyclerAdapter.addItem(route);
 
