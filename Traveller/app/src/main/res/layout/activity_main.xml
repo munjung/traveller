@@ -49,7 +49,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
                 android:layout_alignParentRight="true"/>
-
         </RelativeLayout>
 
         <!--empty image-->

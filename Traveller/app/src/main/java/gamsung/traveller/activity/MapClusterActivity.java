@@ -1,4 +1,5 @@
 package gamsung.traveller.activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+
+import java.util.ArrayList;
 import java.util.Random;
 import gamsung.traveller.R;
 
@@ -89,6 +92,13 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
     @Override
     public boolean onClusterClick(Cluster<PhotoCluster> cluster) {
+        ArrayList<Integer> photolist=new ArrayList<Integer>();
+        for(PhotoCluster pc : cluster.getItems()){
+            photolist.add(pc.source);
+        }
+        Intent intent = new Intent(MapClusterActivity.this,GridInCluster.class);
+        intent.putIntegerArrayListExtra("phototosend",photolist);
+        startActivity(intent);
         return false;
     }
 
