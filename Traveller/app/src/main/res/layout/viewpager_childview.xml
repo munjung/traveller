@@ -3,28 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+     <!-- <ImageView
+        android:id="@+id/img_viewpager_images"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
-        android:src="@drawable/testimage" />
+        android:src="@drawable/testimage" /> -->
+    <ImageView
+        android:id="@+id/img_viewpager_childimage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"/>
 
-    <RelativeLayout
+   <!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="513dp"
         android:layout_weight="8">
 
-        <ImageView
-            android:id="@+id/img_viewpager_childimage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"/>
 
-    </RelativeLayout>
+
+    </RelativeLayout> -->
 
     <ImageButton
         android:layout_width="wrap_content"

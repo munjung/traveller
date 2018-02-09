@@ -26,6 +26,7 @@ import java.io.IOException;
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomPagerAdapter;
 import gamsung.traveller.dao.DataManager;
+import gamsung.traveller.util.DebugToast;
 
 
 /**
@@ -125,10 +126,10 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        //adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
+         adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
 //        adapter.notifyDataSetChanged();
         pager.setAdapter(adapter);
-        adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
+       // adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
 
         memoEdit.clearFocus();
         tvMission.clearFocus();
@@ -143,7 +144,12 @@ public class EditLocationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK){
             imgPath = data.getExtras().getString("img");
-            adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext(), imgPath);
+//            DebugToast.show(this, imgPath);
+
+
+            adapter.setImgPath(imgPath);
+            pager.setAdapter(adapter);
+          //  adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext(), imgPath);
             adapter.notifyDataSetChanged();
            // Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
             //imgPath = path;

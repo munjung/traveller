@@ -47,6 +47,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.CameraActivity" />
+        <activity android:name=".activity.GridInCluster"></activity>
     </application>
 
 </manifest>

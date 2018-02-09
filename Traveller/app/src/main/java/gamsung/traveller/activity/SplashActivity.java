@@ -27,6 +27,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.splashRelative);
+
         layout.setBackgroundDrawable(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.bg)));
 
         Handler handler = new Handler();
@@ -36,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private class SplashHandler implements Runnable {
         public void run() {
-            Intent i = new Intent(SplashActivity.this,MainActivity.class);
+            Intent i = new Intent(SplashActivity.this,MapClusterActivity.class);
             startActivity(i);
             SplashActivity.this.finish();
         }
