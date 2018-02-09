@@ -1,5 +1,6 @@
 package gamsung.traveller.frag;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import gamsung.traveller.R;
 
 public class CalendarFragment extends Fragment {
     private CalendarPickerView calendar;
+    String year, month, day;
 
     @Nullable
     @Override
@@ -43,17 +45,12 @@ public class CalendarFragment extends Fragment {
         calendar.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
             public void onDateSelected(Date date) {
-                //for(Date da: calendar.getSelectedDates()){
-                //  Log.d("잘나오냐", da.toString());
 
                 //이건 안될까?
-                String month = (String)android.text.format.DateFormat.format("MM", date);
-                String day = (String)android.text.format.DateFormat.format("dd", date);
-                String year = (String)android.text.format.DateFormat.format("yyyy", date);
+                month = (String)android.text.format.DateFormat.format("MM", date);
+                day = (String)android.text.format.DateFormat.format("dd", date);
+                year = (String)android.text.format.DateFormat.format("yyyy", date);
 
-//                int month = date.getMonth()+1;
-//                int day = date.getDay();
-//                int year = date.getYear()+1900;
                 Toast.makeText(getContext(), year+"년"+month+"월"+day+"일",Toast.LENGTH_SHORT).show();
             }
 
@@ -64,5 +61,6 @@ public class CalendarFragment extends Fragment {
         });
         return rootView;
     }
+
 
 }
