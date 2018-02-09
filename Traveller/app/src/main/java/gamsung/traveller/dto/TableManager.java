@@ -23,7 +23,6 @@ public class TableManager {
 
         public static final String column_id =          "route_id";
         public static final String column_title =       "title";
-        public static final String column_area =        "area";
         public static final String column_from_date =   "from_date";
         public static final String column_to_date =     "to_date";
         public static final String column_picture_id =  "picture_id";   //대표 사진 id
@@ -31,7 +30,6 @@ public class TableManager {
         public static final String[] columns = {
                 column_id,
                 column_title,
-                column_area,
                 column_from_date,
                 column_to_date,
                 column_picture_id
@@ -43,7 +41,6 @@ public class TableManager {
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
             sb.append(column_title      + " TEXT, ");
-            sb.append(column_area       + " TEXT, ");
             sb.append(column_from_date  + " DATETIME, ");
             sb.append(column_to_date    + " DATETIME, ");
             sb.append(column_picture_id + " INTEGER ");
@@ -60,7 +57,7 @@ public class TableManager {
 
         public static final String column_id =              "spot_id";
         public static final String column_route_id =        "route_id";    //route table id
-        public static final String column_next_spot_id =    "next_spot_id";  /////////이전 place_id ?
+        public static final String column_next_spot_id =    "next_spot_id";
         public static final String column_picture_id =      "picture_id";   //대표 사진 id
         public static final String column_picture_list =    "picture_list"; //연결된 사진 리스트
         public static final String column_mission =         "mission";
@@ -165,14 +162,14 @@ public class TableManager {
         public static final String column_route_id      = "route_id";
         public static final String column_place_id      = "place_id";
         public static final String column_search_id     = "search_id";
-        public static final String column_tag           = "tag";
+        public static final String column_path          = "path";
         public static final String column_date          = "date";
         public static  final String[] columns = {
                 column_id,
                 column_route_id,
                 column_place_id,
                 column_search_id,
-                column_tag,
+                column_path,
                 column_date
         };
 
@@ -185,7 +182,7 @@ public class TableManager {
             sb.append(column_route_id       + " INTEGER, ");
             sb.append(column_place_id       + " INTEGER, ");
             sb.append(column_search_id      + " INTEGER, ");
-            sb.append(column_tag            + " TEXT, ");
+            sb.append(column_path            + " TEXT, ");
             sb.append(column_date           + " DATETIME ");
             sb.append(")");
 
@@ -193,3 +190,4 @@ public class TableManager {
         }
     }
 }
+

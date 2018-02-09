@@ -92,7 +92,7 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
     public void showSelectButton() {
         ArrayList<String> selectedItems = imagesAdapter.getCheckedItems();
         if (selectedItems.size() > 0) {
-            selectImages.setText(selectedItems.size() + " - Images Selected");
+            selectImages.setText(selectedItems.size() + "장 선택");
             selectImages.setVisibility(View.VISIBLE);
         } else
             selectImages.setVisibility(View.GONE);
@@ -157,7 +157,8 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
 
                 //Send back result to MainActivity with selected images
                 Intent intent = new Intent();
-                intent.putExtra(ImageMultiplePickerActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
+                //intent.putExtra(ImageMultiplePickerActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
+                intent.putExtra("img",selectedItems.toString());
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;
@@ -173,7 +174,7 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // do your stuff
-                    Toast.makeText(this, "뭘까이건",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "???",Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "GET_ACCOUNTS Denied",
                             Toast.LENGTH_SHORT).show();

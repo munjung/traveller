@@ -94,7 +94,6 @@ public class RouteManager {
                 Route route = new Route();
                 route.set_id(c.getInt(0));                          //id
                 route.setTitle(c.getString(1));                     //title
-                route.setArea(c.getString(2));                      //area
                 route.setFromDate(new Date(c.getLong(3) * 1000));   //from date
                 route.setToDate(new Date(c.getLong(4) * 1000));     //to date
 
@@ -130,7 +129,6 @@ public class RouteManager {
 
         ContentValues values = new ContentValues();
         values.put(TableManager.RouteTable.column_title, route.getTitle());                                             //title
-        values.put(TableManager.RouteTable.column_area, route.getArea());                                               //area
         values.put(TableManager.RouteTable.column_from_date, Converter.convertSqlDateFormat(route.getFromDate()));      //from
         values.put(TableManager.RouteTable.column_to_date, Converter.convertSqlDateFormat(route.getToDate()));          //to
 
@@ -145,7 +143,6 @@ public class RouteManager {
 
         ContentValues values = new ContentValues();
         values.put(TableManager.RouteTable.column_title, route.getTitle());                                             //title
-        values.put(TableManager.RouteTable.column_area, route.getArea());                                               //area
         values.put(TableManager.RouteTable.column_from_date, Converter.convertSqlDateFormat(route.getFromDate()));      //from
         values.put(TableManager.RouteTable.column_to_date, Converter.convertSqlDateFormat(route.getToDate()));          //to
 

@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.model.Photograph;
@@ -67,6 +69,16 @@ public class PhotographManager {
     }
 
 
+
+    public List<String> getPhotoListWithSpot(int spot_id){
+        return new ArrayList<>();
+    }
+
+    public List<String> getPhotoListWithRoute(int route_id){
+        return new ArrayList<>();
+    }
+
+
     private HashMap<Integer, Photograph> _getphotoList(SQLiteHelper dbHelper){
 
         HashMap<Integer, Photograph> photoList = new HashMap<>();
@@ -83,7 +95,7 @@ public class PhotographManager {
                 photo.setRoute_id(c.getInt(1));
                 photo.setPlace_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
-                photo.setTag(c.getString(4));
+                photo.setPath(c.getString(4));
                 photo.setDate(new Date(c.getLong(5) * 1000));
 
                 photoList.put(photo.get_id(), photo);
@@ -120,7 +132,7 @@ public class PhotographManager {
         values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
         values.put(TableManager.PictureTable.column_place_id, photo.getPlace_id());
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
-        values.put(TableManager.PictureTable.column_tag, photo.getTag());
+        values.put(TableManager.PictureTable.column_path, photo.getPath());
         values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -136,7 +148,7 @@ public class PhotographManager {
         values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
         values.put(TableManager.PictureTable.column_place_id, photo.getPlace_id());
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
-        values.put(TableManager.PictureTable.column_tag, photo.getTag());
+        values.put(TableManager.PictureTable.column_path, photo.getPath());
         values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();

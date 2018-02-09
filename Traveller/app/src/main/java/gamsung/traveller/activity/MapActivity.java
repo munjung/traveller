@@ -57,9 +57,11 @@ import java.util.List;
 
 import gamsung.traveller.R;
 
+/**
+ * 7, 8번 화면. 구글맵 정책 문제로 10번화면과 레이아웃은 같이 씀
+ */
 
-
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
+public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
     private Marker mMarker;
@@ -67,22 +69,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private Place BufferPlace;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_map);
+    protected void startmap() {
+        mMap = getMap();
+        TextView tvname = findViewById(R.id.tvPlaceName);
+        LinearLayout infoll = findViewById(R.id.mInfoll);
+        UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setRotateGesturesEnabled(false);
+        uiSettings.setTiltGesturesEnabled(false);
+        uiSettings.setMapToolbarEnabled(false);
+        uiSettings.setIndoorLevelPickerEnabled(false);
+        uiSettings.setCompassEnabled(false);
+        LatLng seoul = new LatLng(-37, 126);
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
         Button bt = findViewById(R.id.btmsearch);
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -101,20 +105,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 findViewById(R.id.mSelectll).setVisibility(View.GONE);
             }
         });
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        TextView tvname = findViewById(R.id.tvPlaceName);
-        LinearLayout infoll = findViewById(R.id.mInfoll);
-        UiSettings uiSettings = mMap.getUiSettings();
-        uiSettings.setRotateGesturesEnabled(false);
-        uiSettings.setTiltGesturesEnabled(false);
-        uiSettings.setMapToolbarEnabled(false);
-        uiSettings.setIndoorLevelPickerEnabled(false);
-        uiSettings.setCompassEnabled(false);
-       LatLng seoul = new LatLng(-37, 126);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 /*        Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
                 .setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -184,8 +174,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
         selectll.setVisibility(View.VISIBLE);
     }
-
-
 
     @Override
     public void onMapLongClick(LatLng latLng) {

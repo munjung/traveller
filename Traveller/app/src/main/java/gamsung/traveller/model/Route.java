@@ -12,7 +12,6 @@ public class Route {
 
     private int _id;
     private String title;
-    private String area;
     private Date fromDate;
     private Date toDate;
     private int pictureId;
@@ -34,13 +33,7 @@ public class Route {
         this.title = title;
     }
 
-    public String getArea() {
-        return area;
-    }
 
-    public void setArea(String area) {
-        this.area = area;
-    }
     public Date getFromDate() {
         return fromDate;
     }
