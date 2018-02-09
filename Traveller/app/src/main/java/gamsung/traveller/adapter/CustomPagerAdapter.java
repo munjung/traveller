@@ -26,15 +26,22 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
     LayoutInflater inflater;
     public static ImageButton addImgBtn;
     Context context;
-    String path;
+    String imgPath;
     //Bitmap imgBitmap;
 
-    public CustomPagerAdapter(LayoutInflater inflater, Context context) {
+    public CustomPagerAdapter(LayoutInflater inflater, Context context, String imgPath) {
 
         // TODO Auto-generated constructor stub
         //전달 받은 LayoutInflater를 멤버변수로 전달
         this.inflater=inflater;
         this.context = context;
+        this.imgPath = imgPath;
+
+    }
+
+    public CustomPagerAdapter(LayoutInflater inflater, Context context) {
+
+        this(inflater, context, null);
 
     }
 
@@ -79,9 +86,11 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
         //ImageView에 현재 position 번째에 해당하는 이미지를 보여주기 위한 작업
         //현재 position에 해당하는 이미지를 setting
 //        img.setImageResource(R.drawable.gametitle_01+position);
+      //  img.setImageURI(EditLocationActivity.imgBitmap);
         img.setAdjustViewBounds(true);
-        img.setImageBitmap(EditLocationActivity.imgBitmap);
-        Toast.makeText(context, EditLocationActivity.imgBitmap+"뭐받았니",Toast.LENGTH_SHORT).show();
+       // img.setImageBitmap(EditLocationActivity.imgBitmap);
+          Toast.makeText(context, imgPath+"경로로로ㅗ로ㅗ1111",Toast.LENGTH_SHORT).show();
+//        Log.d("경로", imgPath.toString());
       //  img.setImageBitmap(EditLocationActivity.imgPath.);
 //        //ViewPager에 만들어 낸 View 추가
         container.addView(view);
@@ -101,7 +110,7 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
     public void destroyItem(ViewGroup container, int position, Object object) {
 
         // TODO Auto-generated method stub
-
+        Toast.makeText(context, imgPath+"경로로로ㅗ로ㅗ222",Toast.LENGTH_SHORT).show();
         //ViewPager에서 보이지 않는 View는 제거
         //세번째 파라미터가 View 객체 이지만 데이터 타입이 Object여서 형변환 실시
 
@@ -114,6 +123,7 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
 
     public boolean isViewFromObject(View v, Object obj) {
         // TODO Auto-generated method stub
+        Toast.makeText(context, imgPath+"경로로로ㅗ로ㅗ333",Toast.LENGTH_SHORT).show();
         return v==obj;
     }
 

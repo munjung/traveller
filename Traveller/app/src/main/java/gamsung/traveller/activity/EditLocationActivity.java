@@ -35,12 +35,13 @@ import gamsung.traveller.dao.DataManager;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, addImgBtn;
+    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn;
     EditText memoEdit,tvMission;
     TextView editLocation;
     ImageView memoImage,eat,buy,take,visit,anything;
     ViewPager pager;
-    public static String imgPath;
+    String imgPath;
+    CustomPagerAdapter adapter;
     public static Bitmap imgBitmap;
 
     private DataManager _dataManager;
@@ -124,8 +125,10 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
+        //adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
+//        adapter.notifyDataSetChanged();
         pager.setAdapter(adapter);
+        adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
 
         memoEdit.clearFocus();
         tvMission.clearFocus();
@@ -138,15 +141,18 @@ public class EditLocationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String path = data.getExtras().getString("img");
         if (requestCode == 1 && resultCode == RESULT_OK){
-            Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
+            imgPath = data.getExtras().getString("img");
+            adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext(), imgPath);
+            adapter.notifyDataSetChanged();
+           // Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
             //imgPath = path;
-            loadPicture(data);
-           // Intent intent = new Intent(getApplicationContext(), CustomPagerAdapter.class);
-            //intent.putExtra("path", imgPath);
-           // startActivity(intent);
+           // loadPicture(data);
         }
+    }
+
+    public String getImgPath(){
+        return imgPath;
     }
 
     public void loadPicture(Intent data){
