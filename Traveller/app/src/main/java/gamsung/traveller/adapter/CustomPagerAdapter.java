@@ -3,6 +3,7 @@ package gamsung.traveller.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,24 +15,26 @@ import android.widget.Toast;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.CustomGalleryActivity;
+import gamsung.traveller.activity.EditLocationActivity;
 
 /**
  * Created by Jiwon on 2018-01-30.
  */
 
-public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
+public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter implements  View.OnClickListener{
 
     LayoutInflater inflater;
     public static ImageButton addImgBtn;
     Context context;
+    String path;
+    //Bitmap imgBitmap;
 
-    public CustomPagerAdapter(LayoutInflater inflater) {
+    public CustomPagerAdapter(LayoutInflater inflater, Context context) {
 
         // TODO Auto-generated constructor stub
         //전달 받은 LayoutInflater를 멤버변수로 전달
         this.inflater=inflater;
-
-      //  this.context = context;
+        this.context = context;
 
     }
 
@@ -71,19 +74,16 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
         //사진 추가 버튼 클릭시
         context = container.getContext();
         addImgBtn = (ImageButton)view.findViewById(R.id.addImgBtn);
-        addImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //갤러리 이동
-                Intent intent = new Intent(context, CustomGalleryActivity.class);
-                ((Activity) context).startActivityForResult(intent, 1);
-            }
-        });
+        addImgBtn.setOnClickListener(this);
+
         //ImageView에 현재 position 번째에 해당하는 이미지를 보여주기 위한 작업
         //현재 position에 해당하는 이미지를 setting
 //        img.setImageResource(R.drawable.gametitle_01+position);
-
-        //ViewPager에 만들어 낸 View 추가
+        img.setAdjustViewBounds(true);
+        img.setImageBitmap(EditLocationActivity.imgBitmap);
+        Toast.makeText(context, EditLocationActivity.imgBitmap+"뭐받았니",Toast.LENGTH_SHORT).show();
+      //  img.setImageBitmap(EditLocationActivity.imgPath.);
+//        //ViewPager에 만들어 낸 View 추가
         container.addView(view);
 
         //Image가 세팅된 View를 리턴
@@ -115,6 +115,15 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter {
     public boolean isViewFromObject(View v, Object obj) {
         // TODO Auto-generated method stub
         return v==obj;
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        //갤러리 이동
+        Intent intent = new Intent(context, CustomGalleryActivity.class);
+        ((Activity) context).startActivityForResult(intent, 1);
+      //  Toast.makeText(context, EditLocationActivity.imgPath+"이미지 경로임", Toast.LENGTH_SHORT).show();
     }
 
 

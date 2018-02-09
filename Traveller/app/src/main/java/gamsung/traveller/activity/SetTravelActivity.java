@@ -71,8 +71,6 @@ public class SetTravelActivity extends AppCompatActivity {
         try{
             image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
            // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
-           // canvas = new Canvas(myBitmap);
-          //  canvas.drawCircle(60,50,25,paint);
             setImage.setAdjustViewBounds(true);
             //uploadImage.setImageBitmap(rotate(myBitmap, 0));
             setImage.setImageBitmap(image_bitmap);

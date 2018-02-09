@@ -1,8 +1,12 @@
 package gamsung.traveller.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import java.io.File;
+import java.io.IOException;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomPagerAdapter;
@@ -33,6 +40,8 @@ public class EditLocationActivity extends AppCompatActivity {
     TextView editLocation;
     ImageView memoImage,eat,buy,take,visit,anything;
     ViewPager pager;
+    public static String imgPath;
+    public static Bitmap imgBitmap;
 
     private DataManager _dataManager;
 
@@ -115,7 +124,7 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater());
+        CustomPagerAdapter adapter= new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
         pager.setAdapter(adapter);
 
         memoEdit.clearFocus();
@@ -126,49 +135,32 @@ public class EditLocationActivity extends AppCompatActivity {
     }
 
 
-    public void setVisibleMemo(){
-        memoEdit.setText(null);
-        memoEdit.setVisibility(View.VISIBLE);
-        //memoImage.setVisibility(View.VISIBLE);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String path = data.getExtras().getString("img");
+        if (requestCode == 1 && resultCode == RESULT_OK){
+            Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
+            //imgPath = path;
+            loadPicture(data);
+           // Intent intent = new Intent(getApplicationContext(), CustomPagerAdapter.class);
+            //intent.putExtra("path", imgPath);
+           // startActivity(intent);
+        }
     }
 
-    /*
-
-    ToggleButton.OnCheckedChangeListener addMemoListener  = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            if(compoundButton.isChecked()){
-                switch (compoundButton.getId()) {
-                    case R.id.eatToggleBtn:
-                        doBtn.setChecked(false);
-                        takeBtn.setChecked(false);
-                        someBtn.setChecked(false);
-                        setVisibleMemo();
-                        break;
-
-                    case R.id.doToggleBtn:
-                        eatBtn.setChecked(false);
-                        takeBtn.setChecked(false);
-                        someBtn.setChecked(false);
-                        setVisibleMemo();
-                        break;
-
-                    case R.id.takeToggleBtn:
-                        eatBtn.setChecked(false);
-                        someBtn.setChecked(false);
-                        doBtn.setChecked(false);
-                        setVisibleMemo();
-                        break;
-
-                    case R.id.somethingToggleBtn:
-                        eatBtn.setChecked(false);
-                        takeBtn.setChecked(false);
-                        doBtn.setChecked(false);
-                        setVisibleMemo();
-                        break;
-                }
-            }
+    public void loadPicture(Intent data){
+        try {
+            imgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),  Uri.fromFile(new File(data.getExtras().getString("img"))));
+            Log.d("1111", Uri.parse(data.getExtras().getString("img")).toString());
+           // Uri.fromFile(new File(data.getExtras().getString("img")))
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    };
-    */
+        // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
+       // setImage.setAdjustViewBounds(true);
+        //uploadImage.setImageBitmap(rotate(myBitmap, 0));
+        // setImage.setImageBitmap(image_bitmap);
+    }
+
 }
