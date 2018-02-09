@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.Circle;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -23,57 +25,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
 
 
-class CoordViews{
-    int circleX[] = new int[2];
-    int circleY[] = new int[2];
-}
-
 /**
  * Created by JKPark on 2018-01-31.
  */
 public class ScheduleServiceAnimated extends ScheduleService {
     long DRAGDROP_ANIMATION_DURATION, DRAGDROP_WAITING_TIME;
-    public View.OnClickListener clickEditSchedule, clickRemoveSchedule;
-
-    private ArrayList<CoordViews> coordViewsList = new ArrayList<>(); //뷰의 위치 저장
+    public View.OnClickListener clickEditSchedule;
     private Queue<View> queueCircleAnimated= new LinkedList<>();
     private int startID, endID;
     private boolean isScheduleMoved;
     private Handler tHandler = new Handler();
-    private int single_height;
 
     public ScheduleServiceAnimated(ViewGroup rootView, int layoutSingle, NestedScrollView scrollView, RelativeLayout layoutBase, Context appContext, boolean isDragDrop) {
         super(rootView, layoutSingle, scrollView, layoutBase, appContext, isDragDrop);
-        super.longClickedCircle = this.longClickStartEditing;
         super.dragListener = this.scheduleDragListener;
         clickEditSchedule = null;
-        DRAGDROP_ANIMATION_DURATION = 3000;
+        DRAGDROP_ANIMATION_DURATION = 1500;
         DRAGDROP_WAITING_TIME = 1000;
         isScheduleMoved = false;
-        single_height = 0;
-    }
-
-    @Override
-    public void createNewSchedule(@Nullable View.OnClickListener clickCreateNew, @Nullable View.OnClickListener clickEdit) {
-        //animation before creating of new schedule
-        View viewReference;
-        while (listSchedule.size() > coordViewsList.size()) {
-             viewReference = listSchedule.get(coordViewsList.size()).view;
-            if (viewReference == null) //if null throw exception
-                return;
-            if (single_height == 0)
-                single_height = viewReference.getHeight();
-            CoordViews coordViews = new CoordViews();
-
-            coordViews.circleX[0] = getRelativeLeft(viewReference.findViewById(R.id.circleimageview_left), layoutBase);
-            coordViews.circleX[1] = getRelativeLeft(viewReference.findViewById(R.id.circleimageview_right), layoutBase);
-            coordViews.circleY[0] = getRelativeTop(viewReference.findViewById(R.id.circleimageview_left), layoutBase);
-            coordViews.circleY[1] = getRelativeTop(viewReference.findViewById(R.id.circleimageview_right), layoutBase);
-
-            coordViewsList.add(coordViews);
-        }
-
-        super.createNewSchedule(clickCreateNew, clickEdit);
     }
 
     View.OnDragListener scheduleDragListener = new View.OnDragListener(){
@@ -91,7 +60,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
                 case DragEvent.ACTION_DRAG_LOCATION:
                     return true;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    tHandler.removeCallbacksAndMessages(null); //cancel animation + messages when moved to the next
+                    //tHandler.removeCallbacksAndMessages(null); //cancel animation + messages when moved to the next
 
                     view.setBackgroundColor(Color.TRANSPARENT);
                     //view.setVisibility(View.VISIBLE);
@@ -99,17 +68,13 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     return true;
                 case DragEvent.ACTION_DROP:
                     //switch of data happens
-                    tHandler.removeCallbacksAndMessages(null);
+                    //tHandler.removeCallbacksAndMessages(null);
 
                     //view.setVisibility(View.VISIBLE);
                     ClipData.Item item = dragEvent.getClipData().getItemAt(0);
                     String dragData =item.getText().toString();
 
                     Log.d("DragDrop", "Ended entered");
-                    for (int i = 0; i < listSchedule.size(); i++){
-                        listSchedule.get(i).view.findViewById(R.id.circleimageview_left).clearAnimation();
-                        listSchedule.get(i).view.findViewById(R.id.circleimageview_right).clearAnimation();
-                    }
                     view.setBackgroundColor(Color.TRANSPARENT);
                     //if schedule is already moved, animation is not necessary.
                     if (!isScheduleMoved) {
@@ -121,8 +86,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
                         startID = toListIdx((int)view.getTag());
                     }
                     endID = toListIdx((int)view.getTag());
-                    view.setBackgroundColor(Color.GRAY);
-                    tHandler.postDelayed(runnableTimeCounter, DRAGDROP_WAITING_TIME); //animation takes a place after the waiting time.
+                    view.setBackgroundColor(Color.YELLOW);
+                    //tHandler.postDelayed(runnableTimeCounter, DRAGDROP_WAITING_TIME); //animation takes a place after the waiting time.
                     return true;
 
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -130,6 +95,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     endID = toListIdx((int)view.getTag());
                     //tHandler.removeCallbacksAndMessages(null);
                     isScheduleMoved = false;
+                    isEditing = false;
                     return true;
 
                 default:
@@ -139,122 +105,53 @@ public class ScheduleServiceAnimated extends ScheduleService {
         }
     };
 
-
-    View.OnLongClickListener longClickStartEditing = new View.OnLongClickListener(){
-        @Override
-        public boolean onLongClick(View view) { //Start Editing
-            for (int idx = 0; idx < listSchedule.size() - 1; idx++){ //show delete buttons
-                View referenceView = listSchedule.get(idx).view;
-                if (getLeftVisbility(idx)){
-                    referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.VISIBLE);
-                    referenceView.findViewById(R.id.circleimageview_left).setOnLongClickListener(clickStartDragging);
-                }
-                else {
-                    referenceView.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.VISIBLE);
-                    referenceView.findViewById(R.id.circleimageview_right).setOnLongClickListener(clickStartDragging);
-                }
-            }
-            /*start shaking
-            Animation aniShake = AnimationUtils.loadAnimation(appContext, R.anim.shake);
-            for (int idx = 0; idx < listSchedule.size() - 1; idx++){
-                CircleImageView circleImageView;
-                if (getLeftVisbility(idx))
-                    circleImageView = listSchedule.get(idx).view.findViewById(R.id.circleimageview_left);
-                else
-                    circleImageView = listSchedule.get(idx).view.findViewById(R.id.circleimageview_right);
-                circleImageView.startAnimation(aniShake);
-                circleImageView.animate().
-            }
-*/
-            return true;
-        }
-    };
-
-    private CircleImageView createCircleImage(int idxOriginal){
-        Boolean isLeft = getLeftVisbility(idxOriginal);
-        CircleImageView circleCopy = new CircleImageView(appContext);
-        circleCopy.setX(coordViewsList.get(idxOriginal).circleX[isLeft ? 0 : 1]);;
-        circleCopy.setY(coordViewsList.get(idxOriginal).circleY[isLeft ? 0 : 1]);
-        circleCopy.setBorderWidth(BORDER_WIDTH);
-        circleCopy.setBorderColor(Color.BLACK);
-        circleCopy.setImageResource(R.color.colorPrimaryDark);
-        RelativeLayout.LayoutParams circleSize = new RelativeLayout.LayoutParams((int)toDp(IMAGE_SIZE), (int)toDp(IMAGE_SIZE));
-        circleCopy.setLayoutParams(circleSize);
-
-        return circleCopy;
-    }
-    int TEMP_ID;
     @Override
     public boolean removeSchedule(int view_id) {
-        /*
+        /* involves the entire schedules to be animated
         Lower than the selected index
         -Texts: fade out --> fade in
         -Circle Images: left -> right OR right - left
         The selected index
         -fade out --> delete
         Higher than the selected index
-        -Move STRAIGHT UP and replace the selected index.
-        */
-        boolean isLeft;
-        int total = listSchedule.size();
-        TEMP_ID = view_id;
+        -Move STRAIGHT UP and replace the selected index.*/
         int delete_idx = toListIdx(view_id);
-        int height = listSchedule.get(0).view.getHeight();
-        for (int i = 0; i < total; i++){
-            View referenceView = listSchedule.get(i).view;
-            isLeft = getLeftVisbility(i);
-            if (i < delete_idx) {
-                CircleImageView circleCopy = createCircleImage(i);
-                layoutBase.addView(circleCopy);
-                queueCircleAnimated.add(circleCopy);
-                //setting circle animations
-                circleCopy.animate().x(coordViewsList.get(i).circleX[isLeft ? 1 : 0]).setDuration(DRAGDROP_ANIMATION_DURATION);
-
-                //setting text animations
-                if (isLeft) {
-                    referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
-                } else {
-                    referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
-                }
-                referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION/2).alpha(0);
-
-                if (i == 0){
-                    TextsFadeOutAnimationListener fadeOut = new TextsFadeOutAnimationListener();
-                    fadeOut.setData(0, 0, 0, delete_idx - 1, true);
-                    referenceView.animate().setListener(fadeOut);
-                }
+        for (int idx = 0; idx < listSchedule.size(); idx++){
+            boolean isLeft = getLeftVisbility(idx);
+            if (idx < delete_idx){ //circle to side way
+                listSchedule.get(idx).circleImage.animate().x(coordinateInformation.circleX[isLeft ? 1 : 0]).setDuration(DRAGDROP_ANIMATION_DURATION);
+                listSchedule.get(idx).view.animate().alpha(0).setDuration(DRAGDROP_ANIMATION_DURATION/2);
             }
-            else if (i == delete_idx){ //if the target
-                FinishRemoveAnimation fin = new FinishRemoveAnimation(view_id);
-                referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION).setListener(fin).alpha(0);
+            else if (idx == delete_idx){
+                RemoveAnimation removeAnimation = new RemoveAnimation(view_id);
+                removeAnimation.setData(false);
+                listSchedule.get(idx).view.animate().alpha(0).setDuration(DRAGDROP_ANIMATION_DURATION/2).setListener(removeAnimation);
+                listSchedule.get(idx).circleImage.animate().alpha(0).setDuration(DRAGDROP_ANIMATION_DURATION/2);
             }
-            else if (i > delete_idx){
-                referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION).yBy(-height);
+            else{
+                listSchedule.get(idx).view.animate().yBy(-coordinateInformation.layout_height).setDuration(DRAGDROP_ANIMATION_DURATION);
+                if (idx < listSchedule.size() - 1) listSchedule.get(idx).circleImage.animate().yBy(-coordinateInformation.layout_height).setDuration(DRAGDROP_ANIMATION_DURATION);
+                //bottom empty circle also animates
+            }
+
+            if (isLeft)
+                listSchedule.get(idx).view.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.GONE);
+            else
+                listSchedule.get(idx).view.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.GONE);
+
+            //optiotnal
+            if (idx < listSchedule.size() - 1){
+                listSchedule.get(idx).circleImage.bringToFront();
             }
         }
+        isEditing = false;
+
         if (listSchedule.size() > 2)
-            return true;
+            return  true;
         else
-            return false;
-        //return super.removeSchedule(view_id);
+            return  false;
     }
 
-    View.OnLongClickListener clickStartDragging = new View.OnLongClickListener(){
-        @Override
-        public boolean onLongClick(View view) {
-            View parentView = (View) view.getParent();
-            ClipData.Item item = new ClipData.Item((CharSequence) parentView.getTag().toString());
-            String[] mimeType = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-
-            ClipData data = new ClipData(parentView.getTag().toString(), mimeType, item); //pass on the tag of the selected layout
-
-            view.setBackgroundColor(Color.TRANSPARENT);
-
-            View.DragShadowBuilder dragShadowBuilder = new View.DragShadowBuilder(view);
-            view.startDrag(data, dragShadowBuilder, view, 0);
-            return true;
-        }
-    };
 
     @Override
     public void moveSchedule(int idxA, int idxB) {
@@ -283,6 +180,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
 
         for (int idx = low; idx <= high; idx++){
             /*Start of drawing views*/
+            listSchedule.get(idx).circleImage.bringToFront();
+
 
             isLeft = getLeftVisbility(idx);
             View referenceView = listSchedule.get(idx).view;
@@ -292,37 +191,44 @@ public class ScheduleServiceAnimated extends ScheduleService {
                 referenceView.animate().setListener(textsFadeOutAnimationListener);
             referenceView.animate().setDuration(DRAGDROP_ANIMATION_DURATION/2).alpha(0);
 
-            if (isMoveDown && idx == high) continue; //no circle animation for the target that is being moved
-            if (!isMoveDown && idx == low) continue; //no circle animation
-
-            if (isLeft)
-                referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
-            else
-                referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
-
-
-            CircleImageView circleCopy = createCircleImage(idx);
-            layoutBase.addView(circleCopy);
-            queueCircleAnimated.add(circleCopy);
+            if ((idx == high && isMoveDown) || (idx == low && !isMoveDown)) {
+                if (high - low < 3) {
+                    if (isMoveDown) {
+                        isLeft = getLeftVisbility(low);
+                        listSchedule.get(idx).circleImage.animate().yBy(-coordinateInformation.layout_height * (high - low)).
+                                x(coordinateInformation.circleX[isLeft ? 0 : 1]).setDuration(DRAGDROP_ANIMATION_DURATION);
+                    } else {
+                        isLeft = getLeftVisbility(high);
+                        listSchedule.get(idx).circleImage.animate().yBy(+(coordinateInformation.layout_height * (high - low)))
+                                .x(coordinateInformation.circleX[isLeft ? 0 : 1]).setDuration(DRAGDROP_ANIMATION_DURATION);
+                    }
+                }
+                else{
+                    queueCircleAnimated.clear();
+                    queueCircleAnimated.add(listSchedule.get(idx).circleImage);
+                    listSchedule.get(idx).circleImage.animate().alpha(0).setDuration(DRAGDROP_ANIMATION_DURATION/2);
+                }
+                continue;
+            }
 
             //setting circle animations
-            circleCopy.animate().setDuration(DRAGDROP_ANIMATION_DURATION);
+            listSchedule.get(idx).circleImage.animate().setDuration(DRAGDROP_ANIMATION_DURATION);
             if (isMoveDown){ //if moving down
-                circleCopy.animate().y(coordViewsList.get(idx + 1).circleY[isLeft ? 1 : 0]).x(coordViewsList.get(idx + 1).circleX[isLeft ? 1 : 0]);
+                listSchedule.get(idx).circleImage.animate().x(coordinateInformation.circleX[isLeft ? 1: 0]).yBy(+coordinateInformation.layout_height);
             }
             else{
-                circleCopy.animate().y(coordViewsList.get(idx - 1).circleY[isLeft ? 1 : 0]).x(coordViewsList.get(idx - 1).circleX[isLeft ? 1 : 0]);
+                listSchedule.get(idx).circleImage.animate().x(coordinateInformation.circleX[isLeft ? 1: 0]).yBy(-coordinateInformation.layout_height);
             }
             //end of setting destination coordinates//
+            listSchedule.get(idx).circleImage.setOnClickListener(null);
         }
-
 
         for (int idx = 0; idx < listSchedule.size() - 1; idx++){
             View referenceView = listSchedule.get(idx).view;
             if (getLeftVisbility(idx))
-                referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.INVISIBLE);
+                referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.GONE);
             else
-                referenceView.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.INVISIBLE);
+                referenceView.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.GONE);
         }
         //super.moveSchedule(idxA, idxB);
     }
@@ -337,7 +243,6 @@ public class ScheduleServiceAnimated extends ScheduleService {
             startID = endID;
         }
     };
-
 
     class TextsFadeOutAnimationListener implements Animator.AnimatorListener{
         int idxStart, idxEnd, low, high;
@@ -358,45 +263,30 @@ public class ScheduleServiceAnimated extends ScheduleService {
         public void onAnimationEnd(Animator animator) {
             //assumed that editing is on.
             TextsFadeInAnimationListener textsFadeInAnimationListener = new TextsFadeInAnimationListener();
-
+            int idx;
             //if same, the animation is implementing removal.
-            if (idxStart != idxEnd )ScheduleServiceAnimated.super.moveSchedule(idxStart, idxEnd);
+            ScheduleServiceAnimated.super.moveSchedule(idxStart, idxEnd);
 
-            for (int idx = low; idx <= high; idx++) {
+            if (!queueCircleAnimated.isEmpty()){ //if not empty, greater than four circles are being moved.
+                View circleImage = queueCircleAnimated.remove();
+                idx = toListIdx((int)circleImage.getTag());
+                circleImage.setX(coordinateInformation.circleX[getLeftVisbility(idx) ? 0 : 1]);
+                circleImage.setY(coordinateInformation.layout_height * idx + coordinateInformation.first_margin);
+                circleImage.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
+            }
+
+            for (idx = low; idx <= high; idx++) {
                 View referenceView = listSchedule.get(idx).view;
                 if (getLeftVisbility(idx)) {
-                    referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
+                    //referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
                     referenceView.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
                     if (idx == low)
                         referenceView.animate().setListener(textsFadeInAnimationListener);
                 } else {
-                    referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE); //can be ignored
+                    //referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE); //can be ignored
                     referenceView.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
                     if (idx == low)
                         referenceView.animate().setListener(textsFadeInAnimationListener);
-                }
-
-                if (idxStart == idxEnd){
-                    ScheduleServiceAnimated.super.setVisbility(referenceView, !getLeftVisbility(idx));
-                    if (!getLeftVisbility(idx))
-                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.INVISIBLE);
-                    else
-                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.INVISIBLE);
-                    continue;
-                }
-
-                //Specific animation for changing orders
-                if (isMoveDown && idx == low){
-                    if (getLeftVisbility(idx))
-                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
-                    else
-                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
-                }
-                else if (!isMoveDown && idx == high){
-                    if (getLeftVisbility(idx))
-                        referenceView.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
-                    else
-                        referenceView.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
                 }
             }
 
@@ -425,20 +315,17 @@ public class ScheduleServiceAnimated extends ScheduleService {
             //remove animations from layout
             for (int idx = 0; idx < listSchedule.size() - 1; idx++) {
                 if (getLeftVisbility(idx)) {
-                    listSchedule.get(idx).view.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
+                    //listSchedule.get(idx).view.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
                     listSchedule.get(idx).view.animate().setListener(null);
                 }
                 else {
-                    listSchedule.get(idx).view.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
+                    //listSchedule.get(idx).view.findViewById(R.id.circleimageview_right).setVisibility(View.VISIBLE);
                     listSchedule.get(idx).view.animate().setListener(null);
                 }
                 listSchedule.get(idx).view.setOnDragListener(scheduleDragListener); //reactivate drag drop listener
-                listSchedule.get(idx).view.setOnClickListener(clickEditSchedule);
+                listSchedule.get(idx).circleImage.setOnClickListener(clickEditSchedule);
             }
-            while(queueCircleAnimated.size() > 0){ //clearing queue after its use
-                queueCircleAnimated.peek().clearAnimation();
-                layoutBase.removeView(queueCircleAnimated.remove());
-            }
+            isEditing = false;
         }
 
         @Override
@@ -452,12 +339,16 @@ public class ScheduleServiceAnimated extends ScheduleService {
         }
     }
 
-    class FinishRemoveAnimation implements Animator.AnimatorListener{
+    class RemoveAnimation implements Animator.AnimatorListener{
         final int view_id;
-        public FinishRemoveAnimation(int selectedData) {
+        private boolean isFadeIn = false;
+        public RemoveAnimation(int selectedData) {
             this.view_id = selectedData;
         }
 
+        public void setData(boolean isFadeIn){
+            this.isFadeIn = isFadeIn;
+        }
         @Override
         public void onAnimationStart(Animator animator) {
 
@@ -465,7 +356,42 @@ public class ScheduleServiceAnimated extends ScheduleService {
 
         @Override
         public void onAnimationEnd(Animator animator) {
+            //after the animation is finished perform the removal
+            int idxDelete = toListIdx(view_id);
+            if (!isFadeIn) {
+                for (int i = 0; i < idxDelete; i++) {
+                    if (i == 0) {
+                        RemoveAnimation removeAnimation = new RemoveAnimation(view_id);
+                        removeAnimation.setData(true);
+                        listSchedule.get(i).view.animate().setListener(removeAnimation);
+                    }
+                    //listSchedule.get(idx).view.setY(listSchedule.get(idx).view.getY() - coordinateInformation.layout_height);
+                    listSchedule.get(i).view.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION / 2);
+                    if (getLeftVisbility(i)){
+                        listSchedule.get(i).view.findViewById(R.id.title_left).setVisibility(View.INVISIBLE);
+                        listSchedule.get(i).view.findViewById(R.id.contents_left).setVisibility(View.INVISIBLE);
+                        listSchedule.get(i).view.findViewById(R.id.title_right).setVisibility(View.VISIBLE);
+                        listSchedule.get(i).view.findViewById(R.id.contents_right).setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        listSchedule.get(i).view.findViewById(R.id.title_right).setVisibility(View.INVISIBLE);
+                        listSchedule.get(i).view.findViewById(R.id.contents_right).setVisibility(View.INVISIBLE);
+                        listSchedule.get(i).view.findViewById(R.id.title_left).setVisibility(View.VISIBLE);
+                        listSchedule.get(i).view.findViewById(R.id.contents_left).setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            else {
+                listSchedule.get(0).view.animate().setListener(null);
 
+                layoutBase.removeView(listSchedule.get(idxDelete).view);
+                layoutBase.removeView(listSchedule.get(idxDelete).circleImage);
+                listSchedule.remove(idxDelete);
+                isEditing = false;
+
+                updateYCoordinateViews(idxDelete);
+                heightUpdate(false);
+            }
         }
 
         @Override
