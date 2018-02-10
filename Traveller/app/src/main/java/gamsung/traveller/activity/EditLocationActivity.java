@@ -10,6 +10,10 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -22,9 +26,12 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomPagerAdapter;
+import gamsung.traveller.adapter.CustomRecyclerAdapter;
 import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.util.DebugToast;
 
@@ -43,7 +50,11 @@ public class EditLocationActivity extends AppCompatActivity {
     ViewPager pager;
     String imgPath;
     CustomPagerAdapter adapter;
+
+    CustomRecyclerAdapter _adapter;
+
     public static Bitmap imgBitmap;
+    ArrayList<String> pathhhhhh; // = new ArrayList<>();
 
     private DataManager _dataManager;
 
@@ -126,16 +137,27 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-         adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
+
+        List<String> temp = new ArrayList<>();
+        temp.add(""); //첫 이미지 default
+        _adapter = new CustomRecyclerAdapter(this, temp);
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_edit_lcoation);
+        recyclerView.setAdapter(_adapter);
+        //recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+
+//         adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
 //        adapter.notifyDataSetChanged();
-        pager.setAdapter(adapter);
+//        pager.setAdapter(adapter);
        // adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
 
         memoEdit.clearFocus();
         tvMission.clearFocus();
 
         _dataManager = DataManager.getInstance(this);
-
     }
 
 
@@ -144,13 +166,20 @@ public class EditLocationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK){
             imgPath = data.getExtras().getString("img");
+
+
+          pathhhhhh = new ArrayList<>(data.getStringArrayListExtra("img2"));
+          for(int i=0; i<pathhhhhh.size(); i++){
+              Log.d("이시발", pathhhhhh.get(i).toString());
+          }
 //            DebugToast.show(this, imgPath);
 
+             _adapter.addImagePath(imgPath);
 
-            adapter.setImgPath(imgPath);
-            pager.setAdapter(adapter);
+//            adapter.setImgPath(imgPath);
+//            pager.setAdapter(adapter);
           //  adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext(), imgPath);
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
            // Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
             //imgPath = path;
            // loadPicture(data);
