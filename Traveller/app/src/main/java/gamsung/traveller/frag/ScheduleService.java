@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.AppCompatImageView;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -32,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
 
 class ViewIdGenerator {
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
@@ -56,6 +61,8 @@ class ViewIdGenerator {
     }
 }
 
+
+
 public class ScheduleService {
     /**
      * Created by JKPark on 2018-01-30.
@@ -67,13 +74,37 @@ public class ScheduleService {
     }
     class ListSchedule{
         View view, circleImage;
+        View lines[] = new View[2];
         int view_ID;
-        public ListSchedule(View view, View circleImage, int view_ID) {
+        public ListSchedule(View view, View circleImage, View lines[], int view_ID) {
             this.circleImage = circleImage;
             this.view = view;
             this.view_ID = view_ID;
+            this.lines = lines;
         }
     }
+
+    class DrawnLine extends AppCompatImageView{
+        int startX, startY, endX, endY;
+        public DrawnLine(Context context, int startX, int startY, int endX, int endY) {
+            super(context);
+            this.startX = startX;
+            this.startY = startY;
+            this.endX = endX;
+            this.endY = endY;
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
+            line.setStrokeWidth(toDp(5));
+            canvas.drawLine(startX ,startY , endX, endY , line);
+        }
+    }
+
+
+
     int BORDER_WIDTH, IMAGE_SIZE, FIRST_CIRCLE_BIGGER;
     CoordinateInformation coordinateInformation = new CoordinateInformation();
     final boolean isDragDrop;
@@ -191,7 +222,6 @@ public class ScheduleService {
         layoutSchedule.setBackgroundColor(Color.TRANSPARENT);
         layoutSchedule.setOnDragListener(dragListener);
 
-        draw_lines(idx);
         return layoutSchedule;
     }
 
@@ -249,6 +279,8 @@ public class ScheduleService {
 
     public void addSchedule(@Nullable View.OnClickListener clickCreateNew, @Nullable View.OnClickListener clickEdit){
         //내용있는 일정 생성;
+
+
         Boolean isLeft = !getLeftVisbility(listSchedule.size() - 1);
         View createdView = addFilledSchedule(isLeft, listSchedule.size() - 1);
         CircleImageView circleImageView = createCircleImage(coordinateInformation.circleX[isLeft ? 0 : 1],
@@ -258,10 +290,13 @@ public class ScheduleService {
         layoutBase.addView(createdView);
         layoutBase.addView(circleImageView);
         circleImageView.setTag(createdView.getId());
-        listSchedule.add(listSchedule.size() - 1, new ListSchedule(createdView, circleImageView, createdView.getId())); //last index always occupies add button
+        DrawnLine[] lineView = draw_lines(listSchedule.size() - 1);
+        layoutBase.addView(lineView[0]);
+        listSchedule.add(listSchedule.size() - 1, new ListSchedule(createdView, circleImageView, lineView, createdView.getId())); //last index always occupies add button
         heightUpdate(true);
 
         updateYCoordinateViews(listSchedule.size() - 2);
+
 
         //update view
         for (int i = 0; i < listSchedule.size() - 1; i++) {
@@ -322,16 +357,9 @@ public class ScheduleService {
         //A 레이아웃을 B로 이동. A + 1 ~ B는 위로 한칸 이동
 
         if (idxA == idxB) return; //같을경우 리턴
-        //int y_coordinateA, y_coordinateB;
-        //y_coordinateA = coordinateInformation.layout_height * idxB;
-        //y_coordinateB = coordinateInformation.layout_height * idxA;
-        //switching two views
-        //listSchedule.get(idxA).view.setY(y_coordinateB); //하나씩 아래로
-        //listSchedule.get(idxB).view.setY(y_coordinateA);
-        //end of switching
 
-
-        ListSchedule lsTempA = new ListSchedule(listSchedule.get(idxA).view, listSchedule.get(idxA).circleImage, listSchedule.get(idxA).view.getId());
+        ListSchedule lsTempA = new ListSchedule(listSchedule.get(idxA).view, listSchedule.get(idxA).circleImage,
+                listSchedule.get(idxA).lines, listSchedule.get(idxA).view.getId());
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
 
@@ -362,22 +390,29 @@ public class ScheduleService {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
-    public void draw_lines(int idx){
-        ImageView imageView = new ImageView(appContext);
+    public DrawnLine[] draw_lines(int idx){
 
-        imageView.setX(coordinateInformation.circleX[0] +  dipToPixels(appContext,this.IMAGE_SIZE/2));
-        if (idx > 0) {
-            if (idx == 1) imageView.setY((coordinateInformation.first_margin + dipToPixels(appContext, this.IMAGE_SIZE)) * idx);
-            //else imageView.setY(((coordinateInformation.first_margin + coordinateInformation.end_margin) + dipToPixels(appContext, this.IMAGE_SIZE)) * idx - coordinateInformation.first_margin);\
-            else imageView.setY(listSchedule.get(idx).view.getY() - coordinateInformation.end_margin);
+        DrawnLine rtrLine[] = new DrawnLine[2];
+
+        for (int i = 0; i < 2; i++){
+            if (i == 0) {
+                rtrLine[0] =  new DrawnLine(appContext, 0, 0, coordinateInformation.circleX[1] - coordinateInformation.circleX[0], coordinateInformation.first_margin * 2);
+            }
+            else{
+                rtrLine[1] = new DrawnLine(appContext, coordinateInformation.circleX[1] - coordinateInformation.circleX[0], 0, 0, coordinateInformation.first_margin * 2);
+            }
+
+            rtrLine[i].setX(coordinateInformation.circleX[0] +  dipToPixels(appContext,this.IMAGE_SIZE/2));
+            if (idx > 0) {
+                if (idx == 1) rtrLine[i].setY((coordinateInformation.first_margin + dipToPixels(appContext, this.IMAGE_SIZE)) * idx);
+                    //else imageView.setY(((coordinateInformation.first_margin + coordinateInformation.end_margin) + dipToPixels(appContext, this.IMAGE_SIZE)) * idx - coordinateInformation.first_margin);\
+                else rtrLine[i].setY(listSchedule.get(idx).view.getY() - coordinateInformation.end_margin);
+            }
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(coordinateInformation.circleX[1] - coordinateInformation.circleX[0], coordinateInformation.first_margin * 2);
+            rtrLine[i].setLayoutParams(layoutParams);
         }
-        imageView.setBackgroundColor(appContext.getResources().getColor(R.color.cardview_dark_background));
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(coordinateInformation.circleX[1] - coordinateInformation.circleX[0], coordinateInformation.first_margin * 2);
-        imageView.setLayoutParams(layoutParams);
-
-
-        layoutBase.addView(imageView);
+        return rtrLine;
     }
 
     public void initSchedule(@Nullable View.OnClickListener clickCreateNew, @Nullable View.OnClickListener clickEdit){
@@ -391,21 +426,22 @@ public class ScheduleService {
         View createdView = addFilledSchedule(false, listSchedule.size());
         CircleImageView circleImageView = createCircleImage(coordinateInformation.circleX[1], (coordinateInformation.first_margin));
         circleImageView.setOnClickListener(clickEdit);
-        listSchedule.add(new ListSchedule(createdView, circleImageView, createdView.getId()));
+        DrawnLine lineView[] = draw_lines(listSchedule.size());
+        listSchedule.add(new ListSchedule(createdView, circleImageView, lineView, createdView.getId()));
+        layoutBase.addView(lineView[0]);
         layoutBase.addView(circleImageView);
         layoutBase.addView(createdView);
         circleImageView.setTag(createdView.getId());
         heightUpdate(true);
 
         createdView = addEmptySchedule(clickCreateNew); //not necessary to create a new circle image.
-        listSchedule.add(new ListSchedule(createdView, null, createdView.getId()));
+        listSchedule.add(new ListSchedule(createdView, null, null, createdView.getId()));
         layoutBase.addView(createdView);
         heightUpdate(true);
         layoutBase.getLayoutParams().height += FIRST_CIRCLE_BIGGER;
 
         updateYCoordinateViews(0);
 
-        draw_lines(0);
     }
 
     public void updateYCoordinateViews(int startIdx){
@@ -451,14 +487,14 @@ public class ScheduleService {
         //draw an invisible schedule to calculate layout height and xy coordinates.
 
     }
-    public int getRelativeLeft(View  view, View root){
+    public static int getRelativeLeft(View  view, View root){
         if (view.getParent() == root)
             return view.getLeft();
         else
             return view.getLeft() + getRelativeLeft((View)view.getParent(), root);
     }
 
-    public int getRelativeTop(View view, View root){
+    public static int getRelativeTop(View view, View root){
         if (view.getParent() == root)
             return view.getTop();
         else
