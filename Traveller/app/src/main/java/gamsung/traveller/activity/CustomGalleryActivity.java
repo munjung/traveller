@@ -72,7 +72,7 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
             imagecursor.moveToPosition(i);
             int dataColumnIndex = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
             galleryImageUrls.add(imagecursor.getString(dataColumnIndex));//get Image from column index
-            System.out.println("Array path" + galleryImageUrls.get(i));
+            System.out.println("Array path : " + galleryImageUrls.get(i));
         }
     }
 
@@ -158,8 +158,10 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
                 //Send back result to MainActivity with selected images
                 Intent intent = new Intent();
                 //intent.putExtra(ImageMultiplePickerActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
+
                 intent.putExtra("img",selectedItems.toString());
-               // intent.putStringArrayListExtra()
+                intent.putStringArrayListExtra("img2", selectedItems);
+
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;

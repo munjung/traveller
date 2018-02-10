@@ -55,10 +55,11 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
             mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension,mDimension));
             int padding = (int) getResources().getDimension(R.dimen.custom_profile_padding);
-            mImageView.setPadding(padding,padding,padding,padding);
+            mImageView.setPadding(padding+3,padding,padding+3,padding);
+            mImageView.setCropToPadding(true);
+            mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mIconGenerator.setContentView(mImageView);
         }
-
         @Override
         protected void onBeforeClusterItemRendered(PhotoCluster photoCluster, MarkerOptions markerOptions) {
             // Draw a single person.

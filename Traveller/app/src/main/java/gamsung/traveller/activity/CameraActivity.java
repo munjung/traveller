@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -78,7 +80,7 @@ import gamsung.traveller.R;
         controlInflater = LayoutInflater.from(getBaseContext());
         View viewControl = controlInflater.inflate(R.layout.control, null);
         LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.addContentView(viewControl, layoutParamsControl);
 
         buttonTakePicture = (Button) findViewById(R.id.takepicture);
@@ -218,6 +220,7 @@ import gamsung.traveller.R;
     @Override
     public void surfaceCreated(SurfaceHolder holder) { // TODO Auto-generated method stub
         camera = Camera.open();
+        camera.setDisplayOrientation(90);
     }
 
     @Override
@@ -295,8 +298,9 @@ private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
             result = (info.orientation - degrees + 360) % 360;
         }
 
+        camera.setDisplayOrientation(result);
+
         return result;
     }
-
 }
 
