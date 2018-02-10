@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -37,7 +38,7 @@ public class TravelViewActivity extends AppCompatActivity {
      * 준규가 다 만들어줄 9,13화면
      */
 
-    private Button btnAddLocation, btnHome;
+    private ImageButton btnAddLocation, btnHome;
     private ViewSwitcher viewSwitcher;
     private EditText editTitle;
     private TextView textTitle;
@@ -147,9 +148,8 @@ public class TravelViewActivity extends AppCompatActivity {
 
         //draw and implement events for the tab
         TabLayout tabsTravel = findViewById(R.id.tabsTravelView);
-        tabsTravel.addTab(tabsTravel.newTab().setText("일정별"));
-        tabsTravel.addTab(tabsTravel.newTab().setText("사진별"));
-
+        //tabsTravel.addTab(tabsTravel.newTab().setText("일정별"));
+        //tabsTravel.addTab(tabsTravel.newTab().setText("사진별"));
         tabsTravel.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

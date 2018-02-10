@@ -159,6 +159,7 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent();
                 //intent.putExtra(ImageMultiplePickerActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
                 intent.putExtra("img",selectedItems.toString());
+               // intent.putStringArrayListExtra()
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;

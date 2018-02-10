@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
@@ -27,8 +29,8 @@ import gamsung.traveller.frag.CalendarFragment;
 public class SetTravelActivity extends AppCompatActivity {
 
     CalendarFragment calendarFragment;
-    ImageButton addImgBtn;
-    ImageView setImage;
+  // ImageButton addImgBtn;
+    ImageView setImage, addImgBtn;
     private static final int PICK_FROM_ALBUM = 0;
     Bitmap image_bitmap;
     TextView go, back;
@@ -38,7 +40,7 @@ public class SetTravelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_travel);
         calendarFragment = (CalendarFragment)getSupportFragmentManager().findFragmentById(R.id.dateFragment);
-        addImgBtn = (ImageButton)findViewById(R.id.addImgBtn);
+        addImgBtn = (ImageView) findViewById(R.id.addImgBtn);
         setImage = (ImageView)findViewById(R.id.setImage);
 
         addImgBtn.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +75,7 @@ public class SetTravelActivity extends AppCompatActivity {
            // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
             setImage.setAdjustViewBounds(true);
             //uploadImage.setImageBitmap(rotate(myBitmap, 0));
+            //Glide.with(getApplicationContext()).load(image_bitmap).asBitmap().into(setImage);
             setImage.setImageBitmap(image_bitmap);
         } catch (FileNotFoundException e){
             e.printStackTrace();
@@ -83,4 +86,5 @@ public class SetTravelActivity extends AppCompatActivity {
         }
 
     }
+
 }

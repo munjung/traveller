@@ -14,57 +14,68 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="#FFFFFF"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             android:elevation="1dp"
             android:id="@+id/toolTitle"
             app:contentInsetStart="0dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="50dp">
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnHome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" 
-                    android:layout_weight="1"
-                    android:text="H"/>
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:src="@drawable/home_btn"/>
 
                 <ViewSwitcher
                     android:id="@+id/viewSwitcher"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2">
-
-                    <TextView
-                        android:id="@+id/textTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" 
-                        android:text="Trip_Name"
-                        android:gravity="center"
-                        android:textSize="16dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/btnHome"
+                    android:layout_toRightOf="@+id/btnHome"
+                    android:layout_toStartOf="@+id/btnAddLocation"
+                    android:layout_toLeftOf="@+id/btnAddLocation">
 
                     <EditText
                         android:id="@+id/editTitle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Trip_Name"
                         android:gravity="center"
-                        android:textSize="16dp"
+                        android:imeOptions="actionDone"
                         android:singleLine="true"
-                        android:imeOptions="actionDone"/>
+                        android:text="Trip_Name"
+                        android:textColor="#000000"
+                        android:textSize="15.2sp" />
+
+                    <TextView
+                        android:id="@+id/textTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Trip_Name"
+                        android:textColor="#000000"
+                        android:textSize="15.2sp" />
 
                 </ViewSwitcher>
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnAddLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="A"/>
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/a_btn" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 
@@ -74,10 +85,23 @@
             android:layout_height="wrap_content"
             android:elevation="1dp"
             android:background="@android:color/background_light"
+            app:tabTextAppearance="@style/TabTextAppearance"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabTextColor="@color/colorPrimary"
-            app:tabSelectedTextColor="@color/colorAccent"/>
+            app:tabTextColor="#5d5d5d"
+            app:tabSelectedTextColor="#111100"
+            app:tabIndicatorColor="#ff0077"
+            app:tabIndicatorHeight="5dp">
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="일정별" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="사진별" />
+        </android.support.design.widget.TabLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
@@ -93,6 +117,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="bottom|right|end"
+        android:src="@drawable/icn_btn_take_photos"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp" />
 </android.support.design.widget.CoordinatorLayout>
