@@ -61,6 +61,8 @@ public class EditLocationActivity extends AppCompatActivity {
     CustomRecyclerAdapter _adapter;
 
     public static Bitmap imgBitmap;
+
+
     ArrayList<String> pathhhhhh; // = new ArrayList<>();
     private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
@@ -93,7 +95,7 @@ public class EditLocationActivity extends AppCompatActivity {
         anythingBtn = (ImageButton)findViewById(R.id.anythingBtn);
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
-        tvMission = (EditText)findViewById(R.id.tvMission);
+        //tvMission = (EditText)findViewById(R.id.tvMission);
         btnHome = (ImageButton)findViewById(R.id.btnHome);
         btnSave = (ImageButton)findViewById(R.id.btnSave);
         btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
@@ -117,6 +119,7 @@ public class EditLocationActivity extends AppCompatActivity {
             isEdit = true;
             pager.setVisibility(View.VISIBLE);
             btnNextPlan.setVisibility(View.GONE);
+
         }
 
         /*
@@ -221,8 +224,7 @@ public class EditLocationActivity extends AppCompatActivity {
 
                 else {
                     Spot newSpot = new Spot();
-                    newSpot.setMission(tvMission.getText().toString());
-                    newSpot.setCategory_id(CATEGORY_ID);
+//                    newSpot.setCategory_id(CATEGORY_ID);
                     _dataManager.insertSpot(newSpot);
                 }
 
@@ -233,7 +235,7 @@ public class EditLocationActivity extends AppCompatActivity {
         btnNextPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                finish();
             }
         });
 
@@ -244,6 +246,7 @@ public class EditLocationActivity extends AppCompatActivity {
 
         memoEdit.clearFocus();
         tvMission.clearFocus();
+     //   tvMission.requestFocus();
 
         _dataManager = DataManager.getInstance(this);
         tvMission.requestFocus();
