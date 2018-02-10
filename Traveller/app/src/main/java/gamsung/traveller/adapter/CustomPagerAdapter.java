@@ -110,17 +110,27 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
 
             String fileName = imgPathList.get(position);
 
+            ArrayList<String> filePath = new ArrayList<>();
+            filePath.add(fileName.substring(1, fileName.length()-1));
+
+            for(int i=0; i<filePath.size(); i++){
+                Log.d("경로를보자ㅏ경로를", filePath.get(i)+"");
+                Log.d("포지션을보자", position+"");
+            }
+
             String realFileName = fileName.substring(1, fileName.length()-1); //앞뒤에 있는 []을 빼보자
-            String completePath = Environment.getExternalStorageDirectory() + "/" + realFileName; //fileName->realFileName
-            Log.d("뭔뎅1", realFileName);
-            Log.d("뭔뎅2", completePath);
+            //String completePath = Environment.getExternalStorageDirectory() + "/" + realFileName; //fileName->realFileName 얘안씀!
+            //Log.d("뭔뎅1", realFileName);
+            //Log.d("뭔뎅2", completePath);
 
-            File file = new File(realFileName); //completePath -> realFileName
-            Uri imageUri = Uri.fromFile(file);
+            //File file = new File(realFileName); //completePath -> realFileName
+            //Uri imageUri = Uri.fromFile(file); //얘 안해도된다!
 
-            Glide.with(context)
-                    .load(imageUri)
-                    .into(img);
+           /* Glide.with(context)
+                    .load(realFileName)  //.load(imageUri)
+                    .into(img);*/
+            Glide.with(context).load(filePath.get(position)).into(img);
+          //  position++;
 
 //            Glide.with(context).load(imgPathList.get(position)).into(img);
             Log.d("intput img", position + " : " + imgPathList.get(position));
@@ -175,9 +185,9 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
 
     @Override
     public int getItemPosition(Object object) {
-        return POSITION_NONE;
+        return super.getItemPosition(object);
+        //return POSITION_NONE;
     }
-
 
     @Override
     public void onClick(View view) {
