@@ -50,17 +50,7 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn;
-    EditText memoEdit,tvMission;
-    TextView editLocation;
-    ImageView memoImage,eat,buy,take,visit,anything;
-    ViewPager pager;
-    String imgPath;
-    CustomPagerAdapter adapter;
 
-    CustomRecyclerAdapter _adapter;
-
-    public static Bitmap imgBitmap;
 
 
     ArrayList<String> pathhhhhh; // = new ArrayList<>();
@@ -71,7 +61,8 @@ public class EditLocationActivity extends AppCompatActivity {
     private ImageView memoImage,eat,buy,take,visit,anything;
     private ViewPager pager;
     private String imgPath;
-    private CustomPagerAdapter adapter;
+    //private CustomPagerAdapter adapter;
+    private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
     public static Bitmap imgBitmap;
     private int CATEGORY_ID;
@@ -205,8 +196,6 @@ public class EditLocationActivity extends AppCompatActivity {
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-//         adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
-
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,10 +228,6 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
-//        adapter.notifyDataSetChanged();
-//        pager.setAdapter(adapter);
-       // adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext());
 
         memoEdit.clearFocus();
         tvMission.clearFocus();
@@ -260,20 +245,13 @@ public class EditLocationActivity extends AppCompatActivity {
 
             imgPath = data.getExtras().getString("img");
 
-
-          pathhhhhh = new ArrayList<>(data.getStringArrayListExtra("img2"));
-          for(int i=0; i<pathhhhhh.size(); i++){
-              Log.d("이시발", pathhhhhh.get(i).toString());
+            pathhhhhh = new ArrayList<>(data.getStringArrayListExtra("img2"));
+            for(int i=0; i<pathhhhhh.size(); i++){
+                Log.d("갓중평최고????????ㅠㅠ??", pathhhhhh.get(i).toString());
           }
 //            DebugToast.show(this, imgPath);
              _adapter.addImagePath(imgPath);
 
-//            adapter.setImgPath(imgPath);
-//            pager.setAdapter(adapter);
-            adapter.setImgPath(imgPath);
-            pager.setAdapter(adapter);
-          //  adapter = new CustomPagerAdapter(getLayoutInflater(), getApplicationContext(), imgPath);
-//            adapter.notifyDataSetChanged();
            // Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
             //imgPath = path;
            // loadPicture(data);
@@ -297,5 +275,4 @@ public class EditLocationActivity extends AppCompatActivity {
         //uploadImage.setImageBitmap(rotate(myBitmap, 0));
         // setImage.setImageBitmap(image_bitmap);
     }
-
 }
