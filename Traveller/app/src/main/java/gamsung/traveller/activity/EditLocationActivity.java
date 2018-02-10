@@ -50,9 +50,6 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-
-
-
     ArrayList<String> pathhhhhh; // = new ArrayList<>();
     private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
@@ -97,34 +94,21 @@ public class EditLocationActivity extends AppCompatActivity {
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
 
-        Intent intent = getIntent();
-        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+//        Intent intent = getIntent();
+//        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+//
+//        if(whatActivity.equals("create")) {
+//            isEdit = false;
+//            pager.setVisibility(View.GONE);
+//            btnNextPlan.setVisibility(View.VISIBLE);
+//        }
+//
+//        else if(whatActivity.equals("edit")) {
+//            isEdit = true;
+//            pager.setVisibility(View.VISIBLE);
+//            btnNextPlan.setVisibility(View.GONE);
+//        }
 
-        if(whatActivity.equals("create")) {
-            isEdit = false;
-            pager.setVisibility(View.GONE);
-            btnNextPlan.setVisibility(View.VISIBLE);
-        }
-
-        else if(whatActivity.equals("edit")) {
-            isEdit = true;
-            pager.setVisibility(View.VISIBLE);
-            btnNextPlan.setVisibility(View.GONE);
-
-        }
-
-        /*
-            isEdit = false;
-            pager.setVisibility(View.VISIBLE);
-
-            for(int i = 0 ; i <photoList.size(); i++) {
-                Photograph photo = photoList.get(i);
-                adapter.setImgPath(photo.getPath());
-                pager.setAdapter(adapter);
-            }
-
-            adapter.notifyDataSetChanged();
-            */
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,7 +175,6 @@ public class EditLocationActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_edit_lcoation);
         recyclerView.setAdapter(_adapter);
-        //recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
@@ -229,12 +212,15 @@ public class EditLocationActivity extends AppCompatActivity {
         });
 
 
-        memoEdit.clearFocus();
-        tvMission.clearFocus();
-     //   tvMission.requestFocus();
+        if(memoEdit !=null)
+            memoEdit.clearFocus();
+
+        if(tvMission != null){
+            tvMission.clearFocus();
+            tvMission.requestFocus();
+        }
 
         _dataManager = DataManager.getInstance(this);
-        tvMission.requestFocus();
     }
 
 

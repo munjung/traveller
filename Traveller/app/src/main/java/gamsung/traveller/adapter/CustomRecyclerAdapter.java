@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,15 +70,15 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         path = path.replace("[", "");
         path = path.replace("]", "");
+        path = path.replace(" ", "");
         String[] pathArr = path.split(",");
 
-//        _items.add(path);
-
-        int startCount = _items.size();
-        _items.addAll(new ArrayList<String>(Arrays.asList(pathArr)));
+        for(int i=0; i<pathArr.length; i++){
+            _items.add(pathArr[i]);
+            Log.d("path", pathArr[i]);
+        }
 
         notifyDataSetChanged();
-        notifyItemRangeChanged(startCount, _items.size());
     }
 
     public void addImagePath(List<String> path){

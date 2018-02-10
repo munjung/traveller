@@ -90,11 +90,12 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fbtn_add_main"
         app:fabSize="normal"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="78dp"
+        android:layout_height="78dp"
         android:layout_gravity="bottom|right|end"
         android:layout_margin="16dp"
         android:src="@drawable/btn_add"
+        android:backgroundTint="#79abff"
         android:scaleType="center"/>
 
 </android.support.design.widget.CoordinatorLayout>

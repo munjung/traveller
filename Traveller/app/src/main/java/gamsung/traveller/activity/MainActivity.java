@@ -317,7 +317,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             //show picture button
             viewHolder.btnGoToPicture.setVisibility(View.VISIBLE);
             viewHolder.btnDelete.setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
-            viewHolder.layoutShadow.setBackground(_context.getResources().getDrawable(R.drawable.con_inner_shadow));
+            viewHolder.layoutShadow.setBackground(_context.getResources().getDrawable(R.drawable.bg_shadow));
         }
 
         viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
