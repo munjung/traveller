@@ -19,12 +19,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +64,18 @@ public class MainActivity extends AppCompatActivity {
     private int temp_id;
 
     @Override
+    public void onBackPressed() {
+
+        View deleteView = _recyclerAdapter.get_deleteView();
+        if(deleteView != null && deleteView.getVisibility() == View.VISIBLE){
+            deleteView.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        ActivityCompat.finishAffinity(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -70,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
         //temp code
         photoList = getPathOfAllImages();
-
-
 
         this.tryPermCheck();        //권한체크
         this.setRecyclerView();     //여행기록화면 세팅
@@ -169,10 +183,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     /*
      * UI Operation
      */
     private void addRouteItem(){
+
+        if(_recyclerAdapter.getItemCount() == 0){
+
+            Route route = new Route();
+            route.setTitle("temp");
+            _recyclerAdapter.addItem(route);
+        }
 
         //temp code
         int idx = _recyclerAdapter.getItemCount() + 1;
@@ -217,6 +239,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void hideKeypad(){
+
+        EditText editText = findViewById(R.id.txt_search_main);
+
+        InputMethodManager imm= (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
 
 
 
@@ -255,6 +285,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     private List<Route> _items;
 
     private View _deleteView;
+    private FloatingActionButton _addBtnForVisible;
 
     public RecyclerViewAdapter(Context context, List<Route> routeList) {
 
@@ -282,11 +313,24 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         if (!TextUtils.isEmpty(item.getPicturePath())) {
             Glide.with(_context).load(item.getPicturePath()).into(viewHolder.imageView);
+
+            //show picture button
+            viewHolder.btnGoToPicture.setVisibility(View.VISIBLE);
+            viewHolder.btnDelete.setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
+            viewHolder.layoutShadow.setBackground(_context.getResources().getDrawable(R.drawable.con_inner_shadow));
         }
 
         viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //hide keypad
+                MainActivity mainActivity = (MainActivity) _context;
+                mainActivity.hideKeypad();
+                //hide floating button
+                _addBtnForVisible = mainActivity.findViewById(R.id.fbtn_add_main);
+                _addBtnForVisible.setVisibility(View.INVISIBLE);
+
 
                 //click delete button
                 if(_deleteView == null) {
@@ -294,6 +338,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                     //attach delete view
                     ViewGroup inflateViewGroup = ((MainActivity)_context).findViewById(R.id.layout_main_inflate);
                     _deleteView = LayoutInflater.from(_context).inflate(R.layout.layout_main_delete, inflateViewGroup);
+                    _deleteView.setTag(position);
 
                     //delete item
                     TextView textView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
@@ -302,7 +347,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         public void onClick(View view) {
 
                             DebugToast.show(_context, "삭제");
-                            _deleteView.setVisibility(View.VISIBLE);
+                            //hide delete view
+                            _deleteView.setVisibility(View.INVISIBLE);
+
+                            //show floating button
+                            _addBtnForVisible.setVisibility(View.VISIBLE);
+
+                            int position = (int)_deleteView.getTag();
                             removeItem(position);
                         }
                     });
@@ -314,19 +365,27 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         public void onClick(View view) {
 
                             DebugToast.show(_context, "취소");
+                            //hide delete view
                             _deleteView.setVisibility(View.INVISIBLE);
+                            //show floating button
+                            _addBtnForVisible.setVisibility(View.VISIBLE);
                         }
                     });
                 }
                 else{
                     //visible delete view
                     _deleteView.setVisibility(View.VISIBLE);
+                    _deleteView.setTag(position);
+                    //hide floating button
+                    _addBtnForVisible.setVisibility(View.INVISIBLE);
                 }
 
+                //set text => delete view(text)
                 TextView itemTextView = viewHolder.itemView.findViewById(R.id.txt_route_item);
                 TextView deleteTextView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
                 deleteTextView.setText("'" + itemTextView.getText() + "'을 삭제합니다");
 
+                //set image => delete view(image)
                 ImageView imageView = (ImageView)_deleteView.findViewById(R.id.image_main_delete_target);
                 imageView.setImageBitmap(getBitmapFromView(viewHolder.itemView));
             }
@@ -351,11 +410,17 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
     public void removeItem(int position) {
         _items.remove(position);
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+
+        notifyItemRemoved(position);
     }
 
     public Route getItem(int position) {
         return _items.get(position);
+    }
+
+    public View get_deleteView(){
+        return _deleteView;
     }
 
     private Bitmap getBitmapFromView(View view){
@@ -378,8 +443,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         public ImageView imageView;
         public TextView textView;
 
-        public Button btnEdit;
         public Button btnDelete;
+        public Button btnEdit;
+        public Button btnGoToPicture;
+        public RelativeLayout layoutShadow;
 
         public RouteViewHolder(Context context, final View itemView) {
             super(itemView);
@@ -389,7 +456,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             imageView = (ImageView) itemView.findViewById(R.id.image_route_item);
             textView = (TextView) itemView.findViewById(R.id.txt_route_item);
             btnEdit = (Button) itemView.findViewById(R.id.btn_edit_route_item);
+            btnGoToPicture = (Button) itemView.findViewById(R.id.btn_goto_picture);
             btnDelete = (Button) itemView.findViewById(R.id.btn_delete_route_item);
+            layoutShadow = (RelativeLayout) itemView.findViewById(R.id.shadow_backlayer);
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -398,10 +467,17 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                 }
             });
 
+            btnGoToPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DebugToast.show(_context, "button clicked go to picture!");
+                }
+            });
+
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DebugToast.show(_context, "button clicked");
+                    DebugToast.show(_context, "button clicked edit!");
                 }
             });
         }

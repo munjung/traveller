@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
 
 /**
  * Created by Jiwon on 2018. 1. 24
@@ -20,6 +21,8 @@ import gamsung.traveller.R;
  */
 
 public class SplashActivity extends AppCompatActivity {
+
+    private DataManager _dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +34,27 @@ public class SplashActivity extends AppCompatActivity {
         layout.setBackgroundDrawable(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.bg)));
 
         Handler handler = new Handler();
-        handler.postDelayed(new SplashHandler(), 1000);
+        handler.postDelayed(new SplashHandler(), 500);
     }
 
 
     private class SplashHandler implements Runnable {
         public void run() {
-            Intent i = new Intent(SplashActivity.this,MainActivity.class);
-            startActivity(i);
-            SplashActivity.this.finish();
+
+            _dataManager = DataManager.getInstance(SplashActivity.this);
+            if(_dataManager.getRouteList().size() > 0){
+
+                Intent i = new Intent(SplashActivity.this,MainActivity.class);
+                startActivity(i);
+                SplashActivity.this.finish();
+            }
+            else{
+
+                Intent i = new Intent(SplashActivity.this,EmptyMainActivity.class);
+                startActivity(i);
+                SplashActivity.this.finish();
+            }
+
         }
     }
 

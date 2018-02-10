@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_empty_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:layout_marginLeft="30dp"
+        android:text="이번에는\n어디로\n떠나볼까요?"
+        android:textSize="30sp"
+        android:textColor="#212121" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="30dp"
+        android:gravity="right"
+        android:text="여행기 추가화면으로 이동합니다"
+        android:textSize="13sp"
+        android:textColor="#212121" />
+
+    <LinearLayout
+        android:layout_width="133dp"
+        android:layout_height="9dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/btn_next"
+        />
+
+</RelativeLayout>
