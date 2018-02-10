@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -44,6 +45,7 @@ import gamsung.traveller.util.DebugToast;
 public class EditLocationActivity extends AppCompatActivity {
 
     private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
+    private Button btnNextPlan;
     private EditText memoEdit,tvMission;
     private TextView editLocation;
     private ImageView memoImage,eat,buy,take,visit,anything;
@@ -76,6 +78,7 @@ public class EditLocationActivity extends AppCompatActivity {
         tvMission = (EditText)findViewById(R.id.tvMission);
         btnHome = (ImageButton)findViewById(R.id.btnHome);
         btnSave = (ImageButton)findViewById(R.id.btnSave);
+        btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
 
         eat = (ImageView) findViewById(R.id.eat);
         buy = (ImageView)findViewById(R.id.buy);
@@ -89,11 +92,13 @@ public class EditLocationActivity extends AppCompatActivity {
         if(whatActivity.equals("create")) {
             isEdit = false;
             pager.setVisibility(View.GONE);
+            btnNextPlan.setVisibility(View.VISIBLE);
         }
 
         else if(whatActivity.equals("edit")) {
             isEdit = true;
             pager.setVisibility(View.VISIBLE);
+            btnNextPlan.setVisibility(View.GONE);
         }
 
         /*
@@ -191,6 +196,13 @@ public class EditLocationActivity extends AppCompatActivity {
                 }
 
                 finish();
+            }
+        });
+
+        btnNextPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
