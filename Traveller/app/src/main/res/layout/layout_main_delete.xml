@@ -16,6 +16,7 @@
             android:id="@+id/image_main_delete_target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:alpha="1"
             android:scaleType="center"
             android:layout_margin="35dp"
             android:layout_above="@+id/layout_main_delete_warning"/>
