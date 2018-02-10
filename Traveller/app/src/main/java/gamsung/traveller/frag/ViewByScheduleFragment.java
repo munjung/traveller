@@ -82,6 +82,7 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
             scheduleService.addSchedule(createNewSchedule, editSchedule);
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
+            i.putExtra("TAG_ACTIVITY","create");
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
             startActivity(i);
         }
@@ -92,6 +93,7 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
 
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
+            i.putExtra("TAG_ACTIVITY","edit");
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
             startActivity(i);
         }
