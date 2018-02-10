@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.util.Log;
@@ -103,8 +104,22 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
 
 //           img.setImageResource(R.drawable.cheeze3);
 
+//            Glide.with(context)
+//                    .load(imgPathList.get(position))
+//                    .into(img);
+
+            String fileName = imgPathList.get(position);
+
+            String realFileName = fileName.substring(1, fileName.length()-1); //앞뒤에 있는 []을 빼보자
+            String completePath = Environment.getExternalStorageDirectory() + "/" + realFileName; //fileName->realFileName
+            Log.d("뭔뎅1", realFileName);
+            Log.d("뭔뎅2", completePath);
+
+            File file = new File(realFileName); //completePath -> realFileName
+            Uri imageUri = Uri.fromFile(file);
+
             Glide.with(context)
-                    .load(imgPathList.get(position))
+                    .load(imageUri)
                     .into(img);
 
 //            Glide.with(context).load(imgPathList.get(position)).into(img);
