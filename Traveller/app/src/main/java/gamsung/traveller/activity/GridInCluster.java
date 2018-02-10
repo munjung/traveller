@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -68,6 +70,9 @@ class PhotoAdapter extends BaseAdapter{
             view = inf.inflate(layout,null);
         ImageView iv =(ImageView)view.findViewById(R.id.ivphotoplace);
         iv.setImageResource(photoset.get(i));
+        int width = context.getResources().getDisplayMetrics().widthPixels;
+        int celwidth = (width-10)/4;
+        iv.setLayoutParams(new RelativeLayout.LayoutParams(celwidth,celwidth));
         return view;
     }
 }
