@@ -14,7 +14,11 @@
         <!--top view-->
         <RelativeLayout android:id="@+id/layout_top_main"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:layout_alignParentTop="true">
 
@@ -22,14 +26,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@id/btnAddTravel">
+                android:layout_toLeftOf="@id/btnAddTravel"
+                android:background="@drawable/bg_search">
 
                 <!--search button-->
                 <Button android:id="@+id/btn_search_main"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/grap_search"/>
 
                 <!--search text-->
                 <EditText android:id="@+id/txt_search_main"
@@ -39,7 +46,8 @@
                     android:maxLines="1"
                     android:hint="어떤 여행기를 찾으세요?"
                     android:textSize="15sp"
-                    android:textColor="#212121"/>
+                    android:textColor="#212121"
+                    android:background="@android:color/transparent"/>
             </RelativeLayout>
 
             <Button
@@ -47,8 +55,10 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="15dp"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:background="@drawable/a_btn"/>
         </RelativeLayout>
 
         <!--empty image-->
@@ -65,6 +75,13 @@
             android:scrollbars="vertical"
             android:layout_below="@id/layout_top_main">
         </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_main_inflate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     </RelativeLayout>
 
     <!--add new item button-->

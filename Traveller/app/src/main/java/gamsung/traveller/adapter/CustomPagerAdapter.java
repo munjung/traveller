@@ -209,7 +209,5 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
         return imgPath;
     }
 
-
-
 }
 

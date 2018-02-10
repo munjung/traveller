@@ -184,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             route.setPicturPath(photoList.get(temp_id++));
         }
 
-
         _recyclerAdapter.addItem(route);
 
         this.endOperation();
@@ -250,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 //View Holder Adaper
-class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RouteViewHolder> implements View.OnClickListener {
+class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RouteViewHolder> {
 
     private Context _context;
     private List<Route> _items;
@@ -276,7 +275,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     }
 
     @Override
-    public void onBindViewHolder(RouteViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final RouteViewHolder viewHolder, final int position) {
 
         Route item = _items.get(position);
         viewHolder.textView.setText(item.getTitle());
@@ -285,46 +284,53 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             Glide.with(_context).load(item.getPicturePath()).into(viewHolder.imageView);
         }
 
-        viewHolder.deleteClickListener = this;
-    }
+        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-    @Override
-    public void onClick(View view) {
+                //click delete button
+                if(_deleteView == null) {
 
-        DebugToast.show(_context, "delete button clicked");
+                    //attach delete view
+                    ViewGroup inflateViewGroup = ((MainActivity)_context).findViewById(R.id.layout_main_inflate);
+                    _deleteView = LayoutInflater.from(_context).inflate(R.layout.layout_main_delete, inflateViewGroup);
 
-        if(_deleteView == null) {
-            _deleteView = LayoutInflater.from(_context).inflate(R.layout.layout_main_delete, (ViewGroup) ((MainActivity) _context).getWindow().getDecorView());
+                    //delete item
+                    TextView textView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-            //삭제
-            TextView textView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                            DebugToast.show(_context, "삭제");
+                            _deleteView.setVisibility(View.VISIBLE);
+                            removeItem(position);
+                        }
+                    });
 
-                    DebugToast.show(_context, "삭제");
+                    //cancel delete view
+                    View targetView = (View)_deleteView.findViewById(R.id.layout_main_delete_target);
+                    targetView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            DebugToast.show(_context, "취소");
+                            _deleteView.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
+                else{
+                    //visible delete view
                     _deleteView.setVisibility(View.VISIBLE);
                 }
-            });
 
-            //삭제 취소
-            View targetView = (View)_deleteView.findViewById(R.id.layout_main_delete_target);
-            targetView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                TextView itemTextView = viewHolder.itemView.findViewById(R.id.txt_route_item);
+                TextView deleteTextView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
+                deleteTextView.setText("'" + itemTextView.getText() + "'을 삭제합니다");
 
-                    DebugToast.show(_context, "취소");
-                    _deleteView.setVisibility(View.INVISIBLE);
-                }
-            });
-        }
-
-        TextView itemTextView = view.findViewById(R.id.txt_route_item);
-        TextView deleteTextView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
-        deleteTextView.setText("'" + itemTextView.getText() + "'을 삭제합니다");
-
-        ImageView imageView = (ImageView)_deleteView.findViewById(R.id.image_main_delete_target);
-        imageView.setImageBitmap(getBitmapFromView(view));
+                ImageView imageView = (ImageView)_deleteView.findViewById(R.id.image_main_delete_target);
+                imageView.setImageBitmap(getBitmapFromView(viewHolder.itemView));
+            }
+        });
     }
 
     @Override
@@ -371,10 +377,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         public ImageView imageView;
         public TextView textView;
-        public View.OnClickListener deleteClickListener;
 
-        private Button btnEdit;
-        private Button btnDelete;
+        public Button btnEdit;
+        public Button btnDelete;
 
         public RouteViewHolder(Context context, final View itemView) {
             super(itemView);
@@ -399,9 +404,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                     DebugToast.show(_context, "button clicked");
                 }
             });
-
-            if(deleteClickListener != null)
-                btnDelete.setOnClickListener(deleteClickListener);
         }
     }
 }
