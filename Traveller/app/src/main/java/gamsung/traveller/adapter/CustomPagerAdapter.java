@@ -65,7 +65,6 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
     //보통 보여줘야하는 이미지 배열 데이터의 길이를 리턴
 
     @Override
-
     public int getCount() {
 
         // TODO Auto-generated method stub
@@ -102,8 +101,6 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
 
         if(imgPathList.size() > position) {
 
-//           img.setImageResource(R.drawable.cheeze3);
-
 //            Glide.with(context)
 //                    .load(imgPathList.get(position))
 //                    .into(img);
@@ -111,7 +108,8 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
             String fileName = imgPathList.get(position);
 
             ArrayList<String> filePath = new ArrayList<>();
-            filePath.add(fileName.substring(1, fileName.length()-1));
+            filePath.add(imgPathList.get(position).substring(1, imgPathList.get(position).length()-1)); //?
+           // filePath.add(fileName.substring(1, fileName.length()-1));
 
             for(int i=0; i<filePath.size(); i++){
                 Log.d("경로를보자ㅏ경로를", filePath.get(i)+"");
