@@ -97,26 +97,17 @@
             android:orientation="vertical"
             android:gravity="center">
 
-    <EditText
-        android:id="@+id/tvMission"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#5d5d5d"
-        android:gravity="center"
-        android:singleLine="true"
-        android:hint="할일 제목 입력"
-        android:layout_above="@id/layoutLocation"
-        android:textSize="15sp" />
-
     <LinearLayout
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/img_btn_adress_map"
         android:gravity="center_vertical"
         android:id="@+id/layoutLocation"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_above="@+id/layoutToggle">
 
         <ImageButton
@@ -138,17 +129,20 @@
     </LinearLayout>
 
             <TextView
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:layout_marginTop="5dp"
-                android:paddingLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:text="To do list"
                 android:textColor="#79abff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
     <ImageView
-        android:layout_width="340dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_height="1dp"
         android:background="#79abff" />
 
@@ -161,7 +155,7 @@
         android:layout_above="@+id/memoEdit">
         
         <LinearLayout
-            android:layout_width="55dp"
+            android:layout_width="70dp"
             android:layout_height="90dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -190,7 +184,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="55dp"
+            android:layout_width="70dp"
             android:layout_height="90dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -219,7 +213,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="55dp"
+            android:layout_width="70dp"
             android:layout_height="90dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -248,7 +242,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="55dp"
+            android:layout_width="70dp"
             android:layout_height="90dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -277,7 +271,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="55dp"
+            android:layout_width="70dp"
             android:layout_height="90dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -308,7 +302,9 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_height="1dp"
         android:background="#79abff"
         android:layout_marginBottom="10dp">
@@ -316,7 +312,9 @@
     </ImageView>
 
             <RelativeLayout
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
