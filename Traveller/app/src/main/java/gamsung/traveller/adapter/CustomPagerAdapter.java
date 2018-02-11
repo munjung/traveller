@@ -53,6 +53,9 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
         this.inflater=inflater;
         this.context = context;
        // this.imgPath = imgPath;
+
+        if(imgPathList.size() == 0)
+            imgPathList.add("");
     }
 
    /* public CustomPagerAdapter(LayoutInflater inflater, Context context) {
@@ -68,7 +71,7 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
     public int getCount() {
 
         // TODO Auto-generated method stub
-        return 10; //이미지 개수 리턴(그림이 10개라서 10을 리턴)
+        return imgPathList.size(); //이미지 개수 리턴(그림이 10개라서 10을 리턴)
 
     }
 
@@ -101,38 +104,34 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
 
         if(imgPathList.size() > position) {
 
-//            Glide.with(context)
-//                    .load(imgPathList.get(position))
-//                    .into(img);
-
-            String fileName = imgPathList.get(position);
-
             ArrayList<String> filePath = new ArrayList<>();
-            filePath.add(imgPathList.get(position).substring(1, imgPathList.get(position).length()-1)); //?
-           // filePath.add(fileName.substring(1, fileName.length()-1));
+            String fileName = imgPathList.get(position);
+            if(fileName.length() > 0) {
+                filePath.add(fileName.substring(1, fileName.length() - 1));
 
-            for(int i=0; i<filePath.size(); i++){
-                Log.d("경로를보자ㅏ경로를", filePath.get(i)+"");
-                Log.d("포지션을보자", position+"");
-            }
+                for (int i = 0; i < filePath.size(); i++) {
+                    Log.d("경로를보자ㅏ경로를", filePath.get(i) + "");
+                    Log.d("포지션을보자", position + "");
+                }
 
-            String realFileName = fileName.substring(1, fileName.length()-1); //앞뒤에 있는 []을 빼보자
-            //String completePath = Environment.getExternalStorageDirectory() + "/" + realFileName; //fileName->realFileName 얘안씀!
-            //Log.d("뭔뎅1", realFileName);
-            //Log.d("뭔뎅2", completePath);
+                String realFileName = fileName.substring(1, fileName.length() - 1); //앞뒤에 있는 []을 빼보자
+                //String completePath = Environment.getExternalStorageDirectory() + "/" + realFileName; //fileName->realFileName 얘안씀!
+                //Log.d("뭔뎅1", realFileName);
+                //Log.d("뭔뎅2", completePath);
 
-            //File file = new File(realFileName); //completePath -> realFileName
-            //Uri imageUri = Uri.fromFile(file); //얘 안해도된다!
+                //File file = new File(realFileName); //completePath -> realFileName
+                //Uri imageUri = Uri.fromFile(file); //얘 안해도된다!
 
            /* Glide.with(context)
                     .load(realFileName)  //.load(imageUri)
                     .into(img);*/
-            Glide.with(context).load(filePath.get(position)).into(img);
-          //  position++;
+           if(filePath.get(position).length() > 0)
+                Glide.with(context).load(filePath.get(position)).into(img);
+                //  position++;
 
 //            Glide.with(context).load(imgPathList.get(position)).into(img);
-            Log.d("intput img", position + " : " + imgPathList.get(position));
-
+                Log.d("intput img", position + " : " + imgPathList.get(position));
+            }
         }
 
         Log.d("position id : ", "" + position);
@@ -209,8 +208,6 @@ public class CustomPagerAdapter extends android.support.v4.view.PagerAdapter imp
     public String getImgPath(){
         return imgPath;
     }
-
-
 
 }
 

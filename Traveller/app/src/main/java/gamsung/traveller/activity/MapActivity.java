@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.util.List;
 
 import gamsung.traveller.R;
+import gamsung.traveller.model.Spot;
 
 /**
  * 7, 8번 화면. 구글맵 정책 문제로 10번화면과 레이아웃은 같이 씀
@@ -68,6 +69,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
     private GoogleApiClient mGoogleApiClient;
     private Place BufferPlace;
+    private Spot BufferSpot;
 
     @Override
     protected void startmap() {
@@ -120,9 +122,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     }
                 });
 */
-        infoll.setVisibility(View.VISIBLE);
-        infoll.setClickable(false);
-        tvname.setText("장소를 선택해주세요!");
         mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
 
         mMap.setOnMapLongClickListener(this);
@@ -139,7 +138,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
         infoll.setVisibility(View.GONE);
         selectll.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -345,7 +343,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         if (attributedPhoto != null) {
                             // Photo has been loaded, display it.
                             PlacePhoto.setImageBitmap(attributedPhoto.bitmap);
-
+                            Toast.makeText(getApplicationContext(), attributedPhoto.attribution, Toast.LENGTH_SHORT).show();
                             // Display the attribution as HTML content if set.
 
                         }
@@ -362,9 +360,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
                     }
                 });
-
-
-
 
 
 //                mMap.setOnMarkerClickListener(this);
