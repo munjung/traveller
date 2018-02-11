@@ -57,9 +57,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.nio.Buffer;
 import java.util.List;
 
 import gamsung.traveller.R;
+import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 
 /**
@@ -72,13 +75,14 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     private Marker mMarker;
 
     private GoogleApiClient mGoogleApiClient;
-    private Place BufferPlace;
-    private Spot BufferSpot;
+
+    BufferPlace bufferplace=new BufferPlace(0,0,null,null);
 
     @Override
     protected void startmap() {
         mMap = getMap();
         TextView tvname = findViewById(R.id.tvPlaceName);
+
         LinearLayout infoll = findViewById(R.id.mInfoll);
         UiSettings uiSettings = mMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
@@ -95,6 +99,21 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 .enableAutoManage(this, this)
                 .build();
         Button bt = findViewById(R.id.btmsearch);
+        Button buttongo = findViewById(R.id.btchooseplace);
+        buttongo.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapActivity.this,EditLocationActivity.class);
+                intent.putExtra("bufferplace",bufferplace);
+                Toast.makeText(getApplicationContext(), "lat:"+bufferplace.getLat()+"lon: "+bufferplace.getLon()+"name: "+bufferplace.getPlace_name()+"address: "+bufferplace.getPlace_address(), Toast.LENGTH_SHORT).show();
+                /**
+                 * 지원님 여기에요
+                 *
+                 *
+                 */
+            }
+        });
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +196,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         locality="";
                     }
                     currentLocationName = address.get(0).getCountryName()+area+locality;
+                    bufferplace=new BufferPlace(marker.getPosition().latitude,marker.getPosition().longitude,currentLocationName,currentLocationAddress);
                 }
             }
         }catch (IOException e) {
@@ -189,6 +209,8 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         tvname.setText(currentLocationName);
         RelativeLayout selectll = findViewById(R.id.mSelectll);
         selectll.setVisibility(View.VISIBLE);
+
+
     }
 
     @Override
@@ -211,6 +233,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         locality="";
                     }
                     currentLocationName = address.get(0).getCountryName()+" "+locality;
+                    bufferplace=new BufferPlace(latLng.latitude,latLng.longitude,currentLocationName,currentLocationAddress);
                 }
             }
         }catch (IOException e) {
@@ -315,7 +338,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-                Place mPlace = place;
+                final Place mPlace = place;
                 TextView PlaceName = (TextView) findViewById(R.id.tvPlaceName);
                 TextView PlaceAddress = (TextView)findViewById(R.id.tvPlaceAddress);
                 final ImageView PlacePhoto = (ImageView)findViewById(R.id.ivPlace);
@@ -378,12 +401,22 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 }.execute(mPlace.getId());
                 PlaceName.setText(mPlace.getName());
                 PlaceAddress.setText(mPlace.getAddress());
-                LinearLayout infoll = findViewById(R.id.mInfoll);
+                final LinearLayout infoll = findViewById(R.id.mInfoll);
                 infoll.setClickable(true);
                 infoll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "장소 선택함", Toast.LENGTH_SHORT).show();
+
+                        bufferplace= new BufferPlace(mPlace.getLatLng().latitude,mPlace.getLatLng().longitude,mPlace.getName().toString(),mPlace.getAddress().toString());
+                        Intent intent = new Intent(MapActivity.this,EditLocationActivity.class);
+                        intent.putExtra("bufferplace",bufferplace);
+                        Toast.makeText(getApplicationContext(), "lat:"+bufferplace.getLat()+"lon: "+bufferplace.getLon()+"name: "+bufferplace.getPlace_name()+"address: "+bufferplace.getPlace_address(), Toast.LENGTH_SHORT).show();
+                        /**
+                         * 지원님 여기에요
+                         *
+                         *
+                          */
+
 
                     }
                 });
@@ -406,7 +439,14 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-
+    class BufferPlace extends SearchPlace implements Serializable{
+        public BufferPlace(double lat, double lon, String name, String address){
+            this.setLat(lat);
+            this.setLon(lon);
+            this.setPlace_name(name);
+            this.setPlace_address(address);
+        }
+    }
 }
 
 
