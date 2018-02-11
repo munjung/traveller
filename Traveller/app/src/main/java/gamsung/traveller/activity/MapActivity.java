@@ -1,12 +1,15 @@
 package gamsung.traveller.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +81,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         TextView tvname = findViewById(R.id.tvPlaceName);
         LinearLayout infoll = findViewById(R.id.mInfoll);
         UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);
         uiSettings.setTiltGesturesEnabled(false);
         uiSettings.setMapToolbarEnabled(false);
@@ -135,7 +140,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     @Override
     public void onMarkerDragStart(Marker marker) {
         LinearLayout infoll=(LinearLayout)findViewById(R.id.mInfoll);
-        LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
+        RelativeLayout selectll = findViewById(R.id.mSelectll);
         infoll.setVisibility(View.GONE);
         selectll.setVisibility(View.GONE);
     }
@@ -150,6 +155,10 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
         List<Address> address;
         String currentLocationAddress = "주소 정보 없음";
+        String currentLocationName = "장소 정보 없음";
+
+        TextView tvname = findViewById(R.id.tvselname);
+        TextView tvsel = findViewById(R.id.tvSelectAddress);
         marker.setTitle("사용자 지정 위치");
         Geocoder geocoder = new Geocoder(this);
         try {
@@ -159,17 +168,26 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
+                    String area= " "+address.get(0).getAdminArea();
+                    String locality = " "+address.get(0).getLocality();
+                    if(area == null){
+                        area="";
+                    }
+                    if(locality==null){
+                        locality="";
+                    }
+                    currentLocationName = address.get(0).getCountryName()+area+locality;
                 }
             }
         }catch (IOException e) {
 
             e.printStackTrace();
         }
-        marker.setSnippet(currentLocationAddress);
         marker.hideInfoWindow();
-        TextView tvsel = findViewById(R.id.tvSelectAddress);
+
         tvsel.setText(currentLocationAddress);
-        LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
+        tvname.setText(currentLocationName);
+        RelativeLayout selectll = findViewById(R.id.mSelectll);
         selectll.setVisibility(View.VISIBLE);
     }
 
@@ -177,7 +195,9 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     public void onMapLongClick(LatLng latLng) {
         mMap.clear();
         List<Address> address;
+        TextView tvname = findViewById(R.id.tvselname);
         String currentLocationAddress = "주소 정보 없음";
+        String currentLocationName = "장소 정보 없음";
         Geocoder geocoder = new Geocoder(MapActivity.this);
         try {
             if (geocoder != null) {
@@ -186,15 +206,22 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
+                    String locality = address.get(0).getLocality();
+                    if(locality==null){
+                        locality="";
+                    }
+                    currentLocationName = address.get(0).getCountryName()+" "+locality;
                 }
             }
         }catch (IOException e) {
 
             e.printStackTrace();
         }
+
         Marker lcmarker = mMap.addMarker(new MarkerOptions().position(latLng));
         TextView tvlongclick = findViewById(R.id.tvSelectAddress);
         tvlongclick.setText(currentLocationAddress);
+        tvname.setText(currentLocationName);
         lcmarker.hideInfoWindow();
         lcmarker.setDraggable(true);
         mMap.setOnMarkerDragListener(this);

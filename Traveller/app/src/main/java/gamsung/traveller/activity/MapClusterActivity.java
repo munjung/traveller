@@ -125,7 +125,9 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
 
+
         findViewById(R.id.topll).setVisibility(View.GONE);
+        findViewById(R.id.btnworldback).setVisibility(View.VISIBLE);
         UiSettings uiSettings = getMap().getUiSettings();
         uiSettings.setRotateGesturesEnabled(false);
         uiSettings.setTiltGesturesEnabled(false);
