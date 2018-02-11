@@ -15,6 +15,7 @@
             android:id="@+id/base_layout_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#003344"
             android:orientation="vertical">
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

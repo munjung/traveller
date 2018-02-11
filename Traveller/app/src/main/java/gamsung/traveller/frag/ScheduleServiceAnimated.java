@@ -6,6 +6,7 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
@@ -19,10 +20,12 @@ import com.google.android.gms.maps.model.Circle;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
+import gamsung.traveller.model.Spot;
 
 
 /**
@@ -36,8 +39,9 @@ public class ScheduleServiceAnimated extends ScheduleService {
     private boolean isScheduleMoved;
     private Handler tHandler = new Handler();
 
-    public ScheduleServiceAnimated(ViewGroup rootView, int layoutSingle, NestedScrollView scrollView, RelativeLayout layoutBase, Context appContext, boolean isDragDrop) {
-        super(rootView, layoutSingle, scrollView, layoutBase, appContext, isDragDrop);
+    public ScheduleServiceAnimated(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
+                                   RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop) {
+        super(rootView, layoutSingle, scrollView, layoutBase, appContext, spotList, isDragDrop);
         super.dragListener = this.scheduleDragListener;
         clickEditSchedule = null;
         DRAGDROP_ANIMATION_DURATION = 1500;
@@ -359,13 +363,13 @@ public class ScheduleServiceAnimated extends ScheduleService {
             //after the animation is finished perform the removal
             int idxDelete = toListIdx(view_id);
             if (!isFadeIn) {
+                RemoveAnimation removeAnimation = new RemoveAnimation(view_id);
+                removeAnimation.setData(true);
+                if (idxDelete == 0)
+                    listSchedule.get(idxDelete).view.animate().alpha(0).setListener(removeAnimation);
+                else listSchedule.get(0).view.animate().alpha(1).setListener(removeAnimation);
+
                 for (int i = 0; i < idxDelete; i++) {
-                    if (i == 0) {
-                        RemoveAnimation removeAnimation = new RemoveAnimation(view_id);
-                        removeAnimation.setData(true);
-                        listSchedule.get(i).view.animate().setListener(removeAnimation);
-                    }
-                    //listSchedule.get(idx).view.setY(listSchedule.get(idx).view.getY() - coordinateInformation.layout_height);
                     listSchedule.get(i).view.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION / 2);
                     if (getLeftVisbility(i)){
                         listSchedule.get(i).view.findViewById(R.id.title_left).setVisibility(View.INVISIBLE);
@@ -383,14 +387,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
             }
             else {
                 listSchedule.get(0).view.animate().setListener(null);
-
-                layoutBase.removeView(listSchedule.get(idxDelete).view);
-                layoutBase.removeView(listSchedule.get(idxDelete).circleImage);
-                listSchedule.remove(idxDelete);
-                isEditing = false;
-
-                updateYCoordinateViews(idxDelete);
-                heightUpdate(false);
+                ScheduleServiceAnimated.super.removeSchedule(view_id);
             }
         }
 
