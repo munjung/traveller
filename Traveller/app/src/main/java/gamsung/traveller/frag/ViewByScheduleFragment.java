@@ -115,8 +115,8 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
             Bundle bundle = new Bundle();
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
-            
-            Toast.makeText(rootView.getContext(), "Index: " + scheduleService.toListIdx((int)view.getTag()), Toast.LENGTH_SHORT).show();
+            int idx = scheduleService.toListIdx((int)view.getTag());
+            Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
             bundle.putInt("spot list", (int)view.getTag());
             startActivityForResult(i, REQUEST_EDIT, bundle);
 
@@ -152,6 +152,7 @@ public class ViewByScheduleFragment extends Fragment {
             scheduleService.initSchedule(tempSpot);
         }
         else if (requestCode == REQUEST_EDIT){
+
             //Spot editedSPot = new Spot();
             //editedSPot.setMission("Hi");
             //

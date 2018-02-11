@@ -407,7 +407,6 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).view.getId());
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
-        Spot tempSpot = spotList.remove(idxA);
         Collections.swap(spotList, idxA, idxB);
 
         if (idxA > idxB){
