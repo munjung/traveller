@@ -64,11 +64,17 @@ public class TravelViewActivity extends AppCompatActivity {
         Spot spot = new Spot();
         spot.setMission("gamsung misson");
         Spot spot1 = new Spot();
+        spot1.setPicture_id(1);
+        spot1.setPicture_path("");
         spot1.setMission("jk gamsung misson");
+        Spot spot2 = new Spot();
+        spot2.setMission("Help");
+
 
         tempSpotList = new ArrayList<>();
         tempSpotList.add(spot);
         tempSpotList.add(spot1);
+        tempSpotList.add(spot2);
 
         findViews();
         implementEvents();

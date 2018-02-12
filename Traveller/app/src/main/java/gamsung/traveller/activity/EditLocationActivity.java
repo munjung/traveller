@@ -56,13 +56,14 @@ public class EditLocationActivity extends AppCompatActivity {
     private EditText memoEdit,tvMission;
     private TextView editLocation;
     private ImageView memoImage,eat,buy,take,visit,anything;
-    private ViewPager pager;
+//    private ViewPager pager;
     private String imgPath;
     //private CustomPagerAdapter adapter;
     private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
     public static Bitmap imgBitmap;
     private int CATEGORY_ID;
+    private RecyclerView recyclerView;
 
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
@@ -75,7 +76,7 @@ public class EditLocationActivity extends AppCompatActivity {
 
         _dataManager = DataManager.getInstance(this);
 
-        pager= (ViewPager)findViewById(R.id.pager);
+//        pager= (ViewPager)findViewById(R.id.pager);
         eatBtn= (ImageButton)findViewById(R.id.eatBtn);
         buyBtn = (ImageButton)findViewById(R.id.buyBtn);
         takeBtn = (ImageButton)findViewById(R.id.takeBtn);
@@ -94,20 +95,22 @@ public class EditLocationActivity extends AppCompatActivity {
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
 
-//        Intent intent = getIntent();
-//        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
-//
-//        if(whatActivity.equals("create")) {
-//            isEdit = false;
-//            pager.setVisibility(View.GONE);
-//            btnNextPlan.setVisibility(View.VISIBLE);
-//        }
-//
-//        else if(whatActivity.equals("edit")) {
-//            isEdit = true;
-//            pager.setVisibility(View.VISIBLE);
-//            btnNextPlan.setVisibility(View.GONE);
-//        }
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_edit_lcoation);
+
+        Intent intent = getIntent();
+        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+
+        if(whatActivity.equals("create")) {
+            isEdit = false;
+            recyclerView.setVisibility(View.GONE);
+            btnNextPlan.setVisibility(View.VISIBLE);
+        }
+
+        else if(whatActivity.equals("edit")) {
+            isEdit = true;
+            recyclerView.setVisibility(View.VISIBLE);
+            btnNextPlan.setVisibility(View.GONE);
+        }
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override

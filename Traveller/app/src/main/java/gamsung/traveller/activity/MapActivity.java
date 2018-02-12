@@ -1,12 +1,15 @@
 package gamsung.traveller.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +40,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -53,9 +56,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.nio.Buffer;
 import java.util.List;
+import java.util.Locale;
 
 import gamsung.traveller.R;
+import gamsung.traveller.model.SearchPlace;
+import gamsung.traveller.model.Spot;
 
 /**
  * 7, 8번 화면. 구글맵 정책 문제로 10번화면과 레이아웃은 같이 씀
@@ -67,14 +75,17 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     private Marker mMarker;
 
     private GoogleApiClient mGoogleApiClient;
-    private Place BufferPlace;
+
+    BufferPlace bufferplace=new BufferPlace(0,0,null,null);
 
     @Override
     protected void startmap() {
         mMap = getMap();
         TextView tvname = findViewById(R.id.tvPlaceName);
+
         LinearLayout infoll = findViewById(R.id.mInfoll);
         UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);
         uiSettings.setTiltGesturesEnabled(false);
         uiSettings.setMapToolbarEnabled(false);
@@ -88,6 +99,21 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 .enableAutoManage(this, this)
                 .build();
         Button bt = findViewById(R.id.btmsearch);
+        Button buttongo = findViewById(R.id.btchooseplace);
+        buttongo.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapActivity.this,EditLocationActivity.class);
+                intent.putExtra("bufferplace",bufferplace);
+                Toast.makeText(getApplicationContext(), "lat:"+bufferplace.getLat()+"lon: "+bufferplace.getLon()+"name: "+bufferplace.getPlace_name()+"address: "+bufferplace.getPlace_address(), Toast.LENGTH_SHORT).show();
+                /**
+                 * 지원님 여기에요
+                 *
+                 *
+                 */
+            }
+        });
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,9 +146,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     }
                 });
 */
-        infoll.setVisibility(View.VISIBLE);
-        infoll.setClickable(false);
-        tvname.setText("장소를 선택해주세요!");
         mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
 
         mMap.setOnMapLongClickListener(this);
@@ -136,10 +159,9 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     @Override
     public void onMarkerDragStart(Marker marker) {
         LinearLayout infoll=(LinearLayout)findViewById(R.id.mInfoll);
-        LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
+        RelativeLayout selectll = findViewById(R.id.mSelectll);
         infoll.setVisibility(View.GONE);
         selectll.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -151,52 +173,88 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     public void onMarkerDragEnd(Marker marker) {
 
         List<Address> address;
+        List<Address> kaddress;
         String currentLocationAddress = "주소 정보 없음";
+        String currentLocationName = "장소 정보 없음";
+
+        TextView tvname = findViewById(R.id.tvselname);
+        TextView tvsel = findViewById(R.id.tvSelectAddress);
         marker.setTitle("사용자 지정 위치");
-        Geocoder geocoder = new Geocoder(this);
+        Locale locale = new Locale("en");
+        Geocoder geocoder = new Geocoder(this,locale);
+        Geocoder geokoder = new Geocoder(this);
         try {
             if (geocoder != null) {
                 address = geocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1);
 
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
+                    kaddress = geokoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1);
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
+                    String locality = kaddress.get(0).getLocality();
+                    if(locality==null){
+                        locality="";
+                    }
+                    else{
+                        locality=", "+locality;
+                    }
+                    currentLocationName = kaddress.get(0).getCountryName()+locality;
+                    bufferplace=new BufferPlace(marker.getPosition().latitude,marker.getPosition().longitude,currentLocationName,currentLocationAddress);
                 }
             }
         }catch (IOException e) {
 
             e.printStackTrace();
         }
-        marker.setSnippet(currentLocationAddress);
         marker.hideInfoWindow();
-        TextView tvsel = findViewById(R.id.tvSelectAddress);
+
         tvsel.setText(currentLocationAddress);
-        LinearLayout selectll = (LinearLayout)findViewById(R.id.mSelectll);
+        tvname.setText(currentLocationName);
+        RelativeLayout selectll = findViewById(R.id.mSelectll);
         selectll.setVisibility(View.VISIBLE);
+
+
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
         mMap.clear();
         List<Address> address;
+        List<Address> kaddress;
+        TextView tvname = findViewById(R.id.tvselname);
         String currentLocationAddress = "주소 정보 없음";
-        Geocoder geocoder = new Geocoder(MapActivity.this);
+        String currentLocationName = "장소 정보 없음";
+        Locale locale = new Locale("en");
+        Geocoder geocoder = new Geocoder(MapActivity.this,locale);
+        Geocoder geokoder = new Geocoder(MapActivity.this);
         try {
             if (geocoder != null) {
                 address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
+                    kaddress = geokoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
+                    String locality = kaddress.get(0).getLocality();
+                    if(locality==null){
+                        locality="";
+                    }
+                    else{
+                        locality=", "+locality;
+                    }
+                    currentLocationName = kaddress.get(0).getCountryName()+locality;
+                    bufferplace=new BufferPlace(latLng.latitude,latLng.longitude,currentLocationName,currentLocationAddress);
                 }
             }
         }catch (IOException e) {
 
             e.printStackTrace();
         }
+
         Marker lcmarker = mMap.addMarker(new MarkerOptions().position(latLng));
         TextView tvlongclick = findViewById(R.id.tvSelectAddress);
         tvlongclick.setText(currentLocationAddress);
+        tvname.setText(currentLocationName);
         lcmarker.hideInfoWindow();
         lcmarker.setDraggable(true);
         mMap.setOnMarkerDragListener(this);
@@ -290,7 +348,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-                Place mPlace = place;
+                final Place mPlace = place;
                 TextView PlaceName = (TextView) findViewById(R.id.tvPlaceName);
                 TextView PlaceAddress = (TextView)findViewById(R.id.tvPlaceAddress);
                 final ImageView PlacePhoto = (ImageView)findViewById(R.id.ivPlace);
@@ -345,7 +403,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         if (attributedPhoto != null) {
                             // Photo has been loaded, display it.
                             PlacePhoto.setImageBitmap(attributedPhoto.bitmap);
-
+                            Toast.makeText(getApplicationContext(), attributedPhoto.attribution, Toast.LENGTH_SHORT).show();
                             // Display the attribution as HTML content if set.
 
                         }
@@ -353,18 +411,25 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 }.execute(mPlace.getId());
                 PlaceName.setText(mPlace.getName());
                 PlaceAddress.setText(mPlace.getAddress());
-                LinearLayout infoll = findViewById(R.id.mInfoll);
+                final LinearLayout infoll = findViewById(R.id.mInfoll);
                 infoll.setClickable(true);
                 infoll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "장소 선택함", Toast.LENGTH_SHORT).show();
+
+                        bufferplace= new BufferPlace(mPlace.getLatLng().latitude,mPlace.getLatLng().longitude,mPlace.getName().toString(),mPlace.getAddress().toString());
+                        Intent intent = new Intent(MapActivity.this,EditLocationActivity.class);
+                        intent.putExtra("bufferplace",bufferplace);
+                        Toast.makeText(getApplicationContext(), "lat:"+bufferplace.getLat()+"lon: "+bufferplace.getLon()+"name: "+bufferplace.getPlace_name()+"address: "+bufferplace.getPlace_address(), Toast.LENGTH_SHORT).show();
+                        /**
+                         * 지원님 여기에요
+                         *
+                         *
+                          */
+
 
                     }
                 });
-
-
-
 
 
 //                mMap.setOnMarkerClickListener(this);
@@ -384,7 +449,14 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-
+    class BufferPlace extends SearchPlace implements Serializable{
+        public BufferPlace(double lat, double lon, String name, String address){
+            this.setLat(lat);
+            this.setLon(lon);
+            this.setPlace_name(name);
+            this.setPlace_address(address);
+        }
+    }
 }
 
 
