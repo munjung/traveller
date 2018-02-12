@@ -152,6 +152,7 @@
             android:id="@+id/tvselname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#5d5d5d"
             android:layout_marginLeft="56dp"
             android:layout_marginTop="17dp"
             android:text="장소 정보 없음"
@@ -164,9 +165,12 @@
                 android:id="@+id/tvSelectAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#5d5d5d"
+
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="45dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="27dp"
+                android:textSize="12sp"
                 android:text="ADDRESS" />
 
         <Button
@@ -175,7 +179,8 @@
             android:layout_height="43dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="81dp"
+            android:layout_below="@+id/tvSelectAddress"
+            android:layout_marginTop="10dp"
             android:background="@drawable/btn_selection_position" />
 
     </RelativeLayout>

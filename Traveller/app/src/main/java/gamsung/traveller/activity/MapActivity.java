@@ -40,7 +40,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -60,6 +59,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.Buffer;
 import java.util.List;
+import java.util.Locale;
 
 import gamsung.traveller.R;
 import gamsung.traveller.model.SearchPlace;
@@ -173,29 +173,32 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     public void onMarkerDragEnd(Marker marker) {
 
         List<Address> address;
+        List<Address> kaddress;
         String currentLocationAddress = "주소 정보 없음";
         String currentLocationName = "장소 정보 없음";
 
         TextView tvname = findViewById(R.id.tvselname);
         TextView tvsel = findViewById(R.id.tvSelectAddress);
         marker.setTitle("사용자 지정 위치");
-        Geocoder geocoder = new Geocoder(this);
+        Locale locale = new Locale("en");
+        Geocoder geocoder = new Geocoder(this,locale);
+        Geocoder geokoder = new Geocoder(this);
         try {
             if (geocoder != null) {
                 address = geocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1);
 
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
+                    kaddress = geokoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1);
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
-                    String area= " "+address.get(0).getAdminArea();
-                    String locality = " "+address.get(0).getLocality();
-                    if(area == null){
-                        area="";
-                    }
+                    String locality = kaddress.get(0).getLocality();
                     if(locality==null){
                         locality="";
                     }
-                    currentLocationName = address.get(0).getCountryName()+area+locality;
+                    else{
+                        locality=", "+locality;
+                    }
+                    currentLocationName = kaddress.get(0).getCountryName()+locality;
                     bufferplace=new BufferPlace(marker.getPosition().latitude,marker.getPosition().longitude,currentLocationName,currentLocationAddress);
                 }
             }
@@ -217,22 +220,29 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     public void onMapLongClick(LatLng latLng) {
         mMap.clear();
         List<Address> address;
+        List<Address> kaddress;
         TextView tvname = findViewById(R.id.tvselname);
         String currentLocationAddress = "주소 정보 없음";
         String currentLocationName = "장소 정보 없음";
-        Geocoder geocoder = new Geocoder(MapActivity.this);
+        Locale locale = new Locale("en");
+        Geocoder geocoder = new Geocoder(MapActivity.this,locale);
+        Geocoder geokoder = new Geocoder(MapActivity.this);
         try {
             if (geocoder != null) {
                 address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
+                    kaddress = geokoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
-                    String locality = address.get(0).getLocality();
+                    String locality = kaddress.get(0).getLocality();
                     if(locality==null){
                         locality="";
                     }
-                    currentLocationName = address.get(0).getCountryName()+" "+locality;
+                    else{
+                        locality=", "+locality;
+                    }
+                    currentLocationName = kaddress.get(0).getCountryName()+locality;
                     bufferplace=new BufferPlace(latLng.latitude,latLng.longitude,currentLocationName,currentLocationAddress);
                 }
             }
