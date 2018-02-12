@@ -30,8 +30,8 @@
                 android:background="@drawable/img_inner_shadow_2"/>
 
             <Button android:id="@+id/btn_goto_picture"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_margin="15dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
@@ -39,8 +39,8 @@
                 android:background="@drawable/btn_picture"/>
             
             <Button android:id="@+id/btn_delete_route_item"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_margin="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"

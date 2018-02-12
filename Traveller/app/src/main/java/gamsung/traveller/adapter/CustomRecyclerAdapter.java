@@ -66,7 +66,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         return _items == null ? 0 : _items.size();
     }
 
-    public void addImagePath(String path){
+    public int addImagePath(String path){
 
         path = path.replace("[", "");
         path = path.replace("]", "");
@@ -79,6 +79,8 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         }
 
         notifyDataSetChanged();
+
+        return _items.size();
     }
 
     public void addImagePath(List<String> path){
@@ -94,23 +96,22 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         Context context;
 
         private ImageView imageView;
-        private ImageButton addImgBtn;
 
         public CustomViewHolder(final Context context, View itemView) {
             super(itemView);
             this.context = context;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
-            addImgBtn = (ImageButton) itemView.findViewById(R.id.addImgBtn);
-
-            addImgBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //갤러리 이동
-                    Intent intent = new Intent(context, CustomGalleryActivity.class);
-                    ((Activity) context).startActivityForResult(intent, 1);
-                }
-            });
+//            addImgBtn = (ImageButton) itemView.findViewById(R.id.addImgBtn);
+//
+//            addImgBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //갤러리 이동
+//                    Intent intent = new Intent(context, CustomGalleryActivity.class);
+//                    ((Activity) context).startActivityForResult(intent, 1);
+//                }
+//            });
         }
     }
 }

@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity {
             }
             else{
 
-                Intent i = new Intent(SplashActivity.this, EmptyMainActivity.class);
+                Intent i = new Intent(SplashActivity.this, SetTravelActivity.class);
                 startActivity(i);
                 SplashActivity.this.finish();
             }

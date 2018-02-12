@@ -3,6 +3,7 @@ package gamsung.traveller.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -36,7 +37,7 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
     private static final int PICK_FROM_ALBUM = 0;
 
     private CalendarFragment calendarFragment;
-    private ImageView setImage, addImgBtn;
+    private ImageView imageRepresent, imageAddPhoto;
     private Bitmap image_bitmap;
     private TextView txtGo, txtBack;
 
@@ -48,9 +49,9 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         calendarFragment = (CalendarFragment)getSupportFragmentManager().findFragmentById(R.id.dateFragment);
         calendarFragment.setCalendarSelectedListener(this);
 
-        setImage = (ImageView)findViewById(R.id.setImage);
-        addImgBtn = (ImageView) findViewById(R.id.addImgBtn);
-        addImgBtn.setOnClickListener(new View.OnClickListener() {
+        imageRepresent = (ImageView)findViewById(R.id.image_represent_set_travel);
+        imageAddPhoto = (ImageView) findViewById(R.id.image_add_photo_set_travel);
+        imageAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doTakeAlbumAction();
@@ -77,17 +78,16 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         }
     }
     private void loadPicture(Intent data){
-        try{
-            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-           // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
-            setImage.setAdjustViewBounds(true);
+        try {
+
+            Uri uri = data.getData();
+            Glide.with(this).load(uri).into(imageRepresent);
+
+//            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
             //uploadImage.setImageBitmap(rotate(myBitmap, 0));
             //Glide.with(getApplicationContext()).load(image_bitmap).asBitmap().into(setImage);
-            setImage.setImageBitmap(image_bitmap);
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }catch (IOException e){
-            e.printStackTrace();
+//            setImage.setImageBitmap(image_bitmap);
         }catch (Exception e){
             e.printStackTrace();
         }

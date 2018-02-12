@@ -309,6 +309,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             public void onClick(View view) {
                 DebugToast.show(_context, "" + viewHolder.getAdapterPosition());
 
+                int pos = viewHolder.getAdapterPosition();
+                viewHolder.setCurrentPosition(viewHolder.getAdapterPosition());
                 //삭제버튼의 영역안에 클릭 리스너가 발생한 경우에만 아래 삭제기능을 수행하도록 변경해야함
                 //이유: onClick 에서만 getAdapterPosition 이 동작함
             }
@@ -335,8 +337,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                             hideDeleteView();
 
                             //click을 통해 setOnClickListener를 호출해서 position 정보를 가져오도록
-                            viewHolder.itemView.callOnClick();
-                            removeItem(viewHolder.getAdapterPosition());
+                            viewHolder.itemView.performClick();
+                            int pos = viewHolder.getCurrentPosition();
+                            removeItem(viewHolder.getCurrentPosition());
                         }
                     });
 
@@ -385,7 +388,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             viewHolder.getLayoutShadow().setVisibility(View.VISIBLE);
             viewHolder.getBtnDelete().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
         }
-
     }
 
     @Override
@@ -461,6 +463,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     public static class RouteViewHolder extends RecyclerView.ViewHolder {
 
         private Context _context;
+        private int currentPosition;
 
         private ImageView imageView;
         private TextView textView;
@@ -521,6 +524,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         }
         public RelativeLayout getLayoutShadow() {
             return layoutShadow;
+        }
+
+        public int getCurrentPosition() {
+            return currentPosition;
+        }
+
+        public void setCurrentPosition(int currentPosition) {
+            this.currentPosition = currentPosition;
         }
     }
 }

@@ -55,6 +55,9 @@ public class EditLocationActivity extends AppCompatActivity {
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
     private TextView editLocation;
+    private View layoutAddPhoto;
+    private Button btnAddPhoto;
+    private Button btnRepresent;
     private ImageView memoImage,eat,buy,take,visit,anything;
 //    private ViewPager pager;
     private String imgPath;
@@ -95,22 +98,22 @@ public class EditLocationActivity extends AppCompatActivity {
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_edit_lcoation);
 
-        Intent intent = getIntent();
-        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
 
-        if(whatActivity.equals("create")) {
-            isEdit = false;
-            recyclerView.setVisibility(View.GONE);
-            btnNextPlan.setVisibility(View.VISIBLE);
-        }
-
-        else if(whatActivity.equals("edit")) {
-            isEdit = true;
-            recyclerView.setVisibility(View.VISIBLE);
-            btnNextPlan.setVisibility(View.GONE);
-        }
+//        Intent intent = getIntent();
+//        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+//
+//        if(whatActivity.equals("create")) {
+//            isEdit = false;
+//            recyclerView.setVisibility(View.GONE);
+//            btnNextPlan.setVisibility(View.VISIBLE);
+//        }
+//
+//        else if(whatActivity.equals("edit")) {
+//            isEdit = true;
+//            recyclerView.setVisibility(View.VISIBLE);
+//            btnNextPlan.setVisibility(View.GONE);
+//        }
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +176,6 @@ public class EditLocationActivity extends AppCompatActivity {
         });
 
         List<String> temp = new ArrayList<>();
-        temp.add(""); //첫 이미지 default
         _adapter = new CustomRecyclerAdapter(this, temp);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_edit_lcoation);
@@ -181,6 +183,35 @@ public class EditLocationActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        layoutAddPhoto = (View)findViewById(R.id.layout_add_on_empty_edit_location);
+        layoutAddPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
+                startActivityForResult(i,1);
+            }
+        });
+
+        btnRepresent = (Button)findViewById(R.id.btn_represent_edit_location);
+        btnRepresent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        btnAddPhoto = (Button)findViewById(R.id.btn_add_photo_edit_location);
+        btnAddPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
+                startActivityForResult(i,1);
+            }
+        });
+
+
 
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,16 +265,20 @@ public class EditLocationActivity extends AppCompatActivity {
 
             imgPath = data.getExtras().getString("img");
 
-            pathhhhhh = new ArrayList<>(data.getStringArrayListExtra("img2"));
-            for(int i=0; i<pathhhhhh.size(); i++){
-                Log.d("갓중평최고????????ㅠㅠ??", pathhhhhh.get(i).toString());
-          }
-//            DebugToast.show(this, imgPath);
-             _adapter.addImagePath(imgPath);
+             if(_adapter.addImagePath(imgPath) > 0){
 
-           // Toast.makeText(getApplicationContext(), "전달: "+path, Toast.LENGTH_SHORT).show();
-            //imgPath = path;
-           // loadPicture(data);
+                 Button btnRepresent = findViewById(R.id.btn_represent_edit_location);
+                 if(btnRepresent.getVisibility() == View.INVISIBLE)
+                    btnRepresent.setVisibility(View.VISIBLE);
+
+                 Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
+                 if(btnAdd.getVisibility() == View.INVISIBLE)
+                    btnAdd.setVisibility(View.VISIBLE);
+
+                 View layoutFrame = findViewById(R.id.layout_frame_edit_location);
+                 if(layoutFrame.getVisibility() == View.VISIBLE)
+                     layoutFrame.setVisibility(View.INVISIBLE);
+             }
         }
     }
 
