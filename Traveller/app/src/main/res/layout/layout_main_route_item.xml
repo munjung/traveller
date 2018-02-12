@@ -15,19 +15,19 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            
-            <RelativeLayout android:id="@+id/shadow_backlayer"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@drawable/bg_shadow"
-                android:adjustViewBounds="true">
-            </RelativeLayout>
+
 
             <ImageView android:id="@+id/image_route_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/grap_noimage"/>
+
+            <RelativeLayout android:id="@+id/shadow_backlayer"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:visibility="invisible"
+                android:background="@drawable/img_inner_shadow_2"/>
 
             <Button android:id="@+id/btn_goto_picture"
                 android:layout_width="10dp"

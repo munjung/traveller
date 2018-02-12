@@ -11,38 +11,45 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.squareup.timessquare.CalendarPickerView;
 
 import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.frag.CalendarFragment;
+import gamsung.traveller.util.DebugToast;
 
 /**
  * Created by jekan on 2018-01-30.
  */
 
-public class SetTravelActivity extends AppCompatActivity {
+public class SetTravelActivity extends AppCompatActivity implements CalendarPickerView.OnDateSelectedListener {
 
-    CalendarFragment calendarFragment;
-  // ImageButton addImgBtn;
-    ImageView setImage, addImgBtn;
     private static final int PICK_FROM_ALBUM = 0;
-    Bitmap image_bitmap;
-    TextView go, back;
+
+    private CalendarFragment calendarFragment;
+    private ImageView setImage, addImgBtn;
+    private Bitmap image_bitmap;
+    private TextView txtGo, txtBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_travel);
-        calendarFragment = (CalendarFragment)getSupportFragmentManager().findFragmentById(R.id.dateFragment);
-        addImgBtn = (ImageView) findViewById(R.id.addImgBtn);
-        setImage = (ImageView)findViewById(R.id.setImage);
 
+        calendarFragment = (CalendarFragment)getSupportFragmentManager().findFragmentById(R.id.dateFragment);
+        calendarFragment.setCalendarSelectedListener(this);
+
+        setImage = (ImageView)findViewById(R.id.setImage);
+        addImgBtn = (ImageView) findViewById(R.id.addImgBtn);
         addImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,8 +57,8 @@ public class SetTravelActivity extends AppCompatActivity {
             }
         });
 
-        go = (TextView)findViewById(R.id.go);
-        back = (TextView)findViewById(R.id.back);
+        txtGo = (TextView)findViewById(R.id.txt_set_travel_go);
+        txtBack = (TextView)findViewById(R.id.txt_set_travel_back);
     }
 
     public void doTakeAlbumAction(){
@@ -87,4 +94,55 @@ public class SetTravelActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onDateSelected(Date date) {
+
+        DebugToast.show(this, (String)android.text.format.DateFormat.format("yyyy.MM.dd", date));
+
+        List<Date> dates = calendarFragment.getSelectedDates();
+        if(dates == null || dates.size() == 0){
+            txtGo.setTag(null);
+            txtBack.setTag(null);
+        }
+
+        if(dates.size() == 1){
+            txtGo.setTag(dates.get(0));
+            txtBack.setTag(null);
+        }
+
+        if(dates.size() > 1){
+            txtGo.setTag(dates.get(0));
+            txtBack.setTag(dates.get(dates.size()-1));
+        }
+
+        invalidateCalenderGoBack();
+    }
+
+    @Override
+    public void onDateUnselected(Date date) {
+
+    }
+
+    private void checkInvalid(){
+
+    }
+
+    private void invalidateCalenderGoBack(){
+
+        if(txtGo.getTag() == null){
+            txtGo.setText("출발일");
+        }
+        else{
+            Date date = (Date)txtGo.getTag();
+            txtGo.setText((String)android.text.format.DateFormat.format("yyyy.MM.dd", date));
+        }
+
+        if(txtBack.getTag() == null){
+            txtBack.setText("도착일");
+        }
+        else{
+            Date date = (Date)txtBack.getTag();
+            txtBack.setText((String)android.text.format.DateFormat.format("yyyy.MM.dd", date));
+        }
+    }
 }

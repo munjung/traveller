@@ -89,81 +89,116 @@
             android:layout_margin="10dp"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="345dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_title"
         android:layout_gravity="center"
-        android:layout_margin="10dp">
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="여행명을 입력하세요."
-        android:gravity="center"
-        android:background="@android:color/transparent"/>
-        <ImageView
-            android:layout_gravity="center"
-            android:layout_width="189dp"
-            android:layout_height="3dp"
-            android:background="@drawable/line_title"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="vertical"
-        android:layout_gravity="center">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/go"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:gravity="center"
-            android:id="@+id/go"
-            android:text="출발일"/>
-    </LinearLayout>
+        android:background="@drawable/round_border">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <EditText
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/grap_line" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:hint="여행명을 입력하세요."
+            android:layout_above="@+id/img_line_set_travel"
+            android:textSize="13sp"
+            android:textColor="#212121"
+            android:gravity="center"
+            android:background="@android:color/transparent"/>
+
+        <ImageView android:id="@+id/img_line_set_travel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/line_title"/>
+
+    </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/back"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:gravity="center"
-            android:id="@+id/back"
-            android:text="도착일"/>
-    </LinearLayout>
-
-    </LinearLayout>
-
-    <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="6dp"
-        android:id="@+id/dateFragment"
-        android:name="gamsung.traveller.frag.CalendarFragment"/>
+        android:paddingTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/round_border">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/go" />
+
+                <TextView
+                    android:id="@+id/txt_set_travel_go"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="출발일"
+                    android:textColor="#252525"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/grap_line" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/back" />
+
+                <TextView
+                    android:id="@+id/txt_set_travel_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="도착일"
+                    android:textColor="#252525"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <fragment
+            android:id="@+id/dateFragment"
+            android:name="gamsung.traveller.frag.CalendarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

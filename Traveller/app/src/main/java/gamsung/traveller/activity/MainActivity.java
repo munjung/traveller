@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         //
         //
 
-        _recyclerAdapter.updateItem();
+        _recyclerAdapter.refresh();
     }
 
     private void endOperation(){
@@ -301,36 +301,22 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     public RouteViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_main_route_item, viewGroup, false);
+        final RouteViewHolder viewHolder = new RouteViewHolder(_context, itemView);
 
-        return new RouteViewHolder(_context, itemView);
-    }
 
-    @Override
-    public void onBindViewHolder(final RouteViewHolder viewHolder, final int position) {
-
-        Route item = _items.get(position);
-        viewHolder.textView.setText(item.getTitle());
-
-        if (!TextUtils.isEmpty(item.getPicturePath())) {
-            Glide.with(_context).load(item.getPicturePath()).into(viewHolder.imageView);
-
-            //show picture button
-            viewHolder.btnGoToPicture.setVisibility(View.VISIBLE);
-            viewHolder.btnDelete.setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
-            viewHolder.layoutShadow.setBackground(_context.getResources().getDrawable(R.drawable.bg_shadow));
-        }
-
-        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DebugToast.show(_context, "" + viewHolder.getAdapterPosition());
 
-                //hide keypad
-                MainActivity mainActivity = (MainActivity) _context;
-                mainActivity.hideKeypad();
-                //hide floating button
-                _addBtnForVisible = mainActivity.findViewById(R.id.fbtn_add_main);
-                _addBtnForVisible.setVisibility(View.INVISIBLE);
+                //삭제버튼의 영역안에 클릭 리스너가 발생한 경우에만 아래 삭제기능을 수행하도록 변경해야함
+                //이유: onClick 에서만 getAdapterPosition 이 동작함
+            }
+        });
 
+        viewHolder.getBtnDelete().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
                 //click delete button
                 if(_deleteView == null) {
@@ -338,7 +324,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                     //attach delete view
                     ViewGroup inflateViewGroup = ((MainActivity)_context).findViewById(R.id.layout_main_inflate);
                     _deleteView = LayoutInflater.from(_context).inflate(R.layout.layout_main_delete, inflateViewGroup);
-                    _deleteView.setTag(position);
 
                     //delete item
                     TextView textView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);
@@ -347,14 +332,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         public void onClick(View view) {
 
                             DebugToast.show(_context, "삭제");
-                            //hide delete view
-                            _deleteView.setVisibility(View.INVISIBLE);
+                            hideDeleteView();
 
-                            //show floating button
-                            _addBtnForVisible.setVisibility(View.VISIBLE);
-
-                            int position = (int)_deleteView.getTag();
-                            removeItem(position);
+                            //click을 통해 setOnClickListener를 호출해서 position 정보를 가져오도록
+                            viewHolder.itemView.callOnClick();
+                            removeItem(viewHolder.getAdapterPosition());
                         }
                     });
 
@@ -365,19 +347,12 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         public void onClick(View view) {
 
                             DebugToast.show(_context, "취소");
-                            //hide delete view
-                            _deleteView.setVisibility(View.INVISIBLE);
-                            //show floating button
-                            _addBtnForVisible.setVisibility(View.VISIBLE);
+                            hideDeleteView();
                         }
                     });
                 }
                 else{
-                    //visible delete view
-                    _deleteView.setVisibility(View.VISIBLE);
-                    _deleteView.setTag(position);
-                    //hide floating button
-                    _addBtnForVisible.setVisibility(View.INVISIBLE);
+                    showDeleteView();
                 }
 
                 //set text => delete view(text)
@@ -390,6 +365,27 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                 imageView.setImageBitmap(getBitmapFromView(viewHolder.itemView));
             }
         });
+
+
+//        return new RouteViewHolder(_context, itemView);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final RouteViewHolder viewHolder, final int position) {
+
+        Route item = _items.get(position);
+        viewHolder.getTextView().setText(item.getTitle());
+
+        if (!TextUtils.isEmpty(item.getPicturePath())) {
+            Glide.with(_context).load(item.getPicturePath()).into(viewHolder.imageView);
+
+            //show picture button
+            viewHolder.getBtnGoToPicture().setVisibility(View.VISIBLE);
+            viewHolder.getLayoutShadow().setVisibility(View.VISIBLE);
+            viewHolder.getBtnDelete().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
+        }
+
     }
 
     @Override
@@ -397,21 +393,22 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         return _items.size();
     }
 
+
     public void addItem(Route route) {
 
-        if (_items.add(route))
-            notifyDataSetChanged();
+        _items.add(route);
+        notifyItemInserted(_items.size() - 1);
+//        notifyDataSetChanged();
     }
 
-    public void updateItem() {
+    public void refresh() {
 
         notifyDataSetChanged();
     }
 
     public void removeItem(int position) {
-        _items.remove(position);
-//        notifyDataSetChanged();
 
+        _items.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -421,6 +418,31 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
     public View get_deleteView(){
         return _deleteView;
+    }
+
+    public void hideDeleteView(){
+
+        //hide delete view
+        _deleteView.setVisibility(View.INVISIBLE);
+
+        //show floating button
+        MainActivity mainActivity = (MainActivity) _context;
+        _addBtnForVisible = mainActivity.findViewById(R.id.fbtn_add_main);
+        _addBtnForVisible.setVisibility(View.VISIBLE);
+    }
+
+    public void showDeleteView(){
+
+        //hide keypad
+        MainActivity mainActivity = (MainActivity) _context;
+        mainActivity.hideKeypad();
+
+        //hide floating button
+        _addBtnForVisible = mainActivity.findViewById(R.id.fbtn_add_main);
+        _addBtnForVisible.setVisibility(View.INVISIBLE);
+
+        //visible delete view
+        _deleteView.setVisibility(View.VISIBLE);
     }
 
     private Bitmap getBitmapFromView(View view){
@@ -440,13 +462,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         private Context _context;
 
-        public ImageView imageView;
-        public TextView textView;
+        private ImageView imageView;
+        private TextView textView;
 
-        public Button btnDelete;
-        public Button btnEdit;
-        public Button btnGoToPicture;
-        public RelativeLayout layoutShadow;
+        private Button btnDelete;
+        private Button btnEdit;
+        private Button btnGoToPicture;
+        private RelativeLayout layoutShadow;
 
         public RouteViewHolder(Context context, final View itemView) {
             super(itemView);
@@ -480,6 +502,25 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                     DebugToast.show(_context, "button clicked edit!");
                 }
             });
+        }
+
+        public ImageView getImageView() {
+            return imageView;
+        }
+        public TextView getTextView() {
+            return textView;
+        }
+        public Button getBtnDelete() {
+            return btnDelete;
+        }
+        public Button getBtnEdit() {
+            return btnEdit;
+        }
+        public Button getBtnGoToPicture() {
+            return btnGoToPicture;
+        }
+        public RelativeLayout getLayoutShadow() {
+            return layoutShadow;
         }
     }
 }
