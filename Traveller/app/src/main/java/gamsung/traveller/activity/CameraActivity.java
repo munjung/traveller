@@ -80,6 +80,7 @@ public class CameraActivity extends AppCompatActivity {
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
+        /*
         try {
             android.provider.Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
@@ -87,7 +88,7 @@ public class CameraActivity extends AppCompatActivity {
         catch(Exception e){
             e.printStackTrace();
         }
-
+*/
         controlInflater = LayoutInflater.from(getBaseContext());
         View viewControl = controlInflater.inflate(R.layout.control, null);
         LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -225,29 +226,6 @@ public class CameraActivity extends AppCompatActivity {
             changeToSaveMode();
             currentData = data;
 
-/*
-            int orientation = setCameraDisplayOrientation(CameraActivity.this,
-                    CAMERA_FACING, camera);
-
-            //byte array를 bitmap으로 변환
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeByteArray( data, 0, data.length, options);
-            //int w = bitmap.getWidth();
-            //int h = bitmap.getHeight();
-
-            //이미지를 디바이스 방향으로 회전
-
-            Matrix matrix = new Matrix();
-            matrix.postRotate(orientation);
-        bitmap =  Bitmap.createBitmap(bitmap);
-
-            //bitmap을 byte array로 변환
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            currentData = stream.toByteArray();
-
-            */
         }
     };
 
@@ -294,6 +272,29 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(byte[]... data) {
+
+
+            int orientation = setCameraDisplayOrientation(CameraActivity.this,
+                    CAMERA_FACING, camera);
+
+            //byte array를 bitmap으로 변환
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeByteArray( data[0], 0, data[0].length, options);
+            //int w = bitmap.getWidth();
+            //int h = bitmap.getHeight();
+
+            //이미지를 디바이스 방향으로 회전
+
+            Matrix matrix = new Matrix();
+            matrix.postRotate(orientation);
+            bitmap =  Bitmap.createBitmap(bitmap);
+
+            //bitmap을 byte array로 변환
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            currentData = stream.toByteArray();
+
             FileOutputStream outStream = null;
 
             // Write to SD Card
@@ -306,7 +307,7 @@ public class CameraActivity extends AppCompatActivity {
                 File outFile = new File(dir, fileName);
 
                 outStream = new FileOutputStream(outFile);
-                outStream.write(data[0]);
+                outStream.write(currentData);
                 outStream.flush();
                 outStream.close();
 
