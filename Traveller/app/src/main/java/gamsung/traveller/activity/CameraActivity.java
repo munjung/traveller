@@ -80,7 +80,7 @@ public class CameraActivity extends AppCompatActivity {
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
-        /*
+
         try {
             android.provider.Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
@@ -88,7 +88,7 @@ public class CameraActivity extends AppCompatActivity {
         catch(Exception e){
             e.printStackTrace();
         }
-*/
+
         controlInflater = LayoutInflater.from(getBaseContext());
         View viewControl = controlInflater.inflate(R.layout.control, null);
         LayoutParams layoutParamsControl = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -273,6 +273,8 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(byte[]... data) {
 
+            //int w = camera.getParameters().getPictureSize().width;
+            //int h = camera.getParameters().getPictureSize().height;
 
             int orientation = setCameraDisplayOrientation(CameraActivity.this,
                     CAMERA_FACING, camera);
@@ -281,14 +283,14 @@ public class CameraActivity extends AppCompatActivity {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeByteArray( data[0], 0, data[0].length, options);
-            //int w = bitmap.getWidth();
-            //int h = bitmap.getHeight();
+            int w = bitmap.getWidth();
+            int h = bitmap.getHeight();
 
             //이미지를 디바이스 방향으로 회전
 
             Matrix matrix = new Matrix();
             matrix.postRotate(orientation);
-            bitmap =  Bitmap.createBitmap(bitmap);
+            bitmap =  Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
 
             //bitmap을 byte array로 변환
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
