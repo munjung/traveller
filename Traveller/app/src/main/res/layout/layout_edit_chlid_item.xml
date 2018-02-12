@@ -32,10 +32,11 @@
 
     </RelativeLayout>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/img_inner_shadow_2">
-
+        <!--백그라운드 이미지 쉐도우 요청=> represent 버튼이 안보임 -->
     </RelativeLayout>
 </RelativeLayout>

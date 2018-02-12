@@ -24,7 +24,7 @@ public class EmptyMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(EmptyMainActivity.this, MainActivity.class);
+                Intent i = new Intent(EmptyMainActivity.this, SetTravelActivity.class);
                 startActivity(i);
             }
         });
