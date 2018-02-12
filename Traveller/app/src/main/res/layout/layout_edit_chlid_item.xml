@@ -11,15 +11,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:scaleType="centerInside"
-        android:src="@drawable/testimage"
         android:adjustViewBounds="true"/>
-
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/btn_represent_photo_off"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,15 +30,12 @@
             android:layout_marginLeft="10dp"
             android:hint="태그(=메모)" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/btn_add_photos"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:id="@+id/addImgBtn"/>
-
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_inner_shadow_2">
+
+    </RelativeLayout>
 </RelativeLayout>

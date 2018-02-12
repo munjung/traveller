@@ -80,311 +80,358 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-
-        android:id="@+id/recycler_edit_lcoation"
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#000000"
-        android:scrollbars="horizontal">
-
-    </android.support.v7.widget.RecyclerView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/img_btn_adress_map"
-        android:gravity="center_vertical"
-        android:id="@+id/layoutLocation"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_above="@+id/layoutToggle">
-
-        <ImageButton
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/mapButton"
-            android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/icn_marker_map"
-            android:text="지도"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editLocation"
-            android:textSize="12sp"
-            android:background="@android:color/transparent"
-            android:hint="여행 위치/좌표"/>
-
-    </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:text="To do list"
-                android:textColor="#79abff"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_height="1dp"
-        android:background="#79abff" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/layoutToggle"
-        android:gravity="center"
-        android:layout_above="@+id/memoEdit">
-        
-        <LinearLayout
-            android:layout_width="70dp"
-            android:layout_height="90dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:paddingBottom="5dp">
-
-        <ImageButton
-            android:id="@+id/eatBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/icn_btn_eat"
-            android:layout_below="@+id/layoutLocation"
-            android:layout_toEndOf="@+id/memoEdit"
-            android:layout_toRightOf="@+id/memoEdit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#79abff"
-                android:text="eat"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="70dp"
-            android:layout_height="90dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:paddingBottom="5dp">
-
-            <ImageButton
-                android:id="@+id/buyBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/icn_btn_buy"
-                android:layout_below="@+id/layoutLocation"
-                android:layout_toEndOf="@+id/memoEdit"
-                android:layout_toRightOf="@+id/memoEdit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#79abff"
-                android:text="buy"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="70dp"
-            android:layout_height="90dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:paddingBottom="5dp">
-
-            <ImageButton
-                android:id="@+id/takeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/icn_btn_take_photos"
-                android:layout_below="@+id/layoutLocation"
-                android:layout_toEndOf="@+id/memoEdit"
-                android:layout_toRightOf="@+id/memoEdit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#79abff"
-                android:text="photo"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="70dp"
-            android:layout_height="90dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:paddingBottom="5dp">
-
-            <ImageButton
-                android:id="@+id/visitBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/icn_btn_visit"
-                android:layout_below="@+id/layoutLocation"
-                android:layout_toEndOf="@+id/memoEdit"
-                android:layout_toRightOf="@+id/memoEdit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#79abff"
-                android:text="visit"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="70dp"
-            android:layout_height="90dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:paddingBottom="5dp">
-
-            <ImageButton
-                android:id="@+id/anythingBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/icn_btn_anything"
-                android:layout_below="@+id/layoutLocation"
-                android:layout_toEndOf="@+id/memoEdit"
-                android:layout_toRightOf="@+id/memoEdit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#79abff"
-                android:text="anything"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_height="1dp"
-        android:background="#79abff"
-        android:layout_marginBottom="10dp">
-
-    </ImageView>
-
             <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="240dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_edit_lcoation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal">
+                </android.support.v7.widget.RecyclerView>
+
+                <RelativeLayout android:id="@+id/layout_frame_edit_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/img_frame">
+
+                    <RelativeLayout android:id="@+id/layout_add_on_empty_edit_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true">
+
+                        <ImageView android:id="@+id/image_camera_edit_location"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:background="@drawable/btn_camera_widget" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/image_camera_edit_location"
+                            android:layout_marginLeft="10dp"
+                            android:text="해당 버튼을 눌러\n사진을 추가해 주세요"
+                            android:textSize="15sp"
+                            android:textColor="#5d5d5d"/>
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <Button android:id="@+id/btn_represent_edit_location"
+                    android:layout_width="28dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="10dp"
+                    android:visibility="invisible"
+                    android:background="@drawable/btn_represent_photo_off"/>
+
+                <Button android:id="@+id/btn_add_photo_edit_location"
+                    android:layout_width="28dp"
+                    android:layout_height="20dp"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/btn_add_photos"/>
+                
+            </RelativeLayout>
+            
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:background="@drawable/border"
+                android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/eat"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/icn_eat_on_list"
-                    android:layout_centerVertical="true"/>
-                
-                <EditText
-                    android:id="@+id/memoEdit"
-                    android:layout_toRightOf="@+id/eat"
-                    android:layout_width="250dp"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#5d5d5d"
-                    android:paddingLeft="15dp"
-                    android:hint="할일 입력"
-                    android:textSize="14sp"
-                    android:background="@null"
-                    android:layout_centerVertical="true"/>
-                
-                <ImageButton
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/btn_edit_to_do_list"
-                    android:layout_toRightOf="@id/memoEdit"/>
+                    android:background="@drawable/img_btn_adress_map"
+                    android:gravity="center_vertical"
+                    android:id="@+id/layoutLocation"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_above="@+id/layoutToggle">
+
+                    <ImageButton
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/mapButton"
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/icn_marker_map"
+                        android:text="지도"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editLocation"
+                        android:textSize="12sp"
+                        android:background="@android:color/transparent"
+                        android:hint="여행 위치/좌표"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="To do list"
+                    android:textColor="#79abff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <ImageView
-                    android:visibility="gone"
-                    android:id="@+id/buy"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/icn_buy_on_list"
-                    android:layout_centerVertical="true"/>
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="1dp"
+                    android:background="#79abff" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/layoutToggle"
+                    android:gravity="center"
+                    android:layout_above="@+id/memoEdit">
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="90dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="5dp">
+
+                        <ImageButton
+                            android:id="@+id/eatBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/icn_btn_eat"
+                            android:layout_below="@+id/layoutLocation"
+                            android:layout_toEndOf="@+id/memoEdit"
+                            android:layout_toRightOf="@+id/memoEdit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="#79abff"
+                            android:text="eat"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="90dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="5dp">
+
+                        <ImageButton
+                            android:id="@+id/buyBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/icn_btn_buy"
+                            android:layout_below="@+id/layoutLocation"
+                            android:layout_toEndOf="@+id/memoEdit"
+                            android:layout_toRightOf="@+id/memoEdit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="#79abff"
+                            android:text="buy"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="90dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="5dp">
+
+                        <ImageButton
+                            android:id="@+id/takeBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/icn_btn_take_photos"
+                            android:layout_below="@+id/layoutLocation"
+                            android:layout_toEndOf="@+id/memoEdit"
+                            android:layout_toRightOf="@+id/memoEdit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="#79abff"
+                            android:text="photo"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="90dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="5dp">
+
+                        <ImageButton
+                            android:id="@+id/visitBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/icn_btn_visit"
+                            android:layout_below="@+id/layoutLocation"
+                            android:layout_toEndOf="@+id/memoEdit"
+                            android:layout_toRightOf="@+id/memoEdit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="#79abff"
+                            android:text="visit"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="90dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="5dp">
+
+                        <ImageButton
+                            android:id="@+id/anythingBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/icn_btn_anything"
+                            android:layout_below="@+id/layoutLocation"
+                            android:layout_toEndOf="@+id/memoEdit"
+                            android:layout_toRightOf="@+id/memoEdit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="#79abff"
+                            android:text="anything"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/photo"
-                    android:visibility="gone"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/icn_take_photos_on_list"
-                    android:layout_centerVertical="true"/>
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="1dp"
+                    android:background="#79abff"
+                    android:layout_marginBottom="10dp">
 
-                <ImageView
-                    android:id="@+id/visit"
-                    android:visibility="gone"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/icn_visit_on_list"
-                    android:layout_centerVertical="true"/>
+                </ImageView>
 
-                <ImageView
-                    android:id="@+id/anything"
-                    android:visibility="gone"
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/icn_anything_on_list"
-                    android:layout_centerVertical="true"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/border"
+                    android:gravity="center">
 
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/eat"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icn_eat_on_list"
+                        android:layout_centerVertical="true"/>
 
-        </LinearLayout>
+                    <EditText
+                        android:id="@+id/memoEdit"
+                        android:layout_toRightOf="@+id/eat"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="#5d5d5d"
+                        android:paddingLeft="15dp"
+                        android:hint="할일 입력"
+                        android:textSize="14sp"
+                        android:background="@null"
+                        android:layout_centerVertical="true"/>
 
+                    <ImageButton
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/btn_edit_to_do_list"
+                        android:layout_toRightOf="@id/memoEdit"/>
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/buy"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icn_buy_on_list"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageView
+                        android:id="@+id/photo"
+                        android:visibility="gone"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icn_take_photos_on_list"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageView
+                        android:id="@+id/visit"
+                        android:visibility="gone"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icn_visit_on_list"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageView
+                        android:id="@+id/anything"
+                        android:visibility="gone"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icn_anything_on_list"
+                        android:layout_centerVertical="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+            
         </LinearLayout>
 
     </ScrollView>
