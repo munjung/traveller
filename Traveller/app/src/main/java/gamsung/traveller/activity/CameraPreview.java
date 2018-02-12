@@ -1,40 +1,33 @@
 package gamsung.traveller.activity;
-import java.io.IOException;
-import java.util.List;
 
 import android.content.Context;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.IOException;
+import java.util.List;
 
 /**
- * Created by Jiwon on 2018.  02. 01
- * 19번 화면
+ * Created by Jiwon on 2018-02-12.
  */
 
-
-
-class Preview extends ViewGroup implements SurfaceHolder.Callback {
-
-    private final String TAG = "Preview";
+public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 
     SurfaceView mSurfaceView;
     SurfaceHolder mHolder;
-    Size mPreviewSize;
-    List<Size> mSupportedPreviewSizes;
+    Camera.Size mPreviewSize;
+    List<Camera.Size> mSupportedPreviewSizes;
     Camera mCamera;
 
-    Preview(Context context, SurfaceView sv ) {
+    CameraPreview(Context context, SurfaceView sv ) {
+
         super(context);
 
         mSurfaceView = sv;
-//        addView(mSurfaceView);
-
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -43,20 +36,16 @@ class Preview extends ViewGroup implements SurfaceHolder.Callback {
 
     public void setCamera(Camera camera) {
         if (mCamera != null) {
-            // Call stopPreview() to stop updating the preview surface.
             mCamera.stopPreview();
-
-            // Important: Call release() to release the camera for use by other
-            // applications. Applications should release the camera immediately
-            // during onPause() and re-open() it during onResume()).
             mCamera.release();
-
             mCamera = null;
         }
 
         mCamera = camera;
+
         if (mCamera != null) {
-            List<Size> localSizes = mCamera.getParameters().getSupportedPreviewSizes();
+
+            List<Camera.Size> localSizes = mCamera.getParameters().getSupportedPreviewSizes();
             mSupportedPreviewSizes = localSizes;
             requestLayout();
 
@@ -138,7 +127,7 @@ class Preview extends ViewGroup implements SurfaceHolder.Callback {
                 mCamera.setPreviewDisplay(holder);
             }
         } catch (IOException exception) {
-            Log.e(TAG, "IOException caused by setPreviewDisplay()", exception);
+
         }
     }
 
@@ -150,18 +139,18 @@ class Preview extends ViewGroup implements SurfaceHolder.Callback {
     }
 
 
-    private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
+    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.1;
         double targetRatio = (double) w / h;
         if (sizes == null) return null;
 
-        Size optimalSize = null;
+        Camera.Size optimalSize = null;
         double minDiff = Double.MAX_VALUE;
 
         int targetHeight = h;
 
         // Try to find an size match aspect ratio and size
-        for (Size size : sizes) {
+        for (Camera.Size size : sizes) {
             double ratio = (double) size.width / size.height;
             if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
             if (Math.abs(size.height - targetHeight) < minDiff) {
@@ -173,7 +162,7 @@ class Preview extends ViewGroup implements SurfaceHolder.Callback {
         // Cannot find the one match the aspect ratio, ignore the requirement
         if (optimalSize == null) {
             minDiff = Double.MAX_VALUE;
-            for (Size size : sizes) {
+            for (Camera.Size size : sizes) {
                 if (Math.abs(size.height - targetHeight) < minDiff) {
                     optimalSize = size;
                     minDiff = Math.abs(size.height - targetHeight);
@@ -186,7 +175,7 @@ class Preview extends ViewGroup implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         if ( mCamera != null) {
             Camera.Parameters parameters = mCamera.getParameters();
-            List<Size> allSizes = parameters.getSupportedPreviewSizes();
+            List<Camera.Size> allSizes = parameters.getSupportedPreviewSizes();
             Camera.Size size = allSizes.get(0); // get top size
             for (int i = 0; i < allSizes.size(); i++) {
                 if (allSizes.get(i).width > size.width)

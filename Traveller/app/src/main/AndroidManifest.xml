@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"></uses-permission>
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -48,7 +49,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.CameraActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="sensor"/>
         <activity android:name=".activity.GridInCluster"></activity>
     </application>
 
