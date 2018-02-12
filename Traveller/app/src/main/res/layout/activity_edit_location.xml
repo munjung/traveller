@@ -87,8 +87,8 @@
         android:layout_height="240dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:scrollbars="horizontal"
-        android:visibility="visible">
+        android:background="#000000"
+        android:scrollbars="horizontal">
 
     </android.support.v7.widget.RecyclerView>
 

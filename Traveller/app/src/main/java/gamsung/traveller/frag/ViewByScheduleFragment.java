@@ -115,6 +115,7 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
             Bundle bundle = new Bundle();
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
+            i.putExtra("TAG_ACTIVITY","edit");
             int idx = scheduleService.toListIdx((int)view.getTag());
             Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
             bundle.putInt("spot list", (int)view.getTag());

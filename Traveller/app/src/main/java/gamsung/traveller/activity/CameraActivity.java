@@ -34,7 +34,9 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import gamsung.traveller.R;
@@ -53,9 +55,9 @@ import gamsung.traveller.R;
     boolean previewing = false;
     boolean isPreviewing = false;
     LayoutInflater controlInflater = null;
-    Button buttonTakePicture;
+    ImageButton buttonTakePicture,camerachange;
     final int RESULT_SAVEIMAGE = 0;
-    private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
 
     /**
      * Called when the activity is first created.
@@ -83,7 +85,7 @@ import gamsung.traveller.R;
         //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.addContentView(viewControl, layoutParamsControl);
 
-        buttonTakePicture = (Button) findViewById(R.id.takepicture);
+        buttonTakePicture = (ImageButton) findViewById(R.id.takepicture);
         buttonTakePicture.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) { // TODO Auto-generated method stub
@@ -92,13 +94,30 @@ import gamsung.traveller.R;
             }
         });
 
-        LinearLayout layoutBackground = (LinearLayout) findViewById(R.id.background);
+        RelativeLayout layoutBackground = (RelativeLayout) findViewById(R.id.background);
         layoutBackground.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
             public void onClick(View arg0) { // TODO Auto-generated method stub
                 if(!isPreviewing) {
                     buttonTakePicture.setEnabled(false);
                     camera.autoFocus(myAutoFocusCallback);
+                }
+            }
+        });
+
+        camerachange = (ImageButton) findViewById(R.id.camerachange);
+        camerachange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(CAMERA_FACING == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
+                    startCamera();
+                }
+
+                else if(CAMERA_FACING == Camera.CameraInfo.CAMERA_FACING_BACK){
+                    CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                    startCamera();
                 }
             }
         });
