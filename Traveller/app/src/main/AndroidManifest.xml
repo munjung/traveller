@@ -48,8 +48,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CameraActivity"
-            android:screenOrientation="sensor"/>
+        <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.GridInCluster"></activity>
     </application>
 
