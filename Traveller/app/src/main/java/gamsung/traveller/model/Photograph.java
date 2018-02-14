@@ -13,7 +13,7 @@ public class Photograph {
 
     private int _id;
     private int route_id;
-    private int place_id;
+    private int spot_id;
     private int search_id;
     private String path;
     private String tag;
@@ -35,12 +35,12 @@ public class Photograph {
         this.route_id = route_id;
     }
 
-    public int getPlace_id() {
-        return place_id;
+    public int getSpot_id() {
+        return spot_id;
     }
 
-    public void setPlace_id(int place_id) {
-        this.place_id = place_id;
+    public void setSpot_id(int spot_id) {
+        this.spot_id = spot_id;
     }
 
     public int getSearch_id() {
