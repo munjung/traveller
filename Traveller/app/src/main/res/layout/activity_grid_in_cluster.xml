@@ -1,9 +1,35 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="63dp">
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="22dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/btn_back"/>
+
+        <TextView
+
+            android:id="@+id/tvlocalname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="15.2sp" />
+
+    </RelativeLayout>
 
 
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="4dp"
+    android:src="@drawable/line"
+    android:layout_marginTop="63dp"/>
 
     <GridView
         android:id="@+id/gvphoto"
@@ -11,11 +37,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_marginTop="2dp"
-        android:verticalSpacing="2dp"
+        android:layout_marginTop="73dp"
         android:horizontalSpacing="2dp"
+        android:numColumns="4"
         android:stretchMode="columnWidth"
-        android:numColumns="4">
-    </GridView>
+        android:verticalSpacing="2dp"></GridView>
 
-</LinearLayout>
+</RelativeLayout>

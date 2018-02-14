@@ -3,6 +3,7 @@ package gamsung.traveller.activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -23,6 +24,7 @@ import android.widget.ViewSwitcher;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -30,6 +32,7 @@ import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.frag.ViewByPhotosFragment;
 import gamsung.traveller.frag.ViewByScheduleFragment;
+import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
 
 public class TravelViewActivity extends AppCompatActivity {
@@ -38,7 +41,7 @@ public class TravelViewActivity extends AppCompatActivity {
      * 준규가 다 만들어줄 9,13화면
      */
 
-    private ImageButton btnAddLocation, btnHome;
+    private ImageButton btnAddLocation, btnHome, btnCamera;
     private ViewSwitcher viewSwitcher;
     private EditText editTitle;
     private TextView textTitle;
@@ -58,8 +61,9 @@ public class TravelViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_view);
 
-        dataManager = DataManager.getInstance(this);
-
+        //dataManager = DataManager.getInstance(this);
+        //HashMap<Integer, Spot> hashSpot = dataManager.getSpotList();
+        //Spot spottemp = hashSpot.get()
         //*temp code
         /*
         Spot spot = new Spot();
@@ -77,8 +81,9 @@ public class TravelViewActivity extends AppCompatActivity {
         tempSpotList.add(spot1);
         tempSpotList.add(spot2);
         */
+
         tempSpotList = new ArrayList<>();
-        for (int i = 0; i < 50; i++){
+        for (int i = 0; i < 3; i++){
             Spot spot = new Spot();
             spot.setMission("Gamsung Mission num: " + i);
             tempSpotList.add(spot);
@@ -189,15 +194,15 @@ public class TravelViewActivity extends AppCompatActivity {
             }
         });
 
-
-        FloatingActionButton fabTakePic = findViewById(R.id.fabTakePic);
-        fabTakePic.setOnClickListener(new View.OnClickListener() {
+        btnCamera = (ImageButton) findViewById(R.id.btnTakePic);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent i = new Intent(TravelViewActivity.this, CameraActivity.class);
                 startActivity(i);
             }
         });
+
     }
 
 
@@ -208,7 +213,7 @@ public class TravelViewActivity extends AppCompatActivity {
         return tempSpotList;
     }
 
-    public List<String> getImageListWithSpot(int spot_id){
+    public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){
         return dataManager.getPhotoListWithSpot(spot_id);
     }
 }

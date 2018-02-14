@@ -1,7 +1,11 @@
 package gamsung.traveller.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +22,9 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import gamsung.traveller.R;
 
@@ -64,9 +70,10 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         protected void onBeforeClusterItemRendered(PhotoCluster photoCluster, MarkerOptions markerOptions) {
             // Draw a single person.
             // Set the info window to show their name.
-            Drawable smalldraw = getResources().getDrawable(photoCluster.source);
-
-            mImageView.setImageDrawable(smalldraw);
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String imgpath = path+"/testing/"+photoCluster.source;
+            Bitmap bm = BitmapFactory.decodeFile(imgpath);
+            mImageView.setImageBitmap(bm);
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
@@ -77,10 +84,12 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             int width = mDimension;
             int height = mDimension;
             PhotoCluster pc = (PhotoCluster) cluster.getItems().toArray()[0];
-            Drawable drawable = getResources().getDrawable(pc.source);
-            drawable.setBounds(0, 0, width, height);
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String imgpath = path+"/testing/"+pc.source;
+            Bitmap prebm = BitmapFactory.decodeFile(imgpath);
+            Bitmap bm = Bitmap.createScaledBitmap(prebm, width,height,true);
             mClusterIconGenerator.setBackground(null);
-            mClusterImageView.setImageDrawable(drawable);
+            mClusterImageView.setImageBitmap(bm);
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
@@ -93,12 +102,34 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
     @Override
     public boolean onClusterClick(Cluster<PhotoCluster> cluster) {
-        ArrayList<Integer> photolist=new ArrayList<Integer>();
-        for(PhotoCluster pc : cluster.getItems()){
-            photolist.add(pc.source);
+        ArrayList<String> photolist=new ArrayList<String>();
+        String currAddress="";
+        List<Address> addressList;
+        Geocoder geocoder = new Geocoder(this);
+        PhotoCluster pc = (PhotoCluster)cluster.getItems().toArray()[0];
+        try{
+            if (geocoder!=null) {
+                addressList = geocoder.getFromLocation(pc.getPosition().latitude, pc.getPosition().longitude, 1);
+
+                if (addressList != null && addressList.size() > 0) {
+                    String locality = addressList.get(0).getLocality();
+                    if (locality == null) {
+                        locality = "";
+                    } else {
+                        locality = ", " + locality;
+                    }
+                    currAddress = addressList.get(0).getCountryName() + locality;
+                }
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        for(PhotoCluster pcpc : cluster.getItems()){
+            photolist.add(pcpc.source);
         }
         Intent intent = new Intent(MapClusterActivity.this,GridInCluster.class);
-        intent.putIntegerArrayListExtra("phototosend",photolist);
+        intent.putExtra("localname",currAddress);
+        intent.putStringArrayListExtra("phototosend",photolist);
         startActivity(intent);
         return false;
     }
@@ -148,18 +179,18 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
     }
 
     private void addItems(){
-        mClusterManager.addItem(new PhotoCluster(position(), "1",R.drawable.test_1));
-        mClusterManager.addItem(new PhotoCluster(position(), "2",R.drawable.test_2));
-        mClusterManager.addItem(new PhotoCluster(position(), "3",R.drawable.test_3));
-        mClusterManager.addItem(new PhotoCluster(position(), "4",R.drawable.test_4));
-        mClusterManager.addItem(new PhotoCluster(position(), "5",R.drawable.test_5));
-        mClusterManager.addItem(new PhotoCluster(position(), "6",R.drawable.test_6));
-        mClusterManager.addItem(new PhotoCluster(position(), "7",R.drawable.test_7));
-        mClusterManager.addItem(new PhotoCluster(position(), "8",R.drawable.test_8));
-        mClusterManager.addItem(new PhotoCluster(position(), "9",R.drawable.test_9));
-        mClusterManager.addItem(new PhotoCluster(position(), "10",R.drawable.test_10));
-        mClusterManager.addItem(new PhotoCluster(position(), "11",R.drawable.test_11));
-        mClusterManager.addItem(new PhotoCluster(position(), "12",R.drawable.test_12));
+        mClusterManager.addItem(new PhotoCluster(position(), "1","test_1.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "2","test_2.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "3","test_3.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "4","test_4.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "5","test_5.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "6","test_6.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "7","test_7.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "8","test_8.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "9","test_9.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "10","test_10.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "11","test_11.jpg"));
+        mClusterManager.addItem(new PhotoCluster(position(), "12","test_12.jpg"));
 
     }
 
@@ -173,9 +204,9 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 }
 class PhotoCluster implements ClusterItem {
     public  final String name;
-    public final int source;
+    public final String source;
     private final LatLng mPosition;
-    public PhotoCluster(LatLng Position, String name, int pictureResource){
+    public PhotoCluster(LatLng Position, String name, String pictureResource){
         this.name = name;
         source = pictureResource;
         mPosition = Position;

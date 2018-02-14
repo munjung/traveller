@@ -4,6 +4,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/barLayout"
+        android:focusable="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            android:elevation="1dp"
+            android:id="@+id/toolTitle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <ImageButton
+                    android:id="@+id/btnHome"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/btn_back"
+                    android:layout_alignParentLeft="true"
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/textTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="나의 일정_1"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="#5d5d5d"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/btnSave"
+                    android:layout_toRightOf="@id/btnHome"/>
+
+                <ImageButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/btn_represent_photo_off"/>
+                <!--별표 버튼이 다운이 안된다...-->
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">

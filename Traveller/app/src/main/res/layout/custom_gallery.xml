@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
-        android:background="#ffffff"
-        android:textColor="#009688"
+        android:background="@drawable/btn_select_photo"
+        android:textColor="#ffffffff"
         android:textSize="15sp"
         android:visibility="gone"/>
 

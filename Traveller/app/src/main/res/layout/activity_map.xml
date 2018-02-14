@@ -179,8 +179,8 @@
             android:layout_height="43dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_below="@+id/tvSelectAddress"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="6dp"
             android:background="@drawable/btn_selection_position" />
 
     </RelativeLayout>

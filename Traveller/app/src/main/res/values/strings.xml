@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">여기</string>
     <string name="textview">TextView</string>
+    <string name="selectroute"> 일정명을 선택하세요. </string>
+    <string name="selectspot"> 위치를 선택하세요. </string>
+    <string name="warning_spinner"> 일정명과 위치를 선택하세요. </string>
 </resources>

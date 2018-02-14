@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -22,6 +24,7 @@ import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.CustomGalleryActivity;
+import gamsung.traveller.activity.ImageSliderActivity;
 
 /**
  * Created by jekan on 2018-02-10.
@@ -31,6 +34,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
     private Context _context;
     private List<String> _items;
+    private static String[] pathArr;
 
     public CustomRecyclerAdapter(Context context, List<String> imgList) {
 
@@ -71,11 +75,11 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         path = path.replace("[", "");
         path = path.replace("]", "");
         path = path.replace(" ", "");
-        String[] pathArr = path.split(",");
+        pathArr = path.split(",");
+        // Log.d("patharrrrr", pathArr.toString());
 
         for(int i=0; i<pathArr.length; i++){
             _items.add(pathArr[i]);
-            Log.d("path", pathArr[i]);
         }
 
         notifyDataSetChanged();
@@ -91,20 +95,34 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
     }
 
-    public static class CustomViewHolder extends RecyclerView.ViewHolder{
+    public static class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         Context context;
 
         private ImageView imageView;
-        private TextView txtMemo;
+        private EditText txtMemo;
 
         public CustomViewHolder(final Context context, View itemView) {
             super(itemView);
             this.context = context;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
-            txtMemo = (TextView)itemView.findViewById(R.id.txt_memo_edit);
+            txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
+            imageView.setOnClickListener(this);
 
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(context, ImageSliderActivity.class);
+
+            for(int i=0; i<pathArr.length; i++){
+                intent.putExtra("ImgPath", pathArr[i]);
+                Log.d("path2222", pathArr[i]);
+            }
+
+            ((Activity)context).startActivityForResult(intent, 2);
         }
     }
 }

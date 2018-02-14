@@ -91,12 +91,19 @@ CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener 
 
     //Show hide select button if images are selected or deselected
     public void showSelectButton() {
-        ArrayList<String> selectedItems = imagesAdapter.getCheckedItems();
-        if (selectedItems.size() > 0) {
+        ArrayList<String> selectedItems = imagesAdapter.getCheckedItems(); //선택된 사진 갯수
+        if(selectedItems.size()>0){
+            selectImages.setText("총 " +selectedItems.size() + "장의 사진 선택하기");
+            selectImages.setVisibility(View.VISIBLE);
+        }else
+            selectImages.setVisibility(View.GONE);
+      /*  if (selectedItems.size() <= 5 ) {
             selectImages.setText(selectedItems.size() + "장 선택");
             selectImages.setVisibility(View.VISIBLE);
-        } else
+        } else{
+            Toast.makeText(getApplicationContext(),"5장 까지 선택 가능합니다.", Toast.LENGTH_SHORT).show();
             selectImages.setVisibility(View.GONE);
+        }*/
 
     }
 
