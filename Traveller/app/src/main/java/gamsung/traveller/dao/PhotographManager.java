@@ -109,7 +109,7 @@ public class PhotographManager {
                 Photograph photo = new Photograph();
                 photo.set_id(c.getInt(0));
                 photo.setRoute_id(c.getInt(1));
-                photo.setPlace_id(c.getInt(2));
+                photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
                 photo.setDate(new Date(c.getLong(5) * 1000));
@@ -146,7 +146,7 @@ public class PhotographManager {
 
         ContentValues values = new ContentValues();
         values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
-        values.put(TableManager.PictureTable.column_place_id, photo.getPlace_id());
+        values.put(TableManager.PictureTable.column_spot_id, photo.getSpot_id());
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
         values.put(TableManager.PictureTable.column_path, photo.getPath());
         values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
@@ -162,7 +162,7 @@ public class PhotographManager {
 
         ContentValues values = new ContentValues();
         values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
-        values.put(TableManager.PictureTable.column_place_id, photo.getPlace_id());
+        values.put(TableManager.PictureTable.column_spot_id, photo.getSpot_id());
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
         values.put(TableManager.PictureTable.column_path, photo.getPath());
         values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
@@ -181,7 +181,7 @@ public class PhotographManager {
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
-        sb.append("SELECT * FROM " + TABLE_NAME  + " where " + TableManager.PictureTable.column_place_id + "='" + spot_id + "'" );
+        sb.append("SELECT * FROM " + TABLE_NAME  + " where " + TableManager.PictureTable.column_spot_id + "='" + spot_id + "'" );
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
@@ -189,7 +189,7 @@ public class PhotographManager {
                 Photograph photo = new Photograph();
                 photo.set_id(c.getInt(0));
                 photo.setRoute_id(c.getInt(1));
-                photo.setPlace_id(c.getInt(2));
+                photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
                 photo.setDate(new Date(c.getLong(5) * 1000));
@@ -218,7 +218,7 @@ public class PhotographManager {
                 Photograph photo = new Photograph();
                 photo.set_id(c.getInt(0));
                 photo.setRoute_id(c.getInt(1));
-                photo.setPlace_id(c.getInt(2));
+                photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
                 photo.setDate(new Date(c.getLong(5) * 1000));

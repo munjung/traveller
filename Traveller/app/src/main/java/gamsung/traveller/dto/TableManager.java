@@ -160,14 +160,14 @@ public class TableManager {
 
         public static final String column_id            = "picture_id";
         public static final String column_route_id      = "route_id";
-        public static final String column_place_id      = "place_id";
+        public static final String column_spot_id       = "spot_id";
         public static final String column_search_id     = "search_id";
         public static final String column_path          = "path";
         public static final String column_date          = "date";
         public static  final String[] columns = {
                 column_id,
                 column_route_id,
-                column_place_id,
+                column_spot_id,
                 column_search_id,
                 column_path,
                 column_date
@@ -180,7 +180,7 @@ public class TableManager {
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
             sb.append(column_route_id       + " INTEGER, ");
-            sb.append(column_place_id       + " INTEGER, ");
+            sb.append(column_spot_id       + " INTEGER, ");
             sb.append(column_search_id      + " INTEGER, ");
             sb.append(column_path            + " TEXT, ");
             sb.append(column_date           + " DATETIME ");
