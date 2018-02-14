@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -50,6 +51,11 @@ import gamsung.traveller.util.DebugToast;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final static int CREATE_ITEM_MODE = 1;
+    public final static int EDIT_ITEM_MODE = 2;
+
+    private final int PERMISSION_CODE = 0;
+
     private ImageView _imageView;
 
     private RecyclerView _recyclerView;
@@ -58,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
     private DataManager _dataManager;
     private List<Route> _routeList;
 
-    final int PERMISSION_CODE = 0;
 
     private List<String> photoList;
     private int temp_id;
+
 
     @Override
     public void onBackPressed() {
@@ -76,22 +82,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1){
+
+            switch (resultCode){
+                case RESULT_OK:
+                    //parse intent
+                    String title = data.getStringExtra("title");
+                    Date goDate = new Date(data.getLongExtra("goDate", 0));
+                    Date backDate = new Date(data.getLongExtra("backDate", 0));
+                    String picturePath = data.getStringExtra("picturePath");
+
+                    //generate route
+                    Route route = new Route();
+                    route.setTitle(title);
+                    route.setFromDate(goDate);
+                    route.setToDate(backDate);
+                    route.setPicturPath(picturePath);
+
+                    //add route recycler item
+                    _recyclerAdapter.addItem(route);
+
+                    break;
+                case RESULT_CANCELED:
+                    break;
+            }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        this.tryPermCheck();        //권한체크
+
+        //data load
+//        _dataManager = DataManager.getInstance(this);
+//        _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
+//        if(_routeList.size() == 0){
+//
+//            //data가 없는 경우 바로 SetTravelActivity로 이동
+//            Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
+//            intent.putExtra("mode", CREATE_ITEM_MODE);
+//            startActivityForResult(intent, 1);
+//        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //data load
-        _dataManager = DataManager.getInstance(this);
-        _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
-
-        //temp code
-        photoList = getPathOfAllImages();
-
-        this.tryPermCheck();        //권한체크
         this.setRecyclerView();     //여행기록화면 세팅
         this.setImageView();        //빈화면 세팅
         this.endOperation();        //모든 세팅 완료후 동작 함수 실행
         this.setRegisterEvent();    //버튼 이벤트 등록
+
+        //temp code
+        photoList = getPathOfAllImages();
     }
 
 
@@ -223,10 +269,13 @@ public class MainActivity extends AppCompatActivity {
     private void updateRouteItem(int position, Route route){
 
         Route routeItem = _recyclerAdapter.getItem(position);
-        //
-        //
+        routeItem.setTitle(route.getTitle());
+        routeItem.setPictureId(route.getPictureId());
+        routeItem.setPicturPath(route.getPicturePath());
+        routeItem.setFromDate(route.getFromDate());
+        routeItem.setToDate(route.getToDate());
 
-        _recyclerAdapter.refresh();
+        _recyclerAdapter.refresh(position);
     }
 
     private void endOperation(){
@@ -311,6 +360,23 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             }
         });
 
+        //click edit button on view holder
+        viewHolder.getBtnEdit().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //******activity 순서부터 체크해야겠다!!!!!!
+                //처음 시작할땐 메인이 아니라 생성화면으로 갔다가 무엇을할까요 했다가 -> 무엇을 하는것까지 세팅하고 저장??
+                //편집할땐 생성화면(편집화면)으로 갔다가 무엇을할까요를 또가????? 만약 타이틀만 변경하려면???
+                //무조건 일정 편집 화면까지 다 갔다가 와야하는건가요?????
+
+//                Intent intent = new Intent(_context, SetTravelActivity.class);
+//                intent.putExtra("mode", MainActivity.EDIT_ITEM_MODE);
+//                startActivityForResult(intent, 1);
+            }
+        });
+
+        //click delete button on view holder
         viewHolder.getBtnDelete().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -375,11 +441,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         viewHolder.getTextView().setText(item.getTitle());
 
         if (!TextUtils.isEmpty(item.getPicturePath())) {
+            //load image
             Glide.with(_context).load(item.getPicturePath()).into(viewHolder.imageView);
 
             //show picture button
             viewHolder.getBtnGoToPicture().setVisibility(View.VISIBLE);
+            //show shadow image
             viewHolder.getLayoutShadow().setVisibility(View.VISIBLE);
+            //change image delete button
             viewHolder.getBtnDelete().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
         }
     }
@@ -394,12 +463,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         _items.add(route);
         notifyItemInserted(_items.size() - 1);
-//        notifyDataSetChanged();
     }
 
-    public void refresh() {
+    public void refresh(int position) {
 
-        notifyDataSetChanged();
+        notifyItemChanged(position);
     }
 
     public void removeItem(int position) {
@@ -489,13 +557,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                 @Override
                 public void onClick(View view) {
 //                    DebugToast.show(_context, "button clicked go to picture!");
-                }
-            });
-
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    DebugToast.show(_context, "button clicked edit!");
                 }
             });
         }

@@ -88,8 +88,8 @@ public class EditLocationActivity extends AppCompatActivity {
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
         //tvMission = (EditText)findViewById(R.id.tvMission);
-        btnHome = (ImageButton)findViewById(R.id.btnHome);
-        btnSave = (ImageButton)findViewById(R.id.btnSave);
+        btnHome = (ImageButton)findViewById(R.id.btn_cancel_set_travel);
+        btnSave = (ImageButton)findViewById(R.id.btn_save_edit_location);
         btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
 
         eat = (ImageView) findViewById(R.id.eat);

@@ -1,57 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_main_delete_target"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/layout_main_delete_target"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_main_delete_bottom"
         android:background="#353535"
         android:alpha="0.75">
-
-        <ImageView
-            android:id="@+id/image_main_delete_target"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="1"
-            android:scaleType="center"
-            android:layout_margin="35dp"
-            android:layout_above="@+id/layout_main_delete_warning"/>
-
-        <LinearLayout
-            android:id="@+id/layout_main_delete_warning"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="35dp"
-            android:layout_alignParentBottom="true">
-
-            <TextView
-                android:id="@+id/txt_main_delete_warning_message"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="내용도 함께 삭제 됩니다."
-                android:textSize="15sp"
-                android:textColor="#FFFFFF"/>
-
-
-            <TextView android:id="@+id/txt_main_delete_warning_message2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="취소를 원하시면 바탕을 탭해주세요!"
-                android:textSize="15sp"
-                android:textColor="#FFFFFF"/>
-
-        </LinearLayout>
-
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/image_main_delete_target"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:layout_margin="35dp"
+        android:layout_above="@+id/layout_main_delete_warning"/>
+
+    <LinearLayout
+        android:id="@+id/layout_main_delete_warning"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="35dp"
+        android:layout_above="@+id/layout_main_delete_bottom">
+
+        <TextView
+            android:id="@+id/txt_main_delete_warning_message"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="내용도 함께 삭제 됩니다."
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"/>
+
+
+        <TextView android:id="@+id/txt_main_delete_warning_message2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="취소를 원하시면 바탕을 탭해주세요!"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/layout_main_delete_bottom"

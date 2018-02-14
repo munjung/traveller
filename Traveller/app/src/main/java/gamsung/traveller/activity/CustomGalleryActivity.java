@@ -29,7 +29,8 @@ import gamsung.traveller.adapter.GridView_Adapter;
  */
 
 //갤러리에서 이미지 다중선택 부분(22번 화면)
-public class CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener {
+public class
+CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     private static Button selectImages;
     private static GridView galleryImagesGridView;
