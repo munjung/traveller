@@ -23,6 +23,7 @@ import android.widget.ViewSwitcher;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -30,6 +31,7 @@ import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.frag.ViewByPhotosFragment;
 import gamsung.traveller.frag.ViewByScheduleFragment;
+import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
 
 public class TravelViewActivity extends AppCompatActivity {
@@ -208,7 +210,7 @@ public class TravelViewActivity extends AppCompatActivity {
         return tempSpotList;
     }
 
-    public List<String> getImageListWithSpot(int spot_id){
+    public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){
         return dataManager.getPhotoListWithSpot(spot_id);
     }
 }
