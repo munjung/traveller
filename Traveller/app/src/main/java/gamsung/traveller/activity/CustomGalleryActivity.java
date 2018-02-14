@@ -92,7 +92,7 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
     public void showSelectButton() {
         ArrayList<String> selectedItems = imagesAdapter.getCheckedItems(); //선택된 사진 갯수
         if(selectedItems.size()>0){
-            selectImages.setText(selectedItems.size() + "장 선택");
+            selectImages.setText("총 " +selectedItems.size() + "장의 사진 선택하기");
             selectImages.setVisibility(View.VISIBLE);
         }else
             selectImages.setVisibility(View.GONE);

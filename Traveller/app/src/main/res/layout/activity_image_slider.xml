@@ -27,7 +27,7 @@
                     android:id="@+id/btnHome"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="5dp"
                     android:src="@drawable/btn_back"
                     android:layout_alignParentLeft="true"
                     android:backgroundTint="@android:color/transparent"
