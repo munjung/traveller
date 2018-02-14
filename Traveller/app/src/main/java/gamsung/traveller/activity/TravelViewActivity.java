@@ -60,8 +60,9 @@ public class TravelViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_view);
 
-        dataManager = DataManager.getInstance(this);
-
+        //dataManager = DataManager.getInstance(this);
+        //HashMap<Integer, Spot> hashSpot = dataManager.getSpotList();
+        //Spot spottemp = hashSpot.get()
         //*temp code
         /*
         Spot spot = new Spot();
@@ -79,8 +80,9 @@ public class TravelViewActivity extends AppCompatActivity {
         tempSpotList.add(spot1);
         tempSpotList.add(spot2);
         */
+
         tempSpotList = new ArrayList<>();
-        for (int i = 0; i < 50; i++){
+        for (int i = 0; i < 3; i++){
             Spot spot = new Spot();
             spot.setMission("Gamsung Mission num: " + i);
             tempSpotList.add(spot);
