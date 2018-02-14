@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -20,6 +22,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,17 +37,22 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
+import gamsung.traveller.model.Route;
 
 
 /**
@@ -58,15 +66,18 @@ public class CameraActivity extends AppCompatActivity {
     CameraPreview preview;
     boolean isPreviewing = false;
     byte[] currentData;
-
     LayoutInflater controlInflater = null;
-    ImageButton buttonTakePicture,camerachange,btnSave,btnComplete;
-    RelativeLayout layoutBackground;
-    ImageView cameraBar;
+    ImageButton buttonTakePicture,camerachange,btnSave,btnComplete,btnBack,btnCancel;
+    RelativeLayout layoutBackground,popupRelative;
+    ImageView shadowBackground;
     final int RESULT_SAVEIMAGE = 0;
     private static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
+    ArrayList<String> routeTitleList, spotTitleList;
+    DataManager _datamanager;
+    String routeName, spotName;
+    Spinner routeSpinner,spotSpinner;
 
-
+    @SuppressLint("WrongViewCast")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +91,17 @@ public class CameraActivity extends AppCompatActivity {
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
+        routeTitleList = new ArrayList<>();
+        routeTitleList.add(getString(R.string.selectroute));
+
+        spotTitleList = new ArrayList<>();
+        spotTitleList.add(getString(R.string.selectspot));
+
+        _datamanager = DataManager.getInstance(this);
+        for(int i = 0 ; i < _datamanager.getRouteList().size() ; i++ ){
+            routeTitleList.add(_datamanager.getRouteList().get(i).getTitle());
+            spotTitleList.add(_datamanager.getSpotList().get(i).getMission());
+        }
 
         try {
             android.provider.Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
@@ -95,15 +117,82 @@ public class CameraActivity extends AppCompatActivity {
         //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.addContentView(viewControl, layoutParamsControl);
 
-        cameraBar = (ImageView) findViewById(R.id.cameraBar);
-
         btnSave = (ImageButton) findViewById(R.id.btnSavePic);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SaveImageTask().execute(currentData);
+                changeToSelectMode();
+
+                ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, routeTitleList);
+                //스피너 속성
+                routeSpinner = (Spinner) findViewById(R.id.dropDownRoute);
+                routeSpinner.setAdapter(mAdapter);
+                routeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        routeName = routeSpinner.getSelectedItem().toString();
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                ArrayAdapter<String> nAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, spotTitleList);
+                //스피너 속성
+                spotSpinner = (Spinner) findViewById(R.id.dropDownSpot);
+                spotSpinner.setAdapter(nAdapter);
+                spotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        spotName = spotSpinner.getSelectedItem().toString();
+                        
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+            }
+        });
+
+        btnBack = (ImageButton) findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 changeToCameraMode();
                 resetCam();
+            }
+        });
+
+        btnCancel = (ImageButton) findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeToCameraMode();
+                resetCam();
+            }
+        });
+
+        btnComplete =(ImageButton) findViewById(R.id.btnComplete);
+        btnComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(spotName.equals(getString(R.string.selectspot))) {
+                    Toast.makeText(CameraActivity.this,R.string.warning_spinner,Toast.LENGTH_LONG).show();
+                }
+
+                else {
+                    new SaveImageTask().execute(currentData);
+                    changeToSaveMode();
+                    resetCam();
+                }
             }
         });
 
@@ -143,6 +232,9 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }
         });
+
+        popupRelative = (RelativeLayout) findViewById(R.id.popupRelative);
+        shadowBackground = (ImageView) findViewById(R.id.shadow_background);
 
     }
 
@@ -365,17 +457,35 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void changeToCameraMode () {
+
         btnSave.setVisibility(View.GONE);
-        cameraBar.setVisibility(View.VISIBLE);
         buttonTakePicture.setVisibility(View.VISIBLE);
         camerachange.setVisibility(View.VISIBLE);
+        btnComplete.setVisibility(View.GONE);
+        shadowBackground.setVisibility(View.GONE);
+        popupRelative.setVisibility(View.GONE);
+        btnBack.setVisibility(View.GONE);
     }
 
     public void changeToSaveMode () {
 
-        cameraBar.setVisibility(View.GONE);
-        buttonTakePicture.setVisibility(View.GONE);
-        camerachange.setVisibility(View.GONE);
         btnSave.setVisibility(View.VISIBLE);
+        buttonTakePicture.setVisibility(View.INVISIBLE);
+        camerachange.setVisibility(View.GONE);
+        btnComplete.setVisibility(View.GONE);
+        shadowBackground.setVisibility(View.GONE);
+        popupRelative.setVisibility(View.GONE);
+        btnBack.setVisibility(View.VISIBLE);
+    }
+
+    public void changeToSelectMode () {
+
+        buttonTakePicture.setVisibility(View.INVISIBLE);
+        camerachange.setVisibility(View.GONE);
+        btnSave.setVisibility(View.GONE);
+        btnComplete.setVisibility(View.VISIBLE);
+        shadowBackground.setVisibility(View.VISIBLE);
+        popupRelative.setVisibility(View.VISIBLE);
+        btnBack.setVisibility(View.VISIBLE);
     }
 }
