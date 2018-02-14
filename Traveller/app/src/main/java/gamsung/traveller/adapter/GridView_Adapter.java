@@ -2,6 +2,7 @@ package gamsung.traveller.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,6 +32,8 @@ public class GridView_Adapter extends BaseAdapter {
     private SparseBooleanArray mSparseBooleanArray;//Variable to store selected Images
     private DisplayImageOptions options;
     private boolean isCustomGalleryActivity;//Variable to check if gridview is to setup for Custom Gallery or not
+    private CheckBox mCheckBox;
+    private int count;
 
     public GridView_Adapter(Context context, ArrayList<String> imageUrls, boolean isCustomGalleryActivity) {
         this.context = context;
@@ -52,7 +56,6 @@ public class GridView_Adapter extends BaseAdapter {
                 mTempArry.add(imageUrls.get(i));
             }
         }
-
         return mTempArry;
     }
 
@@ -77,7 +80,7 @@ public class GridView_Adapter extends BaseAdapter {
         if (view == null)
             view = inflater.inflate(R.layout.custom_gridview_item, viewGroup, false);//Inflate layout
 
-        CheckBox mCheckBox = (CheckBox) view.findViewById(R.id.selectCheckBox);
+        mCheckBox = (CheckBox) view.findViewById(R.id.selectCheckBox);
         final ImageView imageView = (ImageView) view.findViewById(R.id.galleryImageView);
 
         //If Context is MainActivity then hide checkbox
@@ -89,6 +92,7 @@ public class GridView_Adapter extends BaseAdapter {
         mCheckBox.setTag(position);//Set Tag for CheckBox
         mCheckBox.setChecked(mSparseBooleanArray.get(position));
         mCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
+
         return view;
     }
 
@@ -99,5 +103,7 @@ public class GridView_Adapter extends BaseAdapter {
             mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);//Insert selected checkbox value inside boolean array
             ((CustomGalleryActivity) context).showSelectButton();//call custom gallery activity method
         }
+
     };
+
 }

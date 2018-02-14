@@ -1,9 +1,12 @@
 package gamsung.traveller.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,16 +22,19 @@ public class ImageSliderActivity extends AppCompatActivity {
 
     private static ViewPager mPager;
     private static int currentPage = 0;
-    private static final Integer[] XMEN= { R.drawable.cheeze,R.drawable.cheeze2,R.drawable.cheeze3};
+    private static final Integer[] XMEN = {}; //= { R.drawable.cheeze,R.drawable.cheeze2,R.drawable.cheeze3};
     private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
+    private ArrayList<String> selectImagePath = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_slider);
+
         init();
     }
     private void init() {
+
         for(int i=0;i<XMEN.length;i++)
             XMENArray.add(XMEN[i]);
 
