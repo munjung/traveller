@@ -1,6 +1,9 @@
 package gamsung.traveller.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +22,13 @@ import gamsung.traveller.R;
 public class PhotoAdapter extends BaseAdapter {
     Context context;
     int layout;
-    ArrayList<Integer> photoset;
+    ArrayList<String> photoset;
     LayoutInflater inf;
 
-    public PhotoAdapter(Context context, int layout, ArrayList<Integer> photoset){
+    public PhotoAdapter(Context context, int layout, ArrayList<String> photoset){
         this.context = context;
         this.layout = layout;
-        this.photoset = (ArrayList<Integer>) photoset.clone();
+        this.photoset = (ArrayList<String>) photoset.clone();
         inf = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -49,7 +52,10 @@ public class PhotoAdapter extends BaseAdapter {
         if(view==null)
             view = inf.inflate(layout,null);
         ImageView iv =(ImageView)view.findViewById(R.id.ivphotoplace);
-        iv.setImageResource(photoset.get(i));
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String imgpath = path+"/testing/"+photoset.get(i);
+        Bitmap bm = BitmapFactory.decodeFile(imgpath);
+        iv.setImageBitmap(bm);
         int width = context.getResources().getDisplayMetrics().widthPixels;
         int celwidth = (width-10)/4;
         iv.setLayoutParams(new RelativeLayout.LayoutParams(celwidth,celwidth));

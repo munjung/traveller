@@ -81,6 +81,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     @Override
     protected void startmap() {
         mMap = getMap();
+
         TextView tvname = findViewById(R.id.tvPlaceName);
 
         LinearLayout infoll = findViewById(R.id.mInfoll);
