@@ -51,8 +51,6 @@ import gamsung.traveller.util.DebugToast;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static int CREATE_ITEM_MODE = 1;
-    public final static int EDIT_ITEM_MODE = 2;
 
     private final int PERMISSION_CODE = 0;
 
@@ -64,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
     private DataManager _dataManager;
     private List<Route> _routeList;
 
-
     private List<String> photoList;
     private int temp_id;
+
+    private RecyclerAdapterItemClickListener _recyclerAdapterListener;
 
 
     @Override
@@ -103,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
                     route.setPicturPath(picturePath);
 
                     //add route recycler item
-                    _recyclerAdapter.addItem(route);
+                    if(_dataManager.insertRoute(route) > 0)
+                        _recyclerAdapter.addItem(route);
 
                     break;
                 case RESULT_CANCELED:
@@ -112,21 +112,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         this.tryPermCheck();        //권한체크
 
         //data load
-//        _dataManager = DataManager.getInstance(this);
-//        _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
-//        if(_routeList.size() == 0){
-//
-//            //data가 없는 경우 바로 SetTravelActivity로 이동
-//            Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
-//            intent.putExtra("mode", CREATE_ITEM_MODE);
-//            startActivityForResult(intent, 1);
-//        }
+        _dataManager = DataManager.getInstance(this);
+        _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
+        if(_routeList.size() == 0){
+
+            //data가 없는 경우 바로 SetTravelActivity로 이동
+            Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
+            startActivityForResult(intent, 1);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setRecyclerView(){
 
-        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList);
+        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList, this);
 
         _recyclerView = (RecyclerView)findViewById(R.id.recycler_main_content);
         _recyclerView.setAdapter(_recyclerAdapter);
@@ -175,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         Button btnAddTravel = (Button) findViewById(R.id.btnAddTravel);
         btnAddTravel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        _recyclerAdapterListener = new RecyclerAdapterItemClickListener();
     }
 
     //PERMISSON
@@ -336,7 +338,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     private View _deleteView;
     private FloatingActionButton _addBtnForVisible;
 
-    public RecyclerViewAdapter(Context context, List<Route> routeList) {
+    private RecyclerAdapterItemClickListener _clickListener;
+
+    public RecyclerViewAdapter(Context context, List<Route> routeList, RecyclerAdapterItemClickListener clickListener) {
 
         if (routeList == null) {
             throw new IllegalArgumentException("route data must not be null");
@@ -344,6 +348,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         this._context = context;
         this._items = routeList;
+
+        this._clickListener = clickListener;
     }
 
     @Override
@@ -357,6 +363,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             @Override
             public void onClick(View view) {
                 DebugToast.show(_context, "" + viewHolder.getAdapterPosition());
+
+                _clickListener.send_id = RecyclerAdapterItemClickListener.IMAGE_CLICK;
+                _clickListener.item_position = viewHolder.getAdapterPosition();
+
+                _clickListener.onClick(view);
             }
         });
 
@@ -365,14 +376,24 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             @Override
             public void onClick(View view) {
 
-                //******activity 순서부터 체크해야겠다!!!!!!
-                //처음 시작할땐 메인이 아니라 생성화면으로 갔다가 무엇을할까요 했다가 -> 무엇을 하는것까지 세팅하고 저장??
-                //편집할땐 생성화면(편집화면)으로 갔다가 무엇을할까요를 또가????? 만약 타이틀만 변경하려면???
-                //무조건 일정 편집 화면까지 다 갔다가 와야하는건가요?????
+                _clickListener.send_id = RecyclerAdapterItemClickListener.EDIT_CLICK;
+                _clickListener.item_position = viewHolder.getAdapterPosition();
+
+                _clickListener.onClick(view);
 
 //                Intent intent = new Intent(_context, SetTravelActivity.class);
-//                intent.putExtra("mode", MainActivity.EDIT_ITEM_MODE);
 //                startActivityForResult(intent, 1);
+            }
+        });
+
+        viewHolder.getBtnGoToPicture().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                _clickListener.send_id = RecyclerAdapterItemClickListener.GOTO_PICTURE_CLICK;
+                _clickListener.item_position = viewHolder.getAdapterPosition();
+
+                _clickListener.onClick(view);
             }
         });
 
@@ -579,5 +600,26 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         public RelativeLayout getLayoutShadow() {
             return layoutShadow;
         }
+    }
+}
+
+class RecyclerAdapterItemClickListener implements View.OnClickListener{
+
+
+    public final static int EDIT_CLICK = 1;
+    public final static int IMAGE_CLICK = 2;
+    public final static int GOTO_PICTURE_CLICK = 3;
+
+    public int send_id;
+    public int item_position;
+
+
+    public RecyclerAdapterItemClickListener() {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
