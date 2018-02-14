@@ -29,7 +29,7 @@ import java.util.Random;
 import gamsung.traveller.R;
 
 /**
- *  10번 화면. 구글맵 정책상 레이아웃은 7,8번 화면과 공유함
+ *  10번 화면.
  */
 
 
@@ -41,6 +41,9 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
     private ClusterManager<PhotoCluster> mClusterManager;
     private Random mRandom = new Random(1984);
 
+    protected int getLayoutId(){
+        return R.layout.activity_map_cluster;
+    }
     private class PhotoRenderer extends DefaultClusterRenderer<PhotoCluster>{
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
@@ -156,8 +159,6 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
 
-
-        findViewById(R.id.topll).setVisibility(View.GONE);
         findViewById(R.id.btnworldback).setVisibility(View.VISIBLE);
         UiSettings uiSettings = getMap().getUiSettings();
         uiSettings.setRotateGesturesEnabled(false);
