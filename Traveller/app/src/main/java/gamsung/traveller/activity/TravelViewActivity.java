@@ -3,6 +3,7 @@ package gamsung.traveller.activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -40,7 +41,7 @@ public class TravelViewActivity extends AppCompatActivity {
      * 준규가 다 만들어줄 9,13화면
      */
 
-    private ImageButton btnAddLocation, btnHome;
+    private ImageButton btnAddLocation, btnHome, btnCamera;
     private ViewSwitcher viewSwitcher;
     private EditText editTitle;
     private TextView textTitle;
@@ -193,15 +194,15 @@ public class TravelViewActivity extends AppCompatActivity {
             }
         });
 
-
-        FloatingActionButton fabTakePic = findViewById(R.id.fabTakePic);
-        fabTakePic.setOnClickListener(new View.OnClickListener() {
+        btnCamera = (ImageButton) findViewById(R.id.btnTakePic);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent i = new Intent(TravelViewActivity.this, CameraActivity.class);
                 startActivity(i);
             }
         });
+
     }
 
 

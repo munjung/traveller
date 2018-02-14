@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <layer-list>
+            <item>
+                    <bitmap android:src = "@drawable/grap_title_bg"/> <!-- 배경 -->
+            </item>
+            <!-- 회살표를 넣기위해-->
+            <item android:right="10dp">
+                <bitmap android:src="@drawable/btn_dropdown"  android:gravity="center_vertical|right" />
+            </item>
+        </layer-list>
+    </item>
+</selector>

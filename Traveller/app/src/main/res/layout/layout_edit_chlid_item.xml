@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:text="내가 인스타그램에서 처음으로 접했던 도시"
             android:textColor="#ffffff"
             android:layout_marginLeft="10dp"

@@ -5,14 +5,14 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/cameraBar"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@android:color/black" />
-    
+        android:layout_height="match_parent"
+        android:id="@+id/shadow_background"
+        android:visibility="gone"
+        android:background="#99000000">
+
+    </ImageView>
+
     <ImageButton
         android:id="@+id/takepicture"
         android:layout_width="wrap_content"
@@ -21,26 +21,106 @@
         android:layout_centerInParent="true"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/btn_camera"
-        android:layout_margin="10px" />
+        android:layout_margin="10dp" />
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/btn_camera_back"
+        />
 
     <ImageButton
         android:id="@+id/camerachange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="30dp"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/btn_camera_change" />
 
     <ImageButton
         android:id="@+id/btnSavePic"
         android:visibility="gone"
+        android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/btn_save_2"
-        android:layout_margin="10px" />
+        android:layout_margin="4dp" />
+
+    <ImageButton
+        android:id="@+id/btnComplete"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/btn_complete"
+        android:layout_margin="4dp" />
+
+    <RelativeLayout
+        android:layout_width="330dp"
+        android:layout_height="185dp"
+        android:id="@+id/popupRelative"
+        android:visibility="gone"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:layout_width="330dp"
+            android:layout_height="185dp"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/bg_pop"
+            android:layout_centerInParent="true"/>
+
+        <ImageButton
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/btn_delete_3"/>
+
+        <LinearLayout
+            android:id="@+id/spinnerLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <Spinner
+                android:id="@+id/dropDownRoute"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                style="@style/SpinnerStyle"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"/>
+
+            <Spinner
+                android:id="@+id/dropDownSpot"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                style="@style/SpinnerStyle"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"/>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

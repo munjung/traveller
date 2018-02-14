@@ -76,10 +76,10 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         path = path.replace("]", "");
         path = path.replace(" ", "");
         pathArr = path.split(",");
+        // Log.d("patharrrrr", pathArr.toString());
 
         for(int i=0; i<pathArr.length; i++){
             _items.add(pathArr[i]);
-            Log.d("path2222", pathArr[i]);
         }
 
         notifyDataSetChanged();
@@ -116,8 +116,12 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, ImageSliderActivity.class);
-            intent.putExtra("selectphoto", pathArr);
-            Log.d("ddddddd222222", pathArr.toString());
+
+            for(int i=0; i<pathArr.length; i++){
+                intent.putExtra("ImgPath", pathArr[i]);
+                Log.d("path2222", pathArr[i]);
+            }
+
             ((Activity)context).startActivityForResult(intent, 2);
         }
     }

@@ -25,11 +25,19 @@ public class ImageSliderActivity extends AppCompatActivity {
     private static final Integer[] XMEN = {}; //= { R.drawable.cheeze,R.drawable.cheeze2,R.drawable.cheeze3};
     private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
     private ArrayList<String> selectImagePath = new ArrayList<>();
+    private String[] arrr = new String[]{"","","","",""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_slider);
+        Intent intent = getIntent();
+        selectImagePath.add(intent.getExtras().getString("ImgPath"));
+        Log.d("사이즈", selectImagePath.size()+""); //왜 1개만나오지ㅣ 들어온게 3갠데
+          /*for(int i=0; i<selectImagePath.size(); i++){
+          //  selectImagePath.add(i,intent.getExtras().getString("ImgPath") );
+            Log.d("ㅠㅠ", selectImagePath.get(i).toString());
+        }*/
 
         init();
     }
