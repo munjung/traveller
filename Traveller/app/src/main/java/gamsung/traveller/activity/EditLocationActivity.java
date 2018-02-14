@@ -50,7 +50,6 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    ArrayList<String> pathhhhhh; // = new ArrayList<>();
     private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
@@ -64,7 +63,6 @@ public class EditLocationActivity extends AppCompatActivity {
     //private CustomPagerAdapter adapter;
     private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
-    public static Bitmap imgBitmap;
     private int CATEGORY_ID;
     private RecyclerView recyclerView;
 
@@ -286,17 +284,4 @@ public class EditLocationActivity extends AppCompatActivity {
         return imgPath;
     }
 
-    public void loadPicture(Intent data){
-        try {
-            imgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),  Uri.fromFile(new File(data.getExtras().getString("img"))));
-            Log.d("1111", Uri.parse(data.getExtras().getString("img")).toString());
-           // Uri.fromFile(new File(data.getExtras().getString("img")))
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
-       // setImage.setAdjustViewBounds(true);
-        //uploadImage.setImageBitmap(rotate(myBitmap, 0));
-        // setImage.setImageBitmap(image_bitmap);
-    }
 }

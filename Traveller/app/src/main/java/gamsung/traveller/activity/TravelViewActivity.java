@@ -61,6 +61,7 @@ public class TravelViewActivity extends AppCompatActivity {
         dataManager = DataManager.getInstance(this);
 
         //*temp code
+        /*
         Spot spot = new Spot();
         spot.setMission("gamsung misson");
         Spot spot1 = new Spot();
@@ -75,7 +76,13 @@ public class TravelViewActivity extends AppCompatActivity {
         tempSpotList.add(spot);
         tempSpotList.add(spot1);
         tempSpotList.add(spot2);
-
+        */
+        tempSpotList = new ArrayList<>();
+        for (int i = 0; i < 50; i++){
+            Spot spot = new Spot();
+            spot.setMission("Gamsung Mission num: " + i);
+            tempSpotList.add(spot);
+        }
         findViews();
         implementEvents();
 

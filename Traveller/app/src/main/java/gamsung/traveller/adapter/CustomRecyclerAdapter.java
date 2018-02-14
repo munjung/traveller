@@ -96,22 +96,15 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         Context context;
 
         private ImageView imageView;
+        private TextView txtMemo;
 
         public CustomViewHolder(final Context context, View itemView) {
             super(itemView);
             this.context = context;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
-//            addImgBtn = (ImageButton) itemView.findViewById(R.id.addImgBtn);
-//
-//            addImgBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    //갤러리 이동
-//                    Intent intent = new Intent(context, CustomGalleryActivity.class);
-//                    ((Activity) context).startActivityForResult(intent, 1);
-//                }
-//            });
+            txtMemo = (TextView)itemView.findViewById(R.id.txt_memo_edit);
+
         }
     }
 }

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.FitWindowsLinearLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
@@ -20,6 +23,8 @@ import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.TravelViewActivity;
+import gamsung.traveller.adapter.TimeViewAdapter;
+import gamsung.traveller.dao.SpotManager;
 import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
 
@@ -28,7 +33,10 @@ import gamsung.traveller.util.DebugToast;
  */
 
 public class ViewByPhotosFragment extends Fragment {
-
+    private RecyclerView timeRecyclerView;
+    private TimeViewAdapter timeViewAdapter;
+    private List<Spot> spotList;
+    private LinearLayoutManager linearLayoutManager;
 
     public ViewByPhotosFragment(){
 
@@ -42,15 +50,30 @@ public class ViewByPhotosFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = (View)inflater.inflate(R.layout.fragment_view_by_photos, container, false);
+        //ViewGroup viewGroup = (ViewGroup)view.findViewById(R.id.base_layout_photos);
+
+        timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
+        TravelViewActivity activity = (TravelViewActivity)getActivity();
+        spotList = activity.getSpotList();
+
+        linearLayoutManager = new LinearLayoutManager(view.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        timeViewAdapter = new TimeViewAdapter(spotList);
+        timeRecyclerView.setAdapter(timeViewAdapter);
+        timeRecyclerView.setLayoutManager(linearLayoutManager);
+        timeRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        return view;
 
         //get fragment view group
-        View view = (View)inflater.inflate(R.layout.fragment_view_by_photos, container, false);
-        ViewGroup viewGroup = (ViewGroup)view.findViewById(R.id.base_layout_photos);
+        /*
+
 
         //get spot list from activity (for sync data)
         TravelViewActivity activity = (TravelViewActivity)getActivity();
         List<Spot> spotList = activity.getSpotList();
-
+/*
         //dynamic add custom layout list
         for (int i=spotList.size()-1; i >= 0; i--) {
             Spot spot = spotList.get(i);
@@ -72,8 +95,11 @@ public class ViewByPhotosFragment extends Fragment {
 //            recyclerView.setAdapter(new RecyclerViewAdapter(activity, activity.getImageListWithSpot(spot.get_id())));
 //            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
         }
+        */
 
-        return view;
+
+
+
     }
 }
 

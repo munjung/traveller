@@ -155,14 +155,9 @@ CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener 
 
                 //When button is clicked then fill array with selected images
                 ArrayList<String> selectedItems = imagesAdapter.getCheckedItems();
-
                 //Send back result to MainActivity with selected images
                 Intent intent = new Intent();
-                //intent.putExtra(ImageMultiplePickerActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
-
                 intent.putExtra("img",selectedItems.toString());
-                intent.putStringArrayListExtra("img2", selectedItems);
-
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;

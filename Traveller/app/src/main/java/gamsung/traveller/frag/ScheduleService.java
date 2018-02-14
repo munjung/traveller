@@ -29,6 +29,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -152,7 +154,7 @@ public class ScheduleService {
         }
         else{
             initSchedule(spotList.get(0));
-            for (int idx = 1; idx < spotList.size() - 1; idx++){
+            for (int idx = 1; idx < spotList.size(); idx++){
                 addSchedule(null);
             }
         }
@@ -223,6 +225,7 @@ public class ScheduleService {
         layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
 
         if (newSpot == null) newSpot = spotList.get(listSchedule.size() - 1);
+        else if (newSpot == spotList.get(0)) newSpot = spotList.get(0);
         else spotList.add(newSpot);
 
         if (isLeft) {
@@ -306,7 +309,7 @@ public class ScheduleService {
 
         int photo_id = spotList.get(spot_idx).getPicture_id();
         if (photo_id == 0)
-            circleCopy.setImageResource(R.drawable.grap_noimage);
+            Glide.with(appContext).load(R.drawable.grap_noimage).into(circleCopy);
         else
             circleCopy.setImageResource(tempSelected);
 
@@ -407,12 +410,15 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).view.getId());
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
-        Collections.swap(spotList, idxA, idxB);
-
         if (idxA > idxB){
             int temp = idxA;
             idxA = idxB;
             idxB = temp;
+        }
+
+        Collections.swap(spotList, idxA, idxB);
+        for (int idx = idxB; idx > idxA + 1; idx--){//bubble swap
+            Collections.swap(spotList, idx, idx - 1);
         }
         for (int i = idxA; i <= idxB; i++){
             setScheduleVis(listSchedule.get(i).view, i);

@@ -1,42 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/time_line_view"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
 
+        >
+        <ImageView
+            android:layout_marginTop="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/timeline_circle"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
     <RelativeLayout android:id="@+id/top_view_by_photos"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/time_line_view"
         android:layout_alignParentTop="true">
 
-        <TextView android:id="@+id/txt_view_by_photos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_toLeftOf="@id/btn_view_by_photos"
+        <TextView android:id="@+id/txt_title_by_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="#212121"
+            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@+id/btn_delete_view_by_photos"
             android:gravity="center|left"
             android:text="misson"/>
+        <TextView
+            android:id="@+id/txt_mission_by_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="#212121"
+            android:layout_below="@+id/txt_title_by_photos"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/btn_delete_view_by_photos"
+            android:text="This is the mission."/>
 
-        <Button android:id="@+id/btn_view_by_photos"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"/>
+        <ImageButton android:id="@+id/btn_delete_view_by_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/btn_edit"
+            android:backgroundTint="@android:color/transparent"/>
     </RelativeLayout>
 
-    <RelativeLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/top_view_by_photos">
-
-    </RelativeLayout>
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_by_photos"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/top_view_by_photos"
+        android:layout_below="@+id/top_view_by_photos"
+        android:layout_toRightOf="@+id/time_line_view"
         android:scrollbars="horizontal">
-    </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:id="@+id/time_view_photos_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </RelativeLayout>
