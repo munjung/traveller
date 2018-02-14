@@ -32,7 +32,25 @@ public class ImageSliderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_slider);
         Intent intent = getIntent();
-        selectImagePath.add(intent.getExtras().getString("ImgPath"));
+
+        String pathBulk = intent.getStringExtra("ImgPath");
+        pathBulk = pathBulk.replace("[","");
+        pathBulk = pathBulk.replace("]","");
+        pathBulk = pathBulk.replace(" ","");
+        //selectImagePath= new ArrayList<>();
+        String[] pathArr = pathBulk.split(",");
+        for(int i=0; i<pathArr.length; i++) {
+            selectImagePath.add(pathArr[i]);
+
+            Log.d("pagh", pathArr[i]); //넌뭐야
+        }
+
+
+
+
+//        selectImagePath.add(intent.getExtras().getString("ImgPath"));
+
+
         Log.d("사이즈", selectImagePath.size()+""); //왜 1개만나오지ㅣ 들어온게 3갠데
           /*for(int i=0; i<selectImagePath.size(); i++){
           //  selectImagePath.add(i,intent.getExtras().getString("ImgPath") );

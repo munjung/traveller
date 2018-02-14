@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setRecyclerView(){
 
-        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList, this);
+        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList, _recyclerAdapterListener);
 
         _recyclerView = (RecyclerView)findViewById(R.id.recycler_main_content);
         _recyclerView.setAdapter(_recyclerAdapter);
@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRegisterEvent(){
 
-        FloatingActionButton fbtnAddItem = (FloatingActionButton)findViewById(R.id.fbtn_add_main);
-        fbtnAddItem.setOnClickListener(new View.OnClickListener() {
+        Button btnAddItem = (Button)findViewById(R.id.btn_add_main);
+        btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addRouteItem();
@@ -336,7 +336,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     private List<Route> _items;
 
     private View _deleteView;
-    private FloatingActionButton _addBtnForVisible;
+    private Button _addBtnForVisible;
 
     private RecyclerAdapterItemClickListener _clickListener;
 
@@ -512,7 +512,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         //show floating button
         MainActivity mainActivity = (MainActivity) _context;
-        _addBtnForVisible = mainActivity.findViewById(R.id.fbtn_add_main);
+        _addBtnForVisible = mainActivity.findViewById(R.id.btn_add_main);
         _addBtnForVisible.setVisibility(View.VISIBLE);
     }
 
@@ -523,7 +523,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         mainActivity.hideKeypad();
 
         //hide floating button
-        _addBtnForVisible = mainActivity.findViewById(R.id.fbtn_add_main);
+        _addBtnForVisible = mainActivity.findViewById(R.id.btn_add_main);
         _addBtnForVisible.setVisibility(View.INVISIBLE);
 
         //visible delete view

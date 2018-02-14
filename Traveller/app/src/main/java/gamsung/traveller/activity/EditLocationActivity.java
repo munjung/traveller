@@ -87,7 +87,7 @@ public class EditLocationActivity extends AppCompatActivity {
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
         //tvMission = (EditText)findViewById(R.id.tvMission);
-        btnHome = (ImageButton)findViewById(R.id.btn_cancel_set_travel);
+        btnHome = (ImageButton)findViewById(R.id.btn_cancel_edit_location);
         btnSave = (ImageButton)findViewById(R.id.btn_save_edit_location);
         btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
 
@@ -168,21 +168,20 @@ public class EditLocationActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+        if(whatActivity != null) {
+            if (whatActivity.equals("create")) {
+                isEdit = false;
+                photoRelative.setVisibility(View.GONE);
+                btnNextPlan.setVisibility(View.VISIBLE);
+                memoEdit.requestFocus();
+            } else if (whatActivity.equals("edit")) {
+                isEdit = true;
+                recyclerView.setVisibility(View.VISIBLE);
+                btnNextPlan.setVisibility(View.GONE);
+            }
+        }
 
         photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
-
-        if(whatActivity.equals("create")) {
-            isEdit = false;
-            photoRelative.setVisibility(View.GONE);
-            btnNextPlan.setVisibility(View.VISIBLE);
-            memoEdit.requestFocus();
-        }
-
-        else if(whatActivity.equals("edit")) {
-            isEdit = true;
-            recyclerView.setVisibility(View.VISIBLE);
-            btnNextPlan.setVisibility(View.GONE);
-        }
 
         layoutAddPhoto = (View)findViewById(R.id.layout_add_on_empty_edit_location);
         layoutAddPhoto.setOnClickListener(new View.OnClickListener() {
