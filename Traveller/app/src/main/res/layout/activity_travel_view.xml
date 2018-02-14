@@ -110,14 +110,14 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabTakePic"
-        app:fabSize="normal"
-        android:backgroundTint="#79abff"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+    <ImageButton
+        android:id="@+id/btnTakePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|right|end"
-        android:src="@drawable/icn_btn_take_photos"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/btn_camera_floating_9"/>
+
 </android.support.design.widget.CoordinatorLayout>

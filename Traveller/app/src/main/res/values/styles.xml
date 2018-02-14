@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SpinnerStyle">
+        <item name="android:background">@drawable/spinnerstyle</item>
+    </style>
+
 
     <style name="TabTextAppearance" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">15sp</item>
