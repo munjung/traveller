@@ -1,11 +1,13 @@
 package gamsung.traveller.activity;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -37,7 +39,8 @@ import gamsung.traveller.util.DebugToast;
 
 public class SetTravelActivity extends AppCompatActivity implements CalendarPickerView.OnDateSelectedListener {
 
-    private static final int PICK_FROM_ALBUM = 0;
+    private static final int REQUEST_CODE_PICK_FROM_ALBUM = 0;
+    private static final int REQUEST_CODE_EMPTY_MAIN = 1;
 
     private CalendarFragment calendarFragment;
     private ImageView imageRepresent, imageAddPhoto;
@@ -47,6 +50,15 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        Intent intent = getIntent();
+        String tag = intent.getStringExtra("TAG_ACTIVITY");
+        if(tag.contains("first")){
+
+            Intent firstIntent = new Intent(this, EmptyMainActivity.class);
+            startActivityForResult(firstIntent, REQUEST_CODE_EMPTY_MAIN);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_travel);
 
@@ -80,6 +92,7 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
             @Override
             public void onClick(View view) {
 
+                //schedule
                 Date goDate = (Date)txtGo.getTag();
                 Date backDate = (Date)txtBack.getTag();
                 if(goDate == null || backDate == null) {
@@ -87,22 +100,22 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
                     return;
                 }
 
-                Uri uri = (Uri)imageRepresent.getTag();
-                if(uri == null){
-                    //안내 메세지
-                    return;
-                }
-
-                if(TextUtils.isEmpty(editTxtTravelName.getText())){
+                //title
+                String travelName = editTxtTravelName.getText().toString();
+                if(TextUtils.isEmpty(travelName)){
                     //안내메세지
                     return;
                 }
 
+                //picture uri
+                Uri uri = (Uri)imageRepresent.getTag();
+                String picturePath = uri == null ? null : uri.toString();
+
                 Intent intent = new Intent();
-                intent.putExtra("title", editTxtTravelName.getText());
+                intent.putExtra("title", travelName);
                 intent.putExtra("goDate", goDate.getTime());
                 intent.putExtra("backDate", backDate.getTime());
-                intent.putExtra("pictruePath", uri.toString());
+                intent.putExtra("picturePath", picturePath);
 
                 setResult(RESULT_OK, intent);
                 finish();
@@ -114,17 +127,26 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent,"select Picture"), PICK_FROM_ALBUM);
+        startActivityForResult(Intent.createChooser(intent,"select Picture"), REQUEST_CODE_PICK_FROM_ALBUM);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case PICK_FROM_ALBUM:
+            case REQUEST_CODE_PICK_FROM_ALBUM:
                 loadPicture(data);
+                break;
+
+            case REQUEST_CODE_EMPTY_MAIN:
+                if(resultCode == RESULT_CANCELED){
+                    finish();
+                }
                 break;
         }
     }
+
+
+
     private void loadPicture(Intent data){
         try {
 

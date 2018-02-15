@@ -33,6 +33,14 @@ public class SpotManager {
         return m_spotMap;
     }
 
+    public HashMap<Integer, Spot> getSpotListWithRouteId(SQLiteHelper dbHelper, int routeId){
+
+        m_spotMap.clear();
+        m_spotMap.putAll(_getSpotListWithRouteId(dbHelper, routeId));
+
+        return m_spotMap;
+    }
+
     public boolean deleteSpot(SQLiteHelper dbHelper, Integer id){
 
         if(!_deleteSpot(dbHelper, id))
@@ -93,6 +101,37 @@ public class SpotManager {
 
         return placeMap;
     }
+
+    private HashMap<Integer, Spot> _getSpotListWithRouteId(SQLiteHelper dbHelper, int routeId){
+
+        HashMap<Integer, Spot> placeMap = new HashMap<>();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + routeId);
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+
+                Spot spot = new Spot();
+                spot.set_id(c.getInt(0));                          //id
+                spot.setRoute_id(c.getInt(1));                   //route_id
+                spot.setNext_spot_id(c.getInt(2));              //next_place
+                spot.setPicture_id(c.getInt(3));                 //picture
+                spot.setMission(c.getString(4));                 //mission
+                spot.setSearch_id(c.getInt(5));                  //search
+
+                placeMap.put(spot.get_id(), spot);
+            }
+            c.close();
+        }
+        db.close();
+
+        return placeMap;
+    }
+
 
     private boolean _deleteSpot(SQLiteHelper dbHelper, Integer id){
 

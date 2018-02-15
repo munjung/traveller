@@ -27,7 +27,7 @@
                 android:layout_height="50dp">
 
                 <ImageButton
-                    android:id="@+id/btnHome"
+                    android:id="@+id/btn_home_empty_travle"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="20dp"

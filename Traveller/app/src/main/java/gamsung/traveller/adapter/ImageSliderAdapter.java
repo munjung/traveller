@@ -2,10 +2,14 @@ package gamsung.traveller.adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import gamsung.traveller.R;
 
@@ -15,11 +19,11 @@ import gamsung.traveller.R;
 
 public class ImageSliderAdapter extends PagerAdapter {
 
-    private ArrayList<Integer> images;
+    private ArrayList<String> images;
     private LayoutInflater inflater;
     private Context context;
 
-    public ImageSliderAdapter(Context context, ArrayList<Integer> images) {
+    public ImageSliderAdapter(Context context, ArrayList<String> images) {
         this.context = context;
         this.images=images;
         this.inflater = LayoutInflater.from(context);
@@ -39,8 +43,13 @@ public class ImageSliderAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup view, int position) {
         View myImageLayout = inflater.inflate(R.layout.slider, view, false);
         ImageView myImage = (ImageView) myImageLayout.findViewById(R.id.slideimage);
-        myImage.setImageResource(images.get(position));
-        // myImage.setImageBitmap(images.get(position));
+
+        String item = images.get(position);
+        if (!TextUtils.isEmpty(item)) {
+            Glide.with(context).load(item).into(myImage);
+        }
+
+        //myImage.setImageResource(images.get(position));
         view.addView(myImageLayout, 0);
         return myImageLayout;
     }

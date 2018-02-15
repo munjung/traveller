@@ -15,16 +15,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-
-
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import gamsung.traveller.R;
 import gamsung.traveller.activity.CustomGalleryActivity;
 import gamsung.traveller.activity.ImageSliderActivity;
@@ -126,6 +122,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 //intent.putParcelableArrayListExtra("ImgPath", pathArr[i]);
                 Log.d("path2222", pathArr[i]);
             }
+
 
 
 //            for(int i=0; i<pathArr.length; i++){

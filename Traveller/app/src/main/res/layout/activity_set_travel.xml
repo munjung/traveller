@@ -108,6 +108,7 @@
             android:textSize="13sp"
             android:textColor="#212121"
             android:gravity="center"
+            android:maxLines="1"
             android:background="@android:color/transparent"/>
 
         <ImageView android:id="@+id/img_line_set_travel"

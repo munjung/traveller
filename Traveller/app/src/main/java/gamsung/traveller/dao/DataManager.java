@@ -94,10 +94,12 @@ public class DataManager {
         return m_spotManager.updateSpot(m_sqlHelper, spot);
     }
 
+    public HashMap<Integer, Spot> getSpotListWithRouteId(int routeId){
+        return m_spotManager.getSpotListWithRouteId(m_sqlHelper, routeId);
+    }
+
+
     //photograph data interface
-
-
-
     public HashMap<Integer, Photograph> getPhotoList(){
         return m_photoManager.getPhotoList(m_sqlHelper);
     }

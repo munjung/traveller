@@ -41,20 +41,9 @@ public class SplashActivity extends AppCompatActivity {
     private class SplashHandler implements Runnable {
         public void run() {
 
-            _dataManager = DataManager.getInstance(SplashActivity.this);
-//            if(_dataManager.getRouteList().size() > 0){
-
-                Intent i = new Intent(SplashActivity.this, EditLocationActivity.class);
-                startActivity(i);
-                SplashActivity.this.finish();
-//            }
-//            else{
-//
-//                Intent i = new Intent(SplashActivity.this, EmptyMainActivity.class);
-//                startActivity(i);
-//                SplashActivity.this.finish();
-//            }
-
+            Intent i = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(i);
+            SplashActivity.this.finish();
         }
     }
 
