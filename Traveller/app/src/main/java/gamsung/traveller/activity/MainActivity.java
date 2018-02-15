@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Layout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import java.util.List;
 import gamsung.traveller.R;
 import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.model.Route;
+import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
 
 /*
@@ -49,8 +51,12 @@ import gamsung.traveller.util.DebugToast;
  */
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public final static String KEY_SEND_TO_ACTIVITY_ROUTE_ID = "routeId";
+    private final static int REQUEST_CODE_GO_SET_TRAVEL = 1;
+    private final static int REQUEST_CODE_GO_MAP_PICTURE = 2;
+    private final static int REQUEST_CODE_GO_EDIT_LOCATION = 3;
 
     private final int PERMISSION_CODE = 0;
 
@@ -64,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> photoList;
     private int temp_id;
-
-    private RecyclerAdapterItemClickListener _recyclerAdapterListener;
 
 
     @Override
@@ -84,34 +88,56 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1){
-
-            switch (resultCode){
-                case RESULT_OK:
-                    //parse intent
-                    String title = data.getStringExtra("title");
-                    Date goDate = new Date(data.getLongExtra("goDate", 0));
-                    Date backDate = new Date(data.getLongExtra("backDate", 0));
-                    String picturePath = data.getStringExtra("picturePath");
-
-                    //generate route
-                    Route route = new Route();
-                    route.setTitle(title);
-                    route.setFromDate(goDate);
-                    route.setToDate(backDate);
-                    route.setPicturPath(picturePath);
-
-                    //add route recycler item
-                    if(_dataManager.insertRoute(route) > 0)
-                        _recyclerAdapter.addItem(route);
-
-                    break;
-                case RESULT_CANCELED:
-                    break;
-            }
+        switch (requestCode){
+            case REQUEST_CODE_GO_SET_TRAVEL:
+                this.receiveFromSetTravel(resultCode, data);
+                break;
+            case REQUEST_CODE_GO_MAP_PICTURE:
+                this.receiveFromMapPictrue(resultCode, data);
+                break;
+            case REQUEST_CODE_GO_EDIT_LOCATION:
+                this.receiveFromEditLocation(requestCode, data);
+                break;
         }
     }
 
+    private void receiveFromSetTravel(int resultCode, Intent data){
+
+        switch (resultCode){
+            case RESULT_OK:
+                //parse intent
+                String title = data.getStringExtra("title");
+                Date goDate = new Date(data.getLongExtra("goDate", 0));
+                Date backDate = new Date(data.getLongExtra("backDate", 0));
+                String picturePath = data.getStringExtra("picturePath");
+
+                //generate route
+                Route route = new Route();
+                route.setTitle(title);
+                route.setFromDate(goDate);
+                route.setToDate(backDate);
+                route.setPicturPath(picturePath);
+
+                //add route recycler item
+                if(_dataManager.insertRoute(route) > 0)
+                    _recyclerAdapter.addItem(route);
+
+                break;
+            case RESULT_CANCELED:
+                //no need
+                break;
+        }
+    }
+
+    private void receiveFromEditLocation(int resultCode, Intent data){
+
+        //no need : 이미 DB에 spot들을 저장하고 돌아옴 or 취소
+    }
+
+    private void receiveFromMapPictrue(int resultCode, Intent data){
+
+        //no need : 단순 보여주기이므로 신경 안써도 됨
+    }
 
 
     @Override
@@ -126,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
             //data가 없는 경우 바로 SetTravelActivity로 이동
             Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
-            startActivityForResult(intent, 1);
+            intent.putExtra("TAG_ACTIVITY", "first");
+            startActivityForResult(intent, REQUEST_CODE_GO_SET_TRAVEL);
         }
 
         super.onCreate(savedInstanceState);
@@ -148,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setRecyclerView(){
 
-        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList, _recyclerAdapterListener);
+        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList, this);
 
         _recyclerView = (RecyclerView)findViewById(R.id.recycler_main_content);
         _recyclerView.setAdapter(_recyclerAdapter);
@@ -184,8 +211,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-        _recyclerAdapterListener = new RecyclerAdapterItemClickListener();
     }
 
     //PERMISSON
@@ -325,6 +350,53 @@ public class MainActivity extends AppCompatActivity {
 
         return result;
     }
+
+    @Override
+    public void onClick(View view) {
+
+        int sendId =_recyclerAdapter.get_clickListenerArgs().getSend_id();
+        int position = _recyclerAdapter.get_clickListenerArgs().getItem_position();
+        Route route = _recyclerAdapter.getItem(position);
+
+        switch (sendId){
+            case RouteItemClickListenerArguments.EDIT_CLICK:
+
+                Intent editClickIntent = new Intent(this, SetTravelActivity.class);
+                editClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+                startActivityForResult(editClickIntent, 1);
+                break;
+
+            case RouteItemClickListenerArguments.IMAGE_CLICK:
+//                int spotSize = _dataManager.getSpotListWithRouteId(route.get_id()).size();
+//                if(spotSize == 0){
+//
+//                    Intent imgClickIntent = new Intent(this, EmptyTravelActivity.class);
+//                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+//                    startActivityForResult(imgClickIntent, 1);
+//                }
+//                else{
+//
+//                    Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
+//                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+//                    startActivityForResult(imgClickIntent, 1);
+//                }
+
+                break;
+
+            case RouteItemClickListenerArguments.GOTO_PICTURE_CLICK:
+
+                Intent gotoPictureClickIntent = new Intent(this, EditLocationActivity.class);
+                gotoPictureClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+                startActivityForResult(gotoPictureClickIntent, 1);
+                break;
+
+            case RouteItemClickListenerArguments.DELETE_CLICK:
+                if(_dataManager.deleteRoute(route.get_id())){
+                    Log.d("delete", "route" + route.get_id());
+                }
+                break;
+        }
+    }
 }
 
 
@@ -338,9 +410,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     private View _deleteView;
     private Button _addBtnForVisible;
 
-    private RecyclerAdapterItemClickListener _clickListener;
+    private View.OnClickListener _clickListener;
+    private RouteItemClickListenerArguments _clickListenerArgs;
 
-    public RecyclerViewAdapter(Context context, List<Route> routeList, RecyclerAdapterItemClickListener clickListener) {
+    public RecyclerViewAdapter(Context context, List<Route> routeList, View.OnClickListener clickListener) {
 
         if (routeList == null) {
             throw new IllegalArgumentException("route data must not be null");
@@ -350,6 +423,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         this._items = routeList;
 
         this._clickListener = clickListener;
+        this._clickListenerArgs = new RouteItemClickListenerArguments();
     }
 
     @Override
@@ -362,11 +436,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         viewHolder.getImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DebugToast.show(_context, "" + viewHolder.getAdapterPosition());
 
-                _clickListener.send_id = RecyclerAdapterItemClickListener.IMAGE_CLICK;
-                _clickListener.item_position = viewHolder.getAdapterPosition();
-
+                _clickListenerArgs.setSend_id(RouteItemClickListenerArguments.IMAGE_CLICK);
+                _clickListenerArgs.setItem_position(viewHolder.getAdapterPosition());
                 _clickListener.onClick(view);
             }
         });
@@ -376,13 +448,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             @Override
             public void onClick(View view) {
 
-                _clickListener.send_id = RecyclerAdapterItemClickListener.EDIT_CLICK;
-                _clickListener.item_position = viewHolder.getAdapterPosition();
-
+                _clickListenerArgs.setSend_id(RouteItemClickListenerArguments.EDIT_CLICK);
+                _clickListenerArgs.setItem_position(viewHolder.getAdapterPosition());
                 _clickListener.onClick(view);
 
-//                Intent intent = new Intent(_context, SetTravelActivity.class);
-//                startActivityForResult(intent, 1);
             }
         });
 
@@ -390,9 +459,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             @Override
             public void onClick(View view) {
 
-                _clickListener.send_id = RecyclerAdapterItemClickListener.GOTO_PICTURE_CLICK;
-                _clickListener.item_position = viewHolder.getAdapterPosition();
-
+                _clickListenerArgs.setSend_id(RouteItemClickListenerArguments.GOTO_PICTURE_CLICK);
+                _clickListenerArgs.setItem_position(viewHolder.getAdapterPosition());
                 _clickListener.onClick(view);
             }
         });
@@ -417,6 +485,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
                             DebugToast.show(_context, "삭제");
                             hideDeleteView();
+
+                            _clickListenerArgs.setSend_id(RouteItemClickListenerArguments.DELETE_CLICK);
+                            _clickListenerArgs.setItem_position(viewHolder.getAdapterPosition());
+                            _clickListener.onClick(view);
 
                             //remove view holder position(saved viewholder position in deleteview's tag)
                             removeItem((int)_deleteView.getTag());
@@ -541,6 +613,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         return b;
     }
 
+    public RouteItemClickListenerArguments get_clickListenerArgs() {
+        return _clickListenerArgs;
+    }
+
 
     //View Holder
     public static class RouteViewHolder extends RecyclerView.ViewHolder {
@@ -566,20 +642,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             btnGoToPicture = (Button) itemView.findViewById(R.id.btn_goto_picture);
             btnDelete = (Button) itemView.findViewById(R.id.btn_delete_route_item);
             layoutShadow = (RelativeLayout) itemView.findViewById(R.id.shadow_backlayer);
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    DebugToast.show(_context, "image clicked");
-                }
-            });
-
-            btnGoToPicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    DebugToast.show(_context, "button clicked go to picture!");
-                }
-            });
         }
 
         public ImageView getImageView() {
@@ -603,23 +665,31 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
     }
 }
 
-class RecyclerAdapterItemClickListener implements View.OnClickListener{
-
+class RouteItemClickListenerArguments{
 
     public final static int EDIT_CLICK = 1;
     public final static int IMAGE_CLICK = 2;
     public final static int GOTO_PICTURE_CLICK = 3;
+    public final static int DELETE_CLICK = 4;
 
-    public int send_id;
-    public int item_position;
+    private int send_id;
+    private int item_position;
 
 
-    public RecyclerAdapterItemClickListener() {
-
+    public int getSend_id() {
+        return send_id;
     }
 
-    @Override
-    public void onClick(View view) {
+    public void setSend_id(int send_id) {
+        this.send_id = send_id;
+    }
 
+    public int getItem_position() {
+        return item_position;
+    }
+
+    public void setItem_position(int item_position) {
+        this.item_position = item_position;
     }
 }
+

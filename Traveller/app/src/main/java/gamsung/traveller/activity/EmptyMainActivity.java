@@ -24,10 +24,19 @@ public class EmptyMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(EmptyMainActivity.this, SetTravelActivity.class);
-                startActivity(i);
+                setResult(RESULT_OK);
+                finish();
+//                Intent i = new Intent(EmptyMainActivity.this, SetTravelActivity.class);
+//                startActivity(i);
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }
