@@ -32,7 +32,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.maprecycleritem,parent,false);
+        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.map_recycler_item,parent,false);
         return new ListitemViewHolder(item);
     }
 

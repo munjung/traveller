@@ -26,11 +26,14 @@ public class MapRecyclerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_recycler);
         Intent intent = getIntent();
         ArrayList<String> photolist = (ArrayList<String>) intent.getStringArrayListExtra("photoset").clone();
+        int offset = intent.getIntExtra("offset",0);
         mRecyclerView = (RecyclerView) findViewById(R.id.maprecycler);
 
         mLayoutmanager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutmanager);
+        mLayoutmanager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
+        mRecyclerView.setLayoutManager(mLayoutmanager);
+        mRecyclerView.scrollToPosition(offset);
         mAdapter = new MapRecyclerAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
 

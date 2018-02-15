@@ -60,6 +60,7 @@ public class PhotoAdapter extends BaseAdapter {
         String imgpath = path+"/testing/"+photoset.get(i);
         Bitmap bm = BitmapFactory.decodeFile(imgpath);
         iv.setImageBitmap(bm);
+        final int prepositon = i;
         int width = context.getResources().getDisplayMetrics().widthPixels;
         int celwidth = (width-10)/4;
         iv.setLayoutParams(new RelativeLayout.LayoutParams(celwidth,celwidth));
@@ -68,6 +69,8 @@ public class PhotoAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Intent intent = new Intent(context, MapRecyclerActivity.class);
                 intent.putStringArrayListExtra("photoset",photoset);
+                int position=prepositon;
+                intent.putExtra("offset",position);
                 context.startActivity(intent);
             }
         });

@@ -64,7 +64,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
             mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension,mDimension));
             int padding = (int) getResources().getDimension(R.dimen.custom_profile_padding);
-            mImageView.setPadding(padding+3,padding,padding+3,padding);
+            mImageView.setPadding(padding,padding,padding,padding);
             mImageView.setCropToPadding(true);
             mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mIconGenerator.setContentView(mImageView);
@@ -130,7 +130,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         for(PhotoCluster pcpc : cluster.getItems()){
             photolist.add(pcpc.source);
         }
-        Intent intent = new Intent(MapClusterActivity.this,GridInCluster.class);
+        Intent intent = new Intent(MapClusterActivity.this,GridInClusterActivity.class);
         intent.putExtra("localname",currAddress);
         intent.putStringArrayListExtra("phototosend",photolist);
         startActivity(intent);
