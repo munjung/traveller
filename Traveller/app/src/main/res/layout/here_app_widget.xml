@@ -8,9 +8,18 @@
         android:layout_width="70dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:src="@drawable/w_btn_camera"
+        android:src="@drawable/btn_w_camerabg"
         android:scaleType="fitXY"/>
-    
+
+    <ImageView
+        android:layout_width="37dp"
+        android:layout_height="33dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/btn_w_camera"
+        />
+
     <ImageView
         android:layout_marginLeft="18dp"
         android:layout_width="2dp"
@@ -24,7 +33,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="37dp"
         android:textSize="16.1sp"
-        android:text="지금 수행중인 미션"/>
+        android:text="카오산로드 방문"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,29 +41,31 @@
         android:layout_marginTop="45dp"
         android:layout_marginLeft="37dp"
         android:textSize="10sp"
-        android:text="거기 주소"/>
+        android:text="Thanon Khosan, Bangkok"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="37dp"
         android:textSize="12.1sp"
-        android:text="다음위치"/>
+        android:text="나이쏘이 갈비국수 먹기"/>
 
     <ImageView
-        android:layout_marginTop="19dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/grap_circle_on"/>
-
-    <ImageView
-        android:layout_marginTop="68dp"
-        android:layout_marginLeft="12dp"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:src="@drawable/grap_circle_off"/>
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/grap_circle_on" />
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="12dp"
+        android:src="@drawable/grap_circle_off" />
 
 
 
