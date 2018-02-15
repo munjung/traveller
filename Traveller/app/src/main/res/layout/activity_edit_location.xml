@@ -2,8 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:gravity="center_horizontal"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -34,7 +32,7 @@
                 android:layout_height="50dp">
 
                 <ImageButton
-                    android:id="@+id/btnHome"
+                    android:id="@+id/btn_cancel_edit_location"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="20dp"
@@ -44,7 +42,7 @@
                     android:layout_centerVertical="true"/>
 
                     <TextView
-                        android:id="@+id/textTitle"
+                        android:id="@+id/txt_title_edit_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="나의 여행기록"
@@ -52,11 +50,11 @@
                         android:gravity="center"
                         android:textColor="#5d5d5d"
                         android:layout_centerInParent="true"
-                        android:layout_toLeftOf="@id/btnSave"
-                        android:layout_toRightOf="@id/btnHome"/>
+                        android:layout_toLeftOf="@id/btn_save_edit_location"
+                        android:layout_toRightOf="@id/btn_cancel_edit_location"/>
 
                 <ImageButton
-                    android:id="@+id/btnSave"
+                    android:id="@+id/btn_save_edit_location"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:backgroundTint="@android:color/transparent"
@@ -82,7 +80,8 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="240dp">
+                android:layout_height="240dp"
+                android:id="@+id/photoRelative">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_edit_lcoation"
@@ -172,7 +171,7 @@
                         android:id="@+id/editLocation"
                         android:textSize="12sp"
                         android:background="@android:color/transparent"
-                        android:hint="여행 위치/좌표"/>
+                        android:hint=" 여행할 장소를 선택해주세요."/>
 
                 </LinearLayout>
 

@@ -28,8 +28,10 @@ public class GridInCluster extends AppCompatActivity {
         setContentView(R.layout.activity_grid_in_cluster);
 
         Intent intent = getIntent();
-        ArrayList<Integer> photolist= (ArrayList<Integer>)intent.getIntegerArrayListExtra("phototosend").clone();
-
+        ArrayList<String> photolist= (ArrayList<String>)intent.getStringArrayListExtra("phototosend").clone();
+        String sentname = (String)intent.getStringExtra("localname");
+        TextView textView = findViewById(R.id.tvlocalname);
+        textView.setText(sentname);
         PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(),R.layout.gridrow,photolist);
 
         GridView gv = (GridView)findViewById(R.id.gvphoto);

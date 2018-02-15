@@ -23,6 +23,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -64,7 +65,7 @@ public class EditLocationActivity extends AppCompatActivity {
     private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
     private int CATEGORY_ID;
-    private RecyclerView recyclerView;
+    RelativeLayout photoRelative;
 
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
@@ -86,8 +87,8 @@ public class EditLocationActivity extends AppCompatActivity {
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
         //tvMission = (EditText)findViewById(R.id.tvMission);
-        btnHome = (ImageButton)findViewById(R.id.btnHome);
-        btnSave = (ImageButton)findViewById(R.id.btnSave);
+        btnHome = (ImageButton)findViewById(R.id.btn_cancel_edit_location);
+        btnSave = (ImageButton)findViewById(R.id.btn_save_edit_location);
         btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
 
         eat = (ImageView) findViewById(R.id.eat);
@@ -95,23 +96,6 @@ public class EditLocationActivity extends AppCompatActivity {
         take = (ImageView)findViewById(R.id.photo);
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
-
-
-
-//        Intent intent = getIntent();
-//        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
-//
-//        if(whatActivity.equals("create")) {
-//            isEdit = false;
-//            recyclerView.setVisibility(View.GONE);
-//            btnNextPlan.setVisibility(View.VISIBLE);
-//        }
-//
-//        else if(whatActivity.equals("edit")) {
-//            isEdit = true;
-//            recyclerView.setVisibility(View.VISIBLE);
-//            btnNextPlan.setVisibility(View.GONE);
-//        }
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,6 +165,23 @@ public class EditLocationActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        Intent intent = getIntent();
+        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+        if(whatActivity != null) {
+            if (whatActivity.equals("create")) {
+                isEdit = false;
+                photoRelative.setVisibility(View.GONE);
+                btnNextPlan.setVisibility(View.VISIBLE);
+                memoEdit.requestFocus();
+            } else if (whatActivity.equals("edit")) {
+                isEdit = true;
+                recyclerView.setVisibility(View.VISIBLE);
+                btnNextPlan.setVisibility(View.GONE);
+            }
+        }
+
+        photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
 
         layoutAddPhoto = (View)findViewById(R.id.layout_add_on_empty_edit_location);
         layoutAddPhoto.setOnClickListener(new View.OnClickListener() {

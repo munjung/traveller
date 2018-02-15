@@ -18,7 +18,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+<<<<<<< HEAD
 import java.io.Serializable;
+=======
+import java.lang.reflect.Array;
+>>>>>>> 3b5d3af977ff8e1212825d2562a026d33e76c90b
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -118,13 +122,26 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, ImageSliderActivity.class);
+<<<<<<< HEAD
             for(int i=0; i<pathArr.length; i++){
                  intent.putExtra("ImgPath", pathArr[i]);
                 //intent.putParcelableArrayListExtra("ImgPath", pathArr[i]);
                 Log.d("path2222", pathArr[i]);
             }
+=======
 
-            ((Activity)context).startActivityForResult(intent, 2);
+//            for(int i=0; i<pathArr.length; i++){
+//                intent.putExtra("ImgPath", pathArr[i]);
+//                Log.d("path2222", pathArr[i]);
+//            }
+>>>>>>> 3b5d3af977ff8e1212825d2562a026d33e76c90b
+
+            ArrayList<String> pathList = new ArrayList<String>(Arrays.asList(pathArr));
+            intent.putExtra("ImgPath", pathList.toString());
+
+
+            ((Activity)context).startActivity(intent);
+//            ((Activity)context).startActivityForResult(intent, 2);
         }
     }
 }

@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,8 +41,9 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
     private CalendarFragment calendarFragment;
     private ImageView imageRepresent, imageAddPhoto;
-    private Bitmap image_bitmap;
     private TextView txtGo, txtBack;
+    private EditText editTxtTravelName;
+    private ImageButton btnCancel, btnSave;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +64,50 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
         txtGo = (TextView)findViewById(R.id.txt_set_travel_go);
         txtBack = (TextView)findViewById(R.id.txt_set_travel_back);
+        editTxtTravelName = (EditText) findViewById(R.id.txt_name_set_travel);
+
+        btnCancel = (ImageButton) findViewById(R.id.btn_cancel_set_travel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+        btnSave = (ImageButton) findViewById(R.id.btn_save_set_travel);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Date goDate = (Date)txtGo.getTag();
+                Date backDate = (Date)txtBack.getTag();
+                if(goDate == null || backDate == null) {
+                    //안내 메세지
+                    return;
+                }
+
+                Uri uri = (Uri)imageRepresent.getTag();
+                if(uri == null){
+                    //안내 메세지
+                    return;
+                }
+
+                if(TextUtils.isEmpty(editTxtTravelName.getText())){
+                    //안내메세지
+                    return;
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra("title", editTxtTravelName.getText());
+                intent.putExtra("goDate", goDate.getTime());
+                intent.putExtra("backDate", backDate.getTime());
+                intent.putExtra("pictruePath", uri.toString());
+
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
     }
 
     public void doTakeAlbumAction(){
@@ -82,6 +130,7 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
             Uri uri = data.getData();
             Glide.with(this).load(uri).into(imageRepresent);
+            imageRepresent.setTag(uri);
 
 //            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
             // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
@@ -91,7 +140,6 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -120,10 +168,6 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
     @Override
     public void onDateUnselected(Date date) {
-
-    }
-
-    private void checkInvalid(){
 
     }
 

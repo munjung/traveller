@@ -30,7 +30,7 @@
                 android:layout_height="50dp">
 
                 <ImageButton
-                    android:id="@+id/btnHome"
+                    android:id="@+id/btn_cancel_set_travel"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/btn_back"
@@ -39,7 +39,7 @@
                     android:layout_centerVertical="true"/>
 
                 <TextView
-                    android:id="@+id/textTitle"
+                    android:id="@+id/txt_title_set_travel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="새로운 여행기"
@@ -47,11 +47,11 @@
                     android:gravity="center"
                     android:textColor="#5d5d5d"
                     android:layout_centerInParent="true"
-                    android:layout_toLeftOf="@id/btnSave"
-                    android:layout_toRightOf="@id/btnHome"/>
+                    android:layout_toLeftOf="@id/btn_save_set_travel"
+                    android:layout_toRightOf="@id/btn_cancel_set_travel"/>
 
                 <ImageButton
-                    android:id="@+id/btnSave"
+                    android:id="@+id/btn_save_set_travel"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:backgroundTint="@android:color/transparent"
@@ -98,7 +98,7 @@
         android:orientation="vertical"
         android:background="@drawable/round_border">
 
-        <EditText
+        <EditText android:id="@+id/txt_name_set_travel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
@@ -163,8 +163,8 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
                 android:src="@drawable/grap_line" />
 
             <LinearLayout

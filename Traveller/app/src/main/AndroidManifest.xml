@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -36,7 +36,7 @@
         <activity android:name=".activity.TravelViewActivity" />
         <activity android:name=".activity.SetTravelActivity" />
         <activity android:name=".activity.MapClusterActivity" />
-        <activity android:name=".activity.ImageSliderActivity"/>
+        <activity android:name=".activity.ImageSliderActivity" />
         <activity android:name=".activity.CustomGalleryActivity" />
         <activity android:name=".activity.ImageMultiplePickerActivity">
             <intent-filter>
@@ -49,9 +49,12 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CameraActivity"
-            android:screenOrientation="sensor"/>
-        <activity android:name=".activity.GridInCluster"></activity>
+        <activity
+            android:name=".activity.CameraActivity"
+            android:screenOrientation="sensor" />
+        <activity android:name=".activity.GridInCluster" />
+        <activity android:name=".activity.EmptyTravelActivity" />
+        <activity android:name=".MapRecyclerActivity"></activity>
     </application>
 
 </manifest>

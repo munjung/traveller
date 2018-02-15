@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -66,7 +67,7 @@ import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 
 /**
- * 7, 8번 화면. 구글맵 정책 문제로 10번화면과 레이아웃은 같이 씀
+ * 7, 8번 화면.
  */
 
 public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
@@ -81,6 +82,12 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     @Override
     protected void startmap() {
         mMap = getMap();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            // Show rationale and request permission.
+        }
         TextView tvname = findViewById(R.id.tvPlaceName);
 
         LinearLayout infoll = findViewById(R.id.mInfoll);
@@ -89,15 +96,27 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         uiSettings.setRotateGesturesEnabled(false);
         uiSettings.setTiltGesturesEnabled(false);
         uiSettings.setMapToolbarEnabled(false);
+        uiSettings.setZoomControlsEnabled(true);
         uiSettings.setIndoorLevelPickerEnabled(false);
         uiSettings.setCompassEnabled(false);
-        LatLng seoul = new LatLng(-37, 126);
+        LatLng seoul = new LatLng(37, 126);
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
+        ImageView mapiv=findViewById(R.id.ivPlace);
+        TextView tvnaming=findViewById(R.id.tvPlaceName);
+        TextView tvaddress=findViewById(R.id.tvPlaceAddress);
+        mapiv.setImageResource(0);
+        tvnaming.setText("장소를 선택해주세요!");
+        tvaddress.setText("");
+        mMap.clear();
+        findViewById(R.id.mInfoll).setClickable(false);
+        findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
+        findViewById(R.id.mSelectll).setVisibility(View.GONE);
+
         Button bt = findViewById(R.id.btmsearch);
         Button buttongo = findViewById(R.id.btchooseplace);
         buttongo.setOnClickListener(new Button.OnClickListener(){
@@ -146,7 +165,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     }
                 });
 */
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul,1));
 
         mMap.setOnMapLongClickListener(this);
     }

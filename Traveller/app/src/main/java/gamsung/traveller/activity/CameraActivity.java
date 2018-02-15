@@ -107,6 +107,7 @@ public class CameraActivity extends AppCompatActivity {
             android.provider.Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
+
         catch(Exception e){
             e.printStackTrace();
         }
@@ -150,7 +151,7 @@ public class CameraActivity extends AppCompatActivity {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                         spotName = spotSpinner.getSelectedItem().toString();
-                        
+
                     }
 
                     @Override
@@ -394,7 +395,7 @@ public class CameraActivity extends AppCompatActivity {
             // Write to SD Card
             try {
                 File sdCard = Environment.getExternalStorageDirectory();
-                File dir = new File (sdCard.getAbsolutePath() + "/Traveller");
+                File dir = new File (sdCard.getAbsolutePath() + "/여기");
                 dir.mkdirs();
 
                 String fileName = String.format("%d.jpg", System.currentTimeMillis());
