@@ -1,55 +1,61 @@
 package gamsung.traveller.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 
 import java.util.ArrayList;
 
+import gamsung.traveller.MapRecyclerActivity;
 import gamsung.traveller.R;
 
 /**
  * Created by Hanbin Ju on 2018-02-15.
  */
 
-public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.VeiwHoler>{
+public class MapRecyclerAdapter extends RecyclerView.Adapter{
 
-    private String[] mDataset;
-    public MapRecyclerAdapter(String[] myDataset){
-        mDataset=myDataset;
-    }
+    private ArrayList<String> data;
 
-    public MapRecyclerAdapter() {
-
+    public MapRecyclerAdapter(ArrayList<String> data){
+        this.data=data;
     }
 
     @Override
-    public MapRecyclerAdapter.VeiwHoler onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.maprecycleritem,parent,false);
- //       return new VeiwHoler(view);
-        return null;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.maprecycleritem,parent,false);
+        return new ListitemViewHolder(item);
     }
 
     @Override
-    public void onBindViewHolder(VeiwHoler holder, int position) {
- //        MyModel myModel = myModels.get(position);
- //        holder.imageView.setImageBitmap();
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ListitemViewHolder item = (ListitemViewHolder) holder;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String mydata = path+"/testing/"+data.get(position);
+        Bitmap bm = BitmapFactory.decodeFile(mydata);
+        item.imageView.setImageBitmap(bm);
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return data.size();
     }
+    public static class ListitemViewHolder extends RecyclerView.ViewHolder {
+        public ImageView imageView;
 
-    public class VeiwHoler extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        public VeiwHoler(ImageView itemView) {
+        public ListitemViewHolder(View itemView) {
             super(itemView);
-            imageView = itemView;
+            imageView = itemView.findViewById(R.id.ivRecycleitem);
         }
     }
 }

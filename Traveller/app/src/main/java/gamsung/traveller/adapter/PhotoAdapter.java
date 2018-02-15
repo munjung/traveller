@@ -1,6 +1,7 @@
 package gamsung.traveller.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -13,7 +14,10 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
+import gamsung.traveller.MapRecyclerActivity;
 import gamsung.traveller.R;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by Hanbin Ju on 2018-02-12.
@@ -59,6 +63,14 @@ public class PhotoAdapter extends BaseAdapter {
         int width = context.getResources().getDisplayMetrics().widthPixels;
         int celwidth = (width-10)/4;
         iv.setLayoutParams(new RelativeLayout.LayoutParams(celwidth,celwidth));
+        iv.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MapRecyclerActivity.class);
+                intent.putStringArrayListExtra("photoset",photoset);
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
 }
