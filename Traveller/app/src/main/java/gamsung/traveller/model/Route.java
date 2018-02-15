@@ -14,7 +14,6 @@ public class Route {
     private String title;
     private Date fromDate;
     private Date toDate;
-    private int pictureId;
     private String picturePath;
 
     public void set_id(Integer _id) {
@@ -48,14 +47,6 @@ public class Route {
 
     public void setToDate(Date toDate) {
         this.toDate = toDate;
-    }
-
-    public int getPictureId() {
-        return pictureId;
-    }
-
-    public void setPictureId(int pictureId) {
-        this.pictureId = pictureId;
     }
 
     public String getPicturePath() {

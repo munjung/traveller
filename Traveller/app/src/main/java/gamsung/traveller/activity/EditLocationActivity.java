@@ -166,20 +166,6 @@ public class EditLocationActivity extends AppCompatActivity {
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-        Intent intent = getIntent();
-        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
-        if(whatActivity != null) {
-            if (whatActivity.equals("create")) {
-                isEdit = false;
-                photoRelative.setVisibility(View.GONE);
-                btnNextPlan.setVisibility(View.VISIBLE);
-                memoEdit.requestFocus();
-            } else if (whatActivity.equals("edit")) {
-                isEdit = true;
-                recyclerView.setVisibility(View.VISIBLE);
-                btnNextPlan.setVisibility(View.GONE);
-            }
-        }
 
         photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
 
@@ -244,6 +230,21 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
+
+        Intent intent = getIntent();
+        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+        if(whatActivity != null) {
+            if (whatActivity.equals("create")) {
+                isEdit = false;
+                photoRelative.setVisibility(View.GONE);
+                btnNextPlan.setVisibility(View.VISIBLE);
+                memoEdit.requestFocus();
+            } else if (whatActivity.equals("edit")) {
+                isEdit = true;
+                recyclerView.setVisibility(View.VISIBLE);
+                btnNextPlan.setVisibility(View.GONE);
+            }
+        }
 
         if(memoEdit !=null)
             memoEdit.clearFocus();

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,7 +31,10 @@ import java.util.Date;
 import java.util.List;
 
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.frag.CalendarFragment;
+import gamsung.traveller.model.Route;
+import gamsung.traveller.util.Converter;
 import gamsung.traveller.util.DebugToast;
 
 /**
@@ -42,22 +46,25 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
     private static final int REQUEST_CODE_PICK_FROM_ALBUM = 0;
     private static final int REQUEST_CODE_EMPTY_MAIN = 1;
 
+    public static final int RESULT_CODE_CREATE = 10;
+    public static final int RESULT_CODE_EDIT = 11;
+
     private CalendarFragment calendarFragment;
     private ImageView imageRepresent, imageAddPhoto;
     private TextView txtGo, txtBack;
     private EditText editTxtTravelName;
     private ImageButton btnCancel, btnSave;
 
+    private boolean isEditMode = false;
+    private int editPosition = -1;
+    private int editRouteId = -1;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
-        Intent intent = getIntent();
-        String tag = intent.getStringExtra("TAG_ACTIVITY");
-        if(tag.contains("first")){
-
-            Intent firstIntent = new Intent(this, EmptyMainActivity.class);
-            startActivityForResult(firstIntent, REQUEST_CODE_EMPTY_MAIN);
-        }
+        //아무것도 없는 화면에서 처음 시작할때 안내 화면으로 먼저 이동한다
+        this.firstActionNoneItem();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_travel);
@@ -92,41 +99,77 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
             @Override
             public void onClick(View view) {
 
-                //schedule
-                Date goDate = (Date)txtGo.getTag();
-                Date backDate = (Date)txtBack.getTag();
-                if(goDate == null || backDate == null) {
-                    //안내 메세지
-                    return;
-                }
-
-                //title
                 String travelName = editTxtTravelName.getText().toString();
                 if(TextUtils.isEmpty(travelName)){
                     //안내메세지
                     return;
                 }
 
-                //picture uri
-                Uri uri = (Uri)imageRepresent.getTag();
-                String picturePath = uri == null ? null : uri.toString();
+                List<Date> selectedDates = calendarFragment.getSelectedDates();
+                if(selectedDates.size() <= 1){
+                    //안내 메세지
+                    return;
+                }
+
+                Date goDate = selectedDates.get(0);
+                Date backDate = selectedDates.get(selectedDates.size()-1);
+                String picturePath = (String)imageRepresent.getTag();
 
                 Intent intent = new Intent();
+                intent.putExtra("position", editPosition);
+                intent.putExtra("routeId", editRouteId);
                 intent.putExtra("title", travelName);
                 intent.putExtra("goDate", goDate.getTime());
                 intent.putExtra("backDate", backDate.getTime());
                 intent.putExtra("picturePath", picturePath);
 
-                setResult(RESULT_OK, intent);
+                if(isEditMode)
+                    setResult(RESULT_CODE_EDIT, intent);
+                else
+                    setResult(RESULT_CODE_CREATE, intent);
+
                 finish();
             }
         });
+
+        //현재 있는 경로 아이템을 변경하려 들어온 경우
+        this.updateActionForExistItem();
+    }
+
+    private void firstActionNoneItem(){
+
+        Intent intent = getIntent();
+        String tag = intent.getStringExtra("TAG_ACTIVITY");
+        if(tag != null && tag.contains("first")){
+
+            Intent firstIntent = new Intent(this, EmptyMainActivity.class);
+            startActivityForResult(firstIntent, REQUEST_CODE_EMPTY_MAIN);
+        }
+    }
+
+    private void updateActionForExistItem(){
+
+        Intent intent = getIntent();
+        this.editPosition = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_POSITION, -1);
+        this.editRouteId = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID, -1);
+        if(this.editRouteId > 0){
+            DataManager dataManager = DataManager.getInstance(this);
+            Route route = dataManager.getRouteList().get(this.editRouteId);
+            editTxtTravelName.setText(route.getTitle());
+            calendarFragment.setSelectedDates(route.getFromDate(), route.getToDate());
+
+            this.invalidateCalenderGoBack();
+            this.setPictureToRepresent(route.getPicturePath());
+
+            this.isEditMode = true;
+        }
     }
 
     public void doTakeAlbumAction(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
+
         startActivityForResult(Intent.createChooser(intent,"select Picture"), REQUEST_CODE_PICK_FROM_ALBUM);
     }
 
@@ -151,39 +194,28 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         try {
 
             Uri uri = data.getData();
-            Glide.with(this).load(uri).into(imageRepresent);
-            imageRepresent.setTag(uri);
-
-//            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            // myBitmap = image_bitmap.copy(Bitmap.Config.ARGB_8888, true);
-            //uploadImage.setImageBitmap(rotate(myBitmap, 0));
-            //Glide.with(getApplicationContext()).load(image_bitmap).asBitmap().into(setImage);
-//            setImage.setImageBitmap(image_bitmap);
+            if(uri != null){
+                String path = uri.toString();
+                setPictureToRepresent(path);
+            }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void setPictureToRepresent(String path){
+
+        if(path != null && path.length() > 0) {
+            Glide.with(this).load(path).into(imageRepresent);
+            imageRepresent.setTag(path);
         }
     }
 
     @Override
     public void onDateSelected(Date date) {
 
-        DebugToast.show(this, (String)android.text.format.DateFormat.format("yyyy.MM.dd", date));
-
-        List<Date> dates = calendarFragment.getSelectedDates();
-        if(dates == null || dates.size() == 0){
-            txtGo.setTag(null);
-            txtBack.setTag(null);
-        }
-
-        if(dates.size() == 1){
-            txtGo.setTag(dates.get(0));
-            txtBack.setTag(null);
-        }
-
-        if(dates.size() > 1){
-            txtGo.setTag(dates.get(0));
-            txtBack.setTag(dates.get(dates.size()-1));
-        }
+        String strDate = Converter.convertDateToString("yyyy.MM.dd", date);
+        DebugToast.show(this, strDate);
 
         invalidateCalenderGoBack();
     }
@@ -195,20 +227,20 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
     private void invalidateCalenderGoBack(){
 
-        if(txtGo.getTag() == null){
+        List<Date> dates = calendarFragment.getSelectedDates();
+        if(dates == null || dates.size() == 0){
             txtGo.setText("출발일");
-        }
-        else{
-            Date date = (Date)txtGo.getTag();
-            txtGo.setText((String)android.text.format.DateFormat.format("yyyy.MM.dd", date));
-        }
-
-        if(txtBack.getTag() == null){
             txtBack.setText("도착일");
         }
-        else{
-            Date date = (Date)txtBack.getTag();
-            txtBack.setText((String)android.text.format.DateFormat.format("yyyy.MM.dd", date));
+
+        if(dates.size() == 1){
+            txtGo.setText(Converter.convertDateToString("yyyy.MM.dd", dates.get(0)));
+            txtBack.setText("도착일");
+        }
+
+        if(dates.size() > 1){
+            txtGo.setText(Converter.convertDateToString("yyyy.MM.dd", dates.get(0)));
+            txtBack.setText(Converter.convertDateToString("yyyy.MM.dd", dates.get(dates.size()-1)));
         }
     }
 }

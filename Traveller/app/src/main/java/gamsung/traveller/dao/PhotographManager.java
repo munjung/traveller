@@ -112,7 +112,7 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(new Date(c.getLong(5) * 1000));
+                photo.setDate(Converter.convertStringToDate(c.getString(5)));
 
                 photoList.put(photo.get_id(), photo);
             }
@@ -221,7 +221,7 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(new Date(c.getLong(5) * 1000));
+                photo.setDate(new Date(c.getString(5)));
 
                 photoList.put(photo.get_id(), photo);
 

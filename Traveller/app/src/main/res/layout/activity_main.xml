@@ -14,7 +14,7 @@
         <!--top view-->
         <RelativeLayout android:id="@+id/layout_top_main"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
@@ -26,15 +26,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@id/btnAddTravel"
+                android:layout_toLeftOf="@id/btn_map_main"
                 android:background="@drawable/bg_search"
                 android:focusable="true"
                 android:focusableInTouchMode="true">
 
                 <!--search button-->
                 <Button android:id="@+id/btn_search_main"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -53,9 +53,9 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/btnAddTravel"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:id="@+id/btn_map_main"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="15dp"
@@ -89,12 +89,10 @@
     <!--add new item button-->
     <Button
         android:id="@+id/btn_add_main"
-        app:fabSize="normal"
         android:layout_width="78dp"
         android:layout_height="78dp"
         android:layout_gravity="bottom|right|end"
         android:layout_margin="16dp"
-        android:background="@drawable/btn_add"
-        android:scaleType="center"/>
+        android:background="@drawable/btn_add"/>
 
 </android.support.design.widget.CoordinatorLayout>

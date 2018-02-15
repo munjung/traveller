@@ -25,25 +25,25 @@ public class TableManager {
         public static final String column_title =       "title";
         public static final String column_from_date =   "from_date";
         public static final String column_to_date =     "to_date";
-        public static final String column_picture_id =  "picture_id";   //대표 사진 id
+        public static final String column_picture_path ="picture_path";   //대표 사진 id
 
         public static final String[] columns = {
                 column_id,
                 column_title,
                 column_from_date,
                 column_to_date,
-                column_picture_id
+                column_picture_path
         };
 
         public static String getCreateQuery(){
 
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
-            sb.append(column_id         + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
-            sb.append(column_title      + " TEXT, ");
-            sb.append(column_from_date  + " DATETIME, ");
-            sb.append(column_to_date    + " DATETIME, ");
-            sb.append(column_picture_id + " INTEGER ");
+            sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+            sb.append(column_title          + " TEXT, ");
+            sb.append(column_from_date      + " TEXT, ");
+            sb.append(column_to_date        + " TEXT, ");
+            sb.append(column_picture_path   + " TEXT ");
 
             sb.append(")");
 
@@ -180,10 +180,10 @@ public class TableManager {
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
             sb.append(column_route_id       + " INTEGER, ");
-            sb.append(column_spot_id       + " INTEGER, ");
+            sb.append(column_spot_id        + " INTEGER, ");
             sb.append(column_search_id      + " INTEGER, ");
-            sb.append(column_path            + " TEXT, ");
-            sb.append(column_date           + " DATETIME ");
+            sb.append(column_path           + " TEXT, ");
+            sb.append(column_date           + " TEXT ");
             sb.append(")");
 
             return sb.toString();

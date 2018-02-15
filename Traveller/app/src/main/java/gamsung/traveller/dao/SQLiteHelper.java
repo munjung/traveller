@@ -14,7 +14,7 @@ import gamsung.traveller.dto.TableManager;
 public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "Traveller";
-    private static final int VERSION = 2;
+    private static final int VERSION = 4;
 
 
     public SQLiteHelper(Context context) {

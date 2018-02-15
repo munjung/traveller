@@ -50,11 +50,14 @@ public class CalendarFragment extends Fragment {
 
     public void setCalendarSelectedListener(CalendarPickerView.OnDateSelectedListener listener){
         calendar.setOnDateSelectedListener(listener);
-
     }
 
     public List<Date> getSelectedDates(){
         return calendar.getSelectedDates();
     }
 
+    public void setSelectedDates(Date goDate, Date backDate){
+        calendar.selectDate(goDate);
+        calendar.selectDate(backDate);
+    }
 }

@@ -5,13 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,8 +29,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +36,8 @@ import java.util.List;
 import gamsung.traveller.R;
 import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.model.Route;
-import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
+import gamsung.traveller.util.ImageSupporter;
 
 /*
  * 네신중평님이 마법을 부릴 2,3번 화면
@@ -53,12 +46,17 @@ import gamsung.traveller.util.DebugToast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //permission code
+    private final int PERMISSION_CODE = 0;
+
+    //intent tag name for route id
     public final static String KEY_SEND_TO_ACTIVITY_ROUTE_ID = "routeId";
+    public final static String KEY_SEND_TO_ACTIVITY_POSITION = "position";
+
+    //Activity Result Request Code
     private final static int REQUEST_CODE_GO_SET_TRAVEL = 1;
     private final static int REQUEST_CODE_GO_MAP_PICTURE = 2;
     private final static int REQUEST_CODE_GO_EDIT_LOCATION = 3;
-
-    private final int PERMISSION_CODE = 0;
 
     private ImageView _imageView;
 
@@ -103,29 +101,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void receiveFromSetTravel(int resultCode, Intent data){
 
+        if(resultCode < 10)
+            return;
+
+        //parse intent
+        int position = data.getIntExtra("position", -1);
+        int routeId = data.getIntExtra("routeId", -1);
+        String title = data.getStringExtra("title");
+        Date goDate = new Date(data.getLongExtra("goDate", 0));
+        Date backDate = new Date(data.getLongExtra("backDate", 0));
+        String picturePath = data.getStringExtra("picturePath");
+
+        //generate route
+        Route route = new Route();
+        route.set_id(routeId);
+        route.setTitle(title);
+        route.setFromDate(goDate);
+        route.setToDate(backDate);
+        route.setPicturPath(picturePath);
+
         switch (resultCode){
-            case RESULT_OK:
-                //parse intent
-                String title = data.getStringExtra("title");
-                Date goDate = new Date(data.getLongExtra("goDate", 0));
-                Date backDate = new Date(data.getLongExtra("backDate", 0));
-                String picturePath = data.getStringExtra("picturePath");
-
-                //generate route
-                Route route = new Route();
-                route.setTitle(title);
-                route.setFromDate(goDate);
-                route.setToDate(backDate);
-                route.setPicturPath(picturePath);
-
-                //add route recycler item
+            case SetTravelActivity.RESULT_CODE_CREATE:  //add route recycler item
                 if(_dataManager.insertRoute(route) > 0)
                     _recyclerAdapter.addItem(route);
+                break;
 
+            case SetTravelActivity.RESULT_CODE_EDIT:    //update route recycler item
+                if(_dataManager.updateRoute(route) > 0)
+                    _recyclerAdapter.updateItem(position, route);
                 break;
-            case RESULT_CANCELED:
-                //no need
-                break;
+
         }
     }
 
@@ -161,11 +166,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.setRecyclerView();     //여행기록화면 세팅
         this.setImageView();        //빈화면 세팅
-        this.endOperation();        //모든 세팅 완료후 동작 함수 실행
         this.setRegisterEvent();    //버튼 이벤트 등록
 
         //temp code
-        photoList = getPathOfAllImages();
+        photoList = ImageSupporter.getPathOfAllImages(this);
     }
 
 
@@ -203,8 +207,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        Button btnAddTravel = (Button) findViewById(R.id.btnAddTravel);
-        btnAddTravel.setOnClickListener(new View.OnClickListener() {
+        Button btnPictureMap = (Button) findViewById(R.id.btn_map_main);
+        btnPictureMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, TravelViewActivity.class);
@@ -280,39 +284,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         _recyclerAdapter.addItem(route);
-
-        this.endOperation();
-
-        DebugToast.show(MainActivity.this, "add : " + idx);
-    }
-
-    private void removeRouteItem(int position){
-
-        _recyclerAdapter.removeItem(position);
-
-        this.endOperation();
-    }
-
-    private void updateRouteItem(int position, Route route){
-
-        Route routeItem = _recyclerAdapter.getItem(position);
-        routeItem.setTitle(route.getTitle());
-        routeItem.setPictureId(route.getPictureId());
-        routeItem.setPicturPath(route.getPicturePath());
-        routeItem.setFromDate(route.getFromDate());
-        routeItem.setToDate(route.getToDate());
-
-        _recyclerAdapter.refresh(position);
-    }
-
-    private void endOperation(){
-
-        if(_recyclerAdapter.getItemCount() > 0) {
-            _imageView.setVisibility(View.INVISIBLE);
-        }
-        else{
-            _imageView.setVisibility(View.VISIBLE);
-        }
     }
 
     public void hideKeypad(){
@@ -326,31 +297,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    //temp func
-    private ArrayList<String> getPathOfAllImages()
-    {
-        ArrayList<String> result = new ArrayList<>();
-        Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = { MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME };
-
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, MediaStore.MediaColumns.DATE_ADDED + " desc");
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        int columnDisplayName = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
-
-        if(cursor != null) {
-            while (cursor.moveToNext()) {
-                String pathOfImage = cursor.getString(columnIndex);
-//                String nameOfFile = cursor.getString(columnDisplayName);
-
-                if (!TextUtils.isEmpty(pathOfImage))
-                    result.add(pathOfImage);
-            }
-            cursor.close();
-        }
-
-        return result;
-    }
-
     @Override
     public void onClick(View view) {
 
@@ -363,31 +309,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent editClickIntent = new Intent(this, SetTravelActivity.class);
                 editClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
-                startActivityForResult(editClickIntent, 1);
+                editClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_POSITION, position);
+                startActivityForResult(editClickIntent, REQUEST_CODE_GO_SET_TRAVEL);
                 break;
 
             case RouteItemClickListenerArguments.IMAGE_CLICK:
-//                int spotSize = _dataManager.getSpotListWithRouteId(route.get_id()).size();
-//                if(spotSize == 0){
-//
-//                    Intent imgClickIntent = new Intent(this, EmptyTravelActivity.class);
-//                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
-//                    startActivityForResult(imgClickIntent, 1);
-//                }
-//                else{
-//
-//                    Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
-//                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
-//                    startActivityForResult(imgClickIntent, 1);
-//                }
+                int spotSize = _dataManager.getSpotListWithRouteId(route.get_id()).size();
+                if(spotSize == 0){
 
+                    Intent imgClickIntent = new Intent(this, EmptyTravelActivity.class);
+                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+                    startActivityForResult(imgClickIntent, REQUEST_CODE_GO_EDIT_LOCATION);
+                }
+                else{
+
+                    Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
+                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+                    startActivityForResult(imgClickIntent, REQUEST_CODE_GO_EDIT_LOCATION);
+                }
                 break;
 
             case RouteItemClickListenerArguments.GOTO_PICTURE_CLICK:
 
-                Intent gotoPictureClickIntent = new Intent(this, EditLocationActivity.class);
+                Intent gotoPictureClickIntent = new Intent(this, GridInCluster.class);
                 gotoPictureClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
-                startActivityForResult(gotoPictureClickIntent, 1);
+                startActivityForResult(gotoPictureClickIntent, REQUEST_CODE_GO_MAP_PICTURE);
                 break;
 
             case RouteItemClickListenerArguments.DELETE_CLICK:
@@ -542,7 +488,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             //show shadow image
             viewHolder.getLayoutShadow().setVisibility(View.VISIBLE);
             //change image delete button
-            viewHolder.getBtnDelete().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
+            viewHolder.getBtnDeleteImage().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
         }
     }
 
@@ -558,8 +504,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         notifyItemInserted(_items.size() - 1);
     }
 
-    public void refresh(int position) {
+    public void updateItem(int position, Route route) {
 
+        _items.set(position, route);
         notifyItemChanged(position);
     }
 
@@ -626,9 +573,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         private ImageView imageView;
         private TextView textView;
 
-        private Button btnDelete;
-        private Button btnEdit;
-        private Button btnGoToPicture;
+        private View btnDelete;
+        private View btnDeleteImage;
+        private View btnEdit;
+        private View btnGoToPicture;
         private RelativeLayout layoutShadow;
 
         public RouteViewHolder(Context context, final View itemView) {
@@ -638,9 +586,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
             imageView = (ImageView) itemView.findViewById(R.id.image_route_item);
             textView = (TextView) itemView.findViewById(R.id.txt_route_item);
-            btnEdit = (Button) itemView.findViewById(R.id.btn_edit_route_item);
-            btnGoToPicture = (Button) itemView.findViewById(R.id.btn_goto_picture);
-            btnDelete = (Button) itemView.findViewById(R.id.btn_delete_route_item);
+            btnEdit = (View) itemView.findViewById(R.id.btn_edit_route_item);
+            btnGoToPicture = (View) itemView.findViewById(R.id.btn_goto_picture);
+            btnDelete = (View) itemView.findViewById(R.id.btn_delete_route_item);
+            btnDeleteImage = (View)itemView.findViewById(R.id.btn_delete_image_route_item);
             layoutShadow = (RelativeLayout) itemView.findViewById(R.id.shadow_backlayer);
         }
 
@@ -650,13 +599,16 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         public TextView getTextView() {
             return textView;
         }
-        public Button getBtnDelete() {
+        public View getBtnDelete() {
             return btnDelete;
         }
-        public Button getBtnEdit() {
+        public View getBtnDeleteImage() {
+            return btnDeleteImage;
+        }
+        public View getBtnEdit() {
             return btnEdit;
         }
-        public Button getBtnGoToPicture() {
+        public View getBtnGoToPicture() {
             return btnGoToPicture;
         }
         public RelativeLayout getLayoutShadow() {

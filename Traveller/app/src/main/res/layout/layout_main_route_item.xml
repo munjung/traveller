@@ -29,22 +29,38 @@
                 android:visibility="invisible"
                 android:background="@drawable/img_inner_shadow_2"/>
 
-            <Button android:id="@+id/btn_goto_picture"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_margin="15dp"
+            <RelativeLayout
+                android:id="@+id/btn_goto_picture"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:visibility="invisible"
-                android:background="@drawable/btn_picture"/>
-            
-            <Button android:id="@+id/btn_delete_route_item"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_picture"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout android:id="@+id/btn_delete_route_item"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/btn_delete_2"/>
+                android:layout_margin="10dp">
+
+                <ImageView android:id="@+id/btn_delete_image_route_item"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/btn_delete_2"/>
+            </RelativeLayout>
         </RelativeLayout>
 
     <RelativeLayout
@@ -61,13 +77,19 @@
             android:text="gamsung"
             android:gravity="left|center"/>
 
-        <Button android:id="@+id/btn_edit_route_item"
-            android:layout_width="18dp"
-            android:layout_height="13dp"
-            android:layout_margin="10dp"
+        <RelativeLayout android:id="@+id/btn_edit_route_item"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/btn_edit"/>
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:layout_width="18dp"
+                android:layout_height="13dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_edit"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

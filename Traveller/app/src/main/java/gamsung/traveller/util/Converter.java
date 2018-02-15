@@ -1,5 +1,6 @@
 package gamsung.traveller.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,5 +15,20 @@ public class Converter {
     public static String convertSqlDateFormat(Date date){
 
         return new SimpleDateFormat(SqlDateFormat).format(date);
+    }
+
+    public static String convertDateToString(String format, Date date){
+
+        return (String)android.text.format.DateFormat.format(format, date);
+    }
+
+    public static Date convertStringToDate(String strDate){
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(strDate);
+            return date;
+        }
+        catch (ParseException e){
+            return null;
+        }
     }
 }

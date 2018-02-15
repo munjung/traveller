@@ -94,8 +94,9 @@ public class RouteManager {
                 Route route = new Route();
                 route.set_id(c.getInt(0));                          //id
                 route.setTitle(c.getString(1));                     //title
-                route.setFromDate(new Date(c.getLong(3) * 1000));   //from date
-                route.setToDate(new Date(c.getLong(4) * 1000));     //to date
+                route.setFromDate(Converter.convertStringToDate(c.getString(2)));          //from date
+                route.setToDate(Converter.convertStringToDate(c.getString(3)));            //to date
+                route.setPicturPath(c.getString(4));                //picture path
 
                 routeMap.put(route.get_id(), route);
             }
@@ -131,6 +132,7 @@ public class RouteManager {
         values.put(TableManager.RouteTable.column_title, route.getTitle());                                             //title
         values.put(TableManager.RouteTable.column_from_date, Converter.convertSqlDateFormat(route.getFromDate()));      //from
         values.put(TableManager.RouteTable.column_to_date, Converter.convertSqlDateFormat(route.getToDate()));          //to
+        values.put(TableManager.RouteTable.column_picture_path, route.getPicturePath());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
