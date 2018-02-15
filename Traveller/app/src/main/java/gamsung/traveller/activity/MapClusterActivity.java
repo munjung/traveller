@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import gamsung.traveller.MapRecyclerActivity;
 import gamsung.traveller.R;
 
 /**
@@ -79,6 +81,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             mImageView.setImageBitmap(bm);
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+
         }
         @Override
         protected void onBeforeClusterRendered(Cluster<PhotoCluster> cluster, MarkerOptions markerOptions) {
@@ -144,6 +147,11 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
     @Override
     public boolean onClusterItemClick(PhotoCluster photoCluster) {
+        Intent intent = new Intent(MapClusterActivity.this, MapRecyclerActivity.class);
+        ArrayList<String> photo= new ArrayList<>();
+        photo.add(photoCluster.source);
+        intent.putStringArrayListExtra("photoset",photo);
+        startActivity(intent);
         return false;
     }
 
