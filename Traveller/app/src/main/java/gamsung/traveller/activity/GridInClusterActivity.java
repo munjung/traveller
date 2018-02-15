@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.PhotoAdapter;
 
-public class GridInCluster extends AppCompatActivity {
+public class GridInClusterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

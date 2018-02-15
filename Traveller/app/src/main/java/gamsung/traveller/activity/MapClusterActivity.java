@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import gamsung.traveller.MapRecyclerActivity;
 import gamsung.traveller.R;
 
 /**
@@ -64,7 +66,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
             mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension,mDimension));
             int padding = (int) getResources().getDimension(R.dimen.custom_profile_padding);
-            mImageView.setPadding(padding+3,padding,padding+3,padding);
+            mImageView.setPadding(padding,padding,padding,padding);
             mImageView.setCropToPadding(true);
             mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mIconGenerator.setContentView(mImageView);
@@ -79,6 +81,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             mImageView.setImageBitmap(bm);
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+
         }
         @Override
         protected void onBeforeClusterRendered(Cluster<PhotoCluster> cluster, MarkerOptions markerOptions) {
@@ -130,7 +133,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         for(PhotoCluster pcpc : cluster.getItems()){
             photolist.add(pcpc.source);
         }
-        Intent intent = new Intent(MapClusterActivity.this,GridInCluster.class);
+        Intent intent = new Intent(MapClusterActivity.this,GridInClusterActivity.class);
         intent.putExtra("localname",currAddress);
         intent.putStringArrayListExtra("phototosend",photolist);
         startActivity(intent);
@@ -144,6 +147,11 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
     @Override
     public boolean onClusterItemClick(PhotoCluster photoCluster) {
+        Intent intent = new Intent(MapClusterActivity.this, MapRecyclerActivity.class);
+        ArrayList<String> photo= new ArrayList<>();
+        photo.add(photoCluster.source);
+        intent.putStringArrayListExtra("photoset",photo);
+        startActivity(intent);
         return false;
     }
 

@@ -52,9 +52,9 @@
         <activity
             android:name=".activity.CameraActivity"
             android:screenOrientation="sensor" />
-        <activity android:name=".activity.GridInCluster" />
         <activity android:name=".activity.EmptyTravelActivity" />
-        <activity android:name=".MapRecyclerActivity"></activity>
+        <activity android:name=".MapRecyclerActivity" />
+        <activity android:name=".activity.GridInClusterActivity"></activity>
     </application>
 
 </manifest>
