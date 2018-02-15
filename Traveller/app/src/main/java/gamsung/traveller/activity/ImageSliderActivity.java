@@ -24,16 +24,21 @@ public class ImageSliderActivity extends AppCompatActivity {
     private static int currentPage = 0;
     private static final Integer[] XMEN = {}; //= { R.drawable.cheeze,R.drawable.cheeze2,R.drawable.cheeze3};
     private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
-    private ArrayList<String> selectImagePath = new ArrayList<>();
-    private String[] arrr = new String[]{"","","","",""};
+    //private ArrayList<String> selectImagePath = new ArrayList<>();
+    private String[] arrr = new String[5]; //= new String[]{"","","","",""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_slider);
         Intent intent = getIntent();
-        selectImagePath.add(intent.getExtras().getString("ImgPath"));
-        Log.d("사이즈", selectImagePath.size()+""); //왜 1개만나오지ㅣ 들어온게 3갠데
+        arrr = (String[]) intent.getExtras().getSerializable("ImgPath");
+        for (int i=0; i<arrr.length; i++){
+            Log.d("dddddd", i+"");
+        }
+
+      //  selectImagePath.add(intent.getExtras().getString("ImgPath"));
+                //왜 1개만나오지ㅣ 들어온게 3갠데
           /*for(int i=0; i<selectImagePath.size(); i++){
           //  selectImagePath.add(i,intent.getExtras().getString("ImgPath") );
             Log.d("ㅠㅠ", selectImagePath.get(i).toString());

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +31,12 @@ import gamsung.traveller.activity.ImageSliderActivity;
  * Created by jekan on 2018-02-10.
  */
 
-public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAdapter.CustomViewHolder>{
+public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAdapter.CustomViewHolder> implements Serializable{
 
     private Context _context;
     private List<String> _items;
     private static String[] pathArr;
+    //private static ArrayList<String> pathArr;
 
     public CustomRecyclerAdapter(Context context, List<String> imgList) {
 
@@ -116,9 +118,9 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, ImageSliderActivity.class);
-
             for(int i=0; i<pathArr.length; i++){
-                intent.putExtra("ImgPath", pathArr[i]);
+                 intent.putExtra("ImgPath", pathArr[i]);
+                //intent.putParcelableArrayListExtra("ImgPath", pathArr[i]);
                 Log.d("path2222", pathArr[i]);
             }
 
