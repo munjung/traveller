@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case RouteItemClickListenerArguments.GOTO_PICTURE_CLICK:
 
-                Intent gotoPictureClickIntent = new Intent(this, GridInCluster.class);
+                Intent gotoPictureClickIntent = new Intent(this, GridInClusterActivity.class);
                 gotoPictureClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
                 startActivityForResult(gotoPictureClickIntent, REQUEST_CODE_GO_MAP_PICTURE);
                 break;
