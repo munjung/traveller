@@ -18,22 +18,26 @@ import gamsung.traveller.R;
 
 public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.VeiwHoler>{
 
-    Context context;
-    ArrayList<MyModel> myModels = new ArrayList<>();
-    public MapRecyclerAdapter(Context context, ArrayList<MyModel> myModels){
-        this.context = context;
-        this.myModels = myModels;
+    private String[] mDataset;
+    public MapRecyclerAdapter(String[] myDataset){
+        mDataset=myDataset;
     }
+
+    public MapRecyclerAdapter() {
+
+    }
+
     @Override
-    public VeiwHoler onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.maprecycleritem,parent,false);
-        return new VeiwHoler(view);
+    public MapRecyclerAdapter.VeiwHoler onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.maprecycleritem,parent,false);
+ //       return new VeiwHoler(view);
+        return null;
     }
 
     @Override
     public void onBindViewHolder(VeiwHoler holder, int position) {
-         MyModel myModel = myModels.get(position);
-         holder.imageView.setImageBitmap();
+ //        MyModel myModel = myModels.get(position);
+ //        holder.imageView.setImageBitmap();
     }
 
     @Override
@@ -43,9 +47,9 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
 
     public class VeiwHoler extends RecyclerView.ViewHolder {
         ImageView imageView;
-        public VeiwHoler(View itemView) {
+        public VeiwHoler(ImageView itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.ivRecycleitem);
+            imageView = itemView;
         }
     }
 }
