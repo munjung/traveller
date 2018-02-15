@@ -4,4 +4,6 @@
     <string name="selectroute"> 일정명을 선택하세요. </string>
     <string name="selectspot"> 위치를 선택하세요. </string>
     <string name="warning_spinner"> 일정명과 위치를 선택하세요. </string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
