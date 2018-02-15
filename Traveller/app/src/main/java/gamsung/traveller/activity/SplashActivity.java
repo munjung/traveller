@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
             _dataManager = DataManager.getInstance(SplashActivity.this);
 //            if(_dataManager.getRouteList().size() > 0){
 
-                Intent i = new Intent(SplashActivity.this, EditLocationActivity.class);
+                Intent i = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(i);
                 SplashActivity.this.finish();
 //            }

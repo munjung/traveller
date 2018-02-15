@@ -25,7 +25,7 @@ public class ImageSliderActivity extends AppCompatActivity {
     private static final Integer[] XMEN = {}; //= { R.drawable.cheeze,R.drawable.cheeze2,R.drawable.cheeze3};
     private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
     private ArrayList<String> selectImagePath = new ArrayList<>();
-    private String[] arrr = new String[5]; //= new String[]{"","","","",""};
+    private String[] pathArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,48 +33,29 @@ public class ImageSliderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_slider);
         Intent intent = getIntent();
 
-        arrr = (String[]) intent.getExtras().getSerializable("ImgPath");
-        for (int i=0; i<arrr.length; i++){
-            Log.d("dddddd", i+"");
-        }
-
-      //  selectImagePath.add(intent.getExtras().getString("ImgPath"));
-                //왜 1개만나오지ㅣ 들어온게 3갠데
-
-
         String pathBulk = intent.getStringExtra("ImgPath");
         pathBulk = pathBulk.replace("[","");
         pathBulk = pathBulk.replace("]","");
         pathBulk = pathBulk.replace(" ","");
         //selectImagePath= new ArrayList<>();
-        String[] pathArr = pathBulk.split(",");
+        pathArr = pathBulk.split(",");
         for(int i=0; i<pathArr.length; i++) {
             selectImagePath.add(pathArr[i]);
-
             Log.d("pagh", pathArr[i]); //넌뭐야
         }
 
-
-
-
-//        selectImagePath.add(intent.getExtras().getString("ImgPath"));
-
-
-        Log.d("사이즈", selectImagePath.size()+""); //왜 1개만나오지ㅣ 들어온게 3갠데
-          /*for(int i=0; i<selectImagePath.size(); i++){
-          //  selectImagePath.add(i,intent.getExtras().getString("ImgPath") );
-            Log.d("ㅠㅠ", selectImagePath.get(i).toString());
-        }*/
 
         init();
     }
     private void init() {
 
-        for(int i=0;i<XMEN.length;i++)
-            XMENArray.add(XMEN[i]);
+       /* for(int i=0;i<XMEN.length;i++)
+            XMENArray.add(XMEN[i]);*/
 
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),XMENArray));
+      //  mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),XMENArray));
+
+        mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),selectImagePath));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(mPager);
 
