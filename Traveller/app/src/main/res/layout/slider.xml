@@ -9,21 +9,20 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:layout_gravity="bottom"
-        android:scaleType="centerCrop"
-        android:src="@drawable/cheeze"/>
+        android:scaleType="centerCrop"/>
 
     <RelativeLayout
         android:layout_width="320dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@drawable/img_full_tag_background"
         android:layout_gravity="bottom"
         android:layout_margin="10dp">
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="메모가 들어갈 자리"
-        android:textSize="15dp"
+        android:textSize="13sp"
         android:layout_gravity="bottom"
         android:textColor="#ffffff"/>
     </RelativeLayout>

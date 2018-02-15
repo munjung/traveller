@@ -50,8 +50,6 @@ public class ImageSliderAdapter extends PagerAdapter {
         }
 
         //myImage.setImageResource(images.get(position));
-
-        // myImage.setImageBitmap(images.get(position));
         view.addView(myImageLayout, 0);
         return myImageLayout;
     }

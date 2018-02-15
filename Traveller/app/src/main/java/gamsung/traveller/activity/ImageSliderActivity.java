@@ -22,8 +22,7 @@ public class ImageSliderActivity extends AppCompatActivity {
 
     private static ViewPager mPager;
     private static int currentPage = 0;
-    private static final Integer[] XMEN = {}; //= { R.drawable.cheeze,R.drawable.cheeze2,R.drawable.cheeze3};
-    private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
+    private static final Integer[] XMEN = {};
     private ArrayList<String> selectImagePath = new ArrayList<>();
     private String[] pathArr;
 
@@ -37,20 +36,15 @@ public class ImageSliderActivity extends AppCompatActivity {
         pathBulk = pathBulk.replace("[","");
         pathBulk = pathBulk.replace("]","");
         pathBulk = pathBulk.replace(" ","");
-        //selectImagePath= new ArrayList<>();
         pathArr = pathBulk.split(",");
         for(int i=0; i<pathArr.length; i++) {
             selectImagePath.add(pathArr[i]);
             Log.d("pagh", pathArr[i]); //넌뭐야
         }
 
-
         init();
     }
     private void init() {
-
-       /* for(int i=0;i<XMEN.length;i++)
-            XMENArray.add(XMEN[i]);*/
 
         mPager = (ViewPager) findViewById(R.id.pager);
       //  mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),XMENArray));
