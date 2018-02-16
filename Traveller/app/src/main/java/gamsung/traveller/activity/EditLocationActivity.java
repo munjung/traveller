@@ -51,7 +51,7 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
+    private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
     private TextView editLocation;
@@ -79,11 +79,11 @@ public class EditLocationActivity extends AppCompatActivity {
         _dataManager = DataManager.getInstance(this);
 
 //        pager= (ViewPager)findViewById(R.id.pager);
-        eatBtn= (ImageButton)findViewById(R.id.eatBtn);
-        buyBtn = (ImageButton)findViewById(R.id.buyBtn);
-        takeBtn = (ImageButton)findViewById(R.id.takeBtn);
-        visitBtn = (ImageButton)findViewById(R.id.visitBtn);
-        anythingBtn = (ImageButton)findViewById(R.id.anythingBtn);
+        eatBtn= (ImageView)findViewById(R.id.eatBtn);
+        buyBtn = (ImageView)findViewById(R.id.buyBtn);
+        takeBtn = (ImageView)findViewById(R.id.takeBtn);
+        visitBtn = (ImageView)findViewById(R.id.visitBtn);
+        anythingBtn = (ImageView)findViewById(R.id.anythingBtn);
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
         //tvMission = (EditText)findViewById(R.id.tvMission);
