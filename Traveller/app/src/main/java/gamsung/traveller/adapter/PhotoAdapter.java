@@ -55,7 +55,7 @@ public class PhotoAdapter extends BaseAdapter {
             view = inf.inflate(layout,null);
         ImageView iv =(ImageView)view.findViewById(R.id.ivphotoplace);
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String imgpath = path+"/testing/"+photoset.get(i);
+        String imgpath = path+"/yeogi/"+photoset.get(i);
         Bitmap bm = BitmapFactory.decodeFile(imgpath);
         iv.setImageBitmap(bm);
         final int prepositon = i;
