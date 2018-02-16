@@ -14,10 +14,8 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
-import gamsung.traveller.MapRecyclerActivity;
+import gamsung.traveller.activity.MapRecyclerActivity;
 import gamsung.traveller.R;
-
-import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by Hanbin Ju on 2018-02-12.

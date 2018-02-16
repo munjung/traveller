@@ -1,9 +1,10 @@
-package gamsung.traveller;
+package gamsung.traveller.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Adapter;
@@ -12,6 +13,7 @@ import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 
+import gamsung.traveller.R;
 import gamsung.traveller.adapter.MapRecyclerAdapter;
 
 public class MapRecyclerActivity extends AppCompatActivity {
@@ -36,6 +38,8 @@ public class MapRecyclerActivity extends AppCompatActivity {
         mRecyclerView.scrollToPosition(offset);
         mAdapter = new MapRecyclerAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(mRecyclerView);
 
         data.addAll(photolist);
 

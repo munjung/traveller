@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.PhotoAdapter;
 
+/**
+ * 그리드뷰로 사진들을 보여주는 액티비티.
+ * 현재 11번 화면에 해당하고 12번도 겸용으로 쓰이도록 할 예정.
+ * 누르면 리사이클러뷰로 이동한다.
+ */
 public class GridInClusterActivity extends AppCompatActivity {
 
     @Override
