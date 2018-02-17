@@ -24,6 +24,7 @@ import android.widget.ViewSwitcher;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +35,8 @@ import gamsung.traveller.frag.ViewByPhotosFragment;
 import gamsung.traveller.frag.ViewByScheduleFragment;
 import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
+
+import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID;
 
 public class TravelViewActivity extends AppCompatActivity {
 
@@ -51,49 +54,39 @@ public class TravelViewActivity extends AppCompatActivity {
 
 
     //temp code activity<->fragment
-    private List<Spot> tempSpotList;
+
+    private List<Spot> spotList;
     private DataManager dataManager;
-
-
+    private List<Integer> deletedSpotID, editedSpotID;
+    private int route_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_view);
 
-        //dataManager = DataManager.getInstance(this);
-        //HashMap<Integer, Spot> hashSpot = dataManager.getSpotList();
-        //Spot spottemp = hashSpot.get()
-        //*temp code
-        /*
-        Spot spot = new Spot();
-        spot.setMission("gamsung misson");
-        Spot spot1 = new Spot();
-        spot1.setPicture_id(1);
-        spot1.setPicture_path("");
-        spot1.setMission("jk gamsung misson");
-        Spot spot2 = new Spot();
-        spot2.setMission("Help");
+        Intent intent = getIntent();
 
 
-        tempSpotList = new ArrayList<>();
-        tempSpotList.add(spot);
-        tempSpotList.add(spot1);
-        tempSpotList.add(spot2);
-        */
-
-        tempSpotList = new ArrayList<>();
-        for (int i = 0; i < 3; i++){
+        dataManager = DataManager.getInstance(this);
+        route_id = intent.getIntExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
+        HashMap<Integer, Spot> spotHashMap = dataManager.getSpotListWithRouteId(route_id);
+        spotList = new ArrayList<Spot>(spotHashMap.values());
+        /* temporary adding spots
+        for (int i = 0; i < 100; i++){
             Spot spot = new Spot();
             spot.setMission("Gamsung Mission num: " + i);
-            tempSpotList.add(spot);
+            spot.set_id(i);
+            spotList.add(spot);
         }
+*/
+        deletedSpotID = new ArrayList<>();
+        editedSpotID = new ArrayList<>();
         findViews();
         implementEvents();
 
         getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit(); //set the schedule_fragment as the default
     }
-
 
     private void findViews(){ //find friends
         btnAddLocation = findViewById(R.id.btnAddLocation);
@@ -101,6 +94,7 @@ public class TravelViewActivity extends AppCompatActivity {
         viewSwitcher = findViewById(R.id.viewSwitcher);
         editTitle = findViewById(R.id.editTitle);
         textTitle = findViewById(R.id.textTitle);
+
 
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
@@ -166,8 +160,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         //draw and implement events for the tab
         TabLayout tabsTravel = findViewById(R.id.tabsTravelView);
-        //tabsTravel.addTab(tabsTravel.newTab().setText("일정별"));
-        //tabsTravel.addTab(tabsTravel.newTab().setText("사진별"));
+        //tabsTravel.setSelectedTabIndicatorColor(R.drawable.common_google_signin_btn_icon_dark_normal_background);
         tabsTravel.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -209,8 +202,18 @@ public class TravelViewActivity extends AppCompatActivity {
     /*
      * Activity <-> Fragment
      */
+
     public List<Spot> getSpotList(){
-        return tempSpotList;
+        return spotList;
+    }
+    public List<Integer> getDeletedSpotID(){
+        return deletedSpotID;
+    }
+    public List<Integer> getEditedSpotID(){
+        return editedSpotID;
+    }
+    public int getRoute_id(){
+        return route_id;
     }
 
     public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){

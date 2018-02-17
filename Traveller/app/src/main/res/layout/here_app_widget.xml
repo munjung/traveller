@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="240dp"
+    android:layout_height="100dp"
+    android:background="@drawable/w_bg"
+    >
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/btn_w_camerabg"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:layout_width="37dp"
+        android:layout_height="33dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/btn_w_camera"
+        />
+
+    <ImageView
+        android:layout_marginLeft="18dp"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/w_grap_line"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="37dp"
+        android:textSize="16.1sp"
+        android:text="카오산로드 방문"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="37dp"
+        android:textSize="10sp"
+        android:text="Thanon Khosan, Bangkok"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="37dp"
+        android:textSize="12.1sp"
+        android:text="나이쏘이 갈비국수 먹기"/>
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/grap_circle_on" />
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="12dp"
+        android:src="@drawable/grap_circle_off" />
+
+
+
+</RelativeLayout>

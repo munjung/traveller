@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import gamsung.traveller.MapRecyclerActivity;
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
 
 /**
  *  10번 화면.
@@ -76,9 +76,12 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             // Draw a single person.
             // Set the info window to show their name.
             String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            String imgpath = path+"/testing/"+photoCluster.source;
-            Bitmap bm = BitmapFactory.decodeFile(imgpath);
-            mImageView.setImageBitmap(bm);
+            String imgpath = path+"/yeogi/"+photoCluster.source;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize=4;
+            Bitmap bm = BitmapFactory.decodeFile(imgpath,options);
+            Bitmap resizedbm = Bitmap.createScaledBitmap(bm,mDimension,mDimension,true);
+            mImageView.setImageBitmap(resizedbm);
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
 
@@ -91,8 +94,10 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             int height = mDimension;
             PhotoCluster pc = (PhotoCluster) cluster.getItems().toArray()[0];
             String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            String imgpath = path+"/testing/"+pc.source;
-            Bitmap prebm = BitmapFactory.decodeFile(imgpath);
+            String imgpath = path+"/yeogi/"+pc.source;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize=4;
+            Bitmap prebm = BitmapFactory.decodeFile(imgpath,options);
             Bitmap bm = Bitmap.createScaledBitmap(prebm, width,height,true);
             mClusterIconGenerator.setBackground(null);
             mClusterImageView.setImageBitmap(bm);
@@ -188,6 +193,8 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
     }
 
     private void addItems(){
+        DataManager dataManager = DataManager.getInstance(this);
+        dataManager.getPhotoList();
         mClusterManager.addItem(new PhotoCluster(position(), "1","test_1.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "2","test_2.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "3","test_3.jpg"));

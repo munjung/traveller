@@ -37,7 +37,6 @@ public class ScheduleServiceAnimated extends ScheduleService {
     private Queue<View> queueCircleAnimated= new LinkedList<>();
     private int startID, endID;
     private boolean isScheduleMoved;
-    private Handler tHandler = new Handler();
 
     public ScheduleServiceAnimated(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
                                    RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop) {
@@ -110,7 +109,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
     };
 
     @Override
-    public boolean removeSchedule(int view_id) {
+    public void removeSchedule(int view_id) {
         /* involves the entire schedules to be animated
         Lower than the selected index
         -Texts: fade out --> fade in
@@ -120,7 +119,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
         Higher than the selected index
         -Move STRAIGHT UP and replace the selected index.*/
         int delete_idx = toListIdx(view_id);
-        for (int idx = 0; idx < listSchedule.size(); idx++){
+        int listSize = listSchedule.size();
+        for (int idx = 0; idx < listSize; idx++){
             boolean isLeft = getLeftVisbility(idx);
             if (idx < delete_idx){ //circle to side way
                 listSchedule.get(idx).circleImage.animate().x(coordinateInformation.circleX[isLeft ? 1 : 0]).setDuration(DRAGDROP_ANIMATION_DURATION);
@@ -149,11 +149,6 @@ public class ScheduleServiceAnimated extends ScheduleService {
             }
         }
         isEditing = false;
-
-        if (listSchedule.size() > 2)
-            return  true;
-        else
-            return  false;
     }
 
 
@@ -236,17 +231,6 @@ public class ScheduleServiceAnimated extends ScheduleService {
         }
         //super.moveSchedule(idxA, idxB);
     }
-
-    private Runnable runnableTimeCounter = new Runnable() {
-        @Override
-        public void run() {
-            if (startID == endID) //no necessary animation needs to be made.
-                return;
-            moveSchedule(startID, endID);
-            isScheduleMoved = true;
-            startID = endID;
-        }
-    };
 
     class TextsFadeOutAnimationListener implements Animator.AnimatorListener{
         int idxStart, idxEnd, low, high;

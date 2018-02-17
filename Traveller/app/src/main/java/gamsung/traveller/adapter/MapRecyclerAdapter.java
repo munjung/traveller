@@ -1,6 +1,5 @@
 package gamsung.traveller.adapter;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -8,14 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
 import java.util.ArrayList;
 
-import gamsung.traveller.MapRecyclerActivity;
 import gamsung.traveller.R;
 
 /**
@@ -40,7 +36,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ListitemViewHolder item = (ListitemViewHolder) holder;
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String mydata = path+"/testing/"+data.get(position);
+        String mydata = path+"/yeogi/"+data.get(position);
         Bitmap bm = BitmapFactory.decodeFile(mydata);
         item.imageView.setImageBitmap(bm);
 

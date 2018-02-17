@@ -52,12 +52,12 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
+
 //    public static final String KEY_SEND_ACTIVITY_IMAGE_LIST = "img_list";
 //    public static final String KEY_SEND_ACTIVITY_MEMO_LIST = "memo_list";
     public static final String KEY_SEND_ACTIVITY_PHOTO_LIST = "photo_list";
-
-
-    private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
+    
+    private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
     private TextView editLocation;
@@ -82,6 +82,7 @@ public class EditLocationActivity extends AppCompatActivity {
 
         _dataManager = DataManager.getInstance(this);
 
+<<<<<<< HEAD
         Intent intent = getIntent();
         editSpotId = intent.getIntExtra("spotId", -1);
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
@@ -100,11 +101,11 @@ public class EditLocationActivity extends AppCompatActivity {
 
     private void registerListener(){
 
-        eatBtn= (ImageButton)findViewById(R.id.eatBtn);
-        buyBtn = (ImageButton)findViewById(R.id.buyBtn);
-        takeBtn = (ImageButton)findViewById(R.id.takeBtn);
-        visitBtn = (ImageButton)findViewById(R.id.visitBtn);
-        anythingBtn = (ImageButton)findViewById(R.id.anythingBtn);
+        eatBtn= (ImageView)findViewById(R.id.eatBtn);
+        buyBtn = (ImageView)findViewById(R.id.buyBtn);
+        takeBtn = (ImageView)findViewById(R.id.takeBtn);
+        visitBtn = (ImageView)findViewById(R.id.visitBtn);
+        anythingBtn = (ImageView)findViewById(R.id.anythingBtn);
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
         photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);

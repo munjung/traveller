@@ -53,8 +53,18 @@
             android:name=".activity.CameraActivity"
             android:screenOrientation="sensor" />
         <activity android:name=".activity.EmptyTravelActivity" />
-        <activity android:name=".MapRecyclerActivity" />
-        <activity android:name=".activity.GridInClusterActivity"></activity>
+        <activity android:name=".activity.MapRecyclerActivity" />
+        <activity android:name=".activity.GridInClusterActivity" />
+
+        <receiver android:name=".activity.HereAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/here_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

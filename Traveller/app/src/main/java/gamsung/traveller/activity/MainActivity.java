@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import gamsung.traveller.R;
 import gamsung.traveller.dao.DataManager;
@@ -203,7 +204,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addRouteItem();
+                Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
+                startActivityForResult(intent,REQUEST_CODE_GO_SET_TRAVEL);
+               //중평님 코드 잠시 기절시킴
+               //addRouteItem();
             }
         });
 
@@ -266,7 +270,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void addRouteItem(){
 
-        if(_recyclerAdapter.getItemCount() == 0){
+       if(_recyclerAdapter.getItemCount() == 0){
+
 
             Route route = new Route();
             route.setTitle("temp");
@@ -284,6 +289,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         _recyclerAdapter.addItem(route);
+
+
+
     }
 
     public void hideKeypad(){
