@@ -63,12 +63,6 @@
             android:src="@drawable/btn_edit"
             android:backgroundTint="@android:color/transparent"/>
 
-        <Button android:id="@+id/btn_delete_view_by_photos"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_toLeftOf="@id/btn_edit_view_by_photos"
-            android:text="X"
-            android:backgroundTint="@android:color/transparent"/>
         <HorizontalScrollView
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"

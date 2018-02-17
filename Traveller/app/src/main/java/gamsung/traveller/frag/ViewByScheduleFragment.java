@@ -45,6 +45,7 @@ public class ViewByScheduleFragment extends Fragment {
     private View referenceView;
     private List<Spot> spotList;
     private List<Integer> deletedSpotID, editedSpotID;
+    private boolean isOrderChanged;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class ViewByScheduleFragment extends Fragment {
         spotList = activity.getSpotList();
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
+        isOrderChanged = activity.isOrderChanged();
         route_id = activity.getRoute_id();
 
         if (rootView == null) { //if rootview is not loaded, load.
@@ -92,9 +94,10 @@ public class ViewByScheduleFragment extends Fragment {
             //end of calculation of coordinates.
         }
 
-        if (editedSpotID.size() >  0 || deletedSpotID.size() > 0)
-            scheduleService.updateSchedule(deletedSpotID, editedSpotID);
-
+        if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
+            scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
+            activity.setOrderChanged(false);
+        }
         return rootView;
     }
     View.OnClickListener startScheduling = new View.OnClickListener(){
@@ -149,10 +152,7 @@ public class ViewByScheduleFragment extends Fragment {
                         layoutBase.removeAllViews();
                         scheduleService.listSchedule.clear();
                         spotList.clear();
-                        scheduleService.drawFirstScreen_Coordinator();/*
-                        Intent intent = new Intent(getActivity(), EmptyTravelActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();*/
+                        scheduleService.drawFirstScreen_Coordinator();
                     }
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -170,10 +170,10 @@ public class ViewByScheduleFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ADD){
             //temporary creating spots
-            //Spot tempSpot = new Spot();
-            //tempSpot.set_id(spotList.size());
-            //tempSpot.setMission("This is a temp mission: " + tempSpot.get_id());
-            //spotList.add(tempSpot);
+            Spot tempSpot = new Spot();
+            tempSpot.set_id(spotList.size());
+            tempSpot.setMission("This is a temp mission: " + tempSpot.get_id());
+            spotList.add(tempSpot);
             //the difference in the size between schedules and spot are number of items being created.
             int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
             int num_added = spotList.size() - list_total;
