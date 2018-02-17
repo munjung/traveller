@@ -23,6 +23,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dao.PhotographManager;
 import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Route;
+import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
 
@@ -51,6 +53,9 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
+    private final static int REQUEST_CODE_GO_ADD_PHOTO = 1;
+    private final static int REQUEST_CODE_GO_MAP = 2;
+    private final static int MAP_SELECTED=10;
     private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
@@ -59,6 +64,7 @@ public class EditLocationActivity extends AppCompatActivity {
     private Button btnAddPhoto;
     private Button btnRepresent;
     private ImageView memoImage,eat,buy,take,visit,anything;
+    private LinearLayout llGotoMap;
 //    private ViewPager pager;
     private String imgPath;
     //private CustomPagerAdapter adapter;
@@ -96,6 +102,18 @@ public class EditLocationActivity extends AppCompatActivity {
         take = (ImageView)findViewById(R.id.photo);
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
+
+        llGotoMap = (LinearLayout)findViewById(R.id.layoutLocation);
+
+        llGotoMap.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditLocationActivity.this,MapActivity.class);
+                startActivityForResult(intent,REQUEST_CODE_GO_MAP);
+            }
+        });
+
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +193,7 @@ public class EditLocationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
-                startActivityForResult(i,1);
+                startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
 
@@ -192,7 +210,7 @@ public class EditLocationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
-                startActivityForResult(i,1);
+                startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
 
@@ -261,7 +279,15 @@ public class EditLocationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK){
+        if(requestCode == REQUEST_CODE_GO_MAP && resultCode == MAP_SELECTED){
+            TextView address = findViewById(R.id.editLocation);
+            HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
+            SearchPlace searchPlace =placelist.get(data.getIntExtra("placeID",0));
+            address.setText(searchPlace.getPlace_address());
+
+        }
+
+        if (requestCode == REQUEST_CODE_GO_ADD_PHOTO && resultCode == RESULT_OK){
 
             imgPath = data.getExtras().getString("img");
 
