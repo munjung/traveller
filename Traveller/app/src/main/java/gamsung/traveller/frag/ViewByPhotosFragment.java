@@ -1,6 +1,8 @@
 package gamsung.traveller.frag;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,9 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.sql.Time;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -36,6 +40,7 @@ public class ViewByPhotosFragment extends Fragment {
     private RecyclerView timeRecyclerView;
     private TimeViewAdapter timeViewAdapter;
     private List<Spot> spotList;
+    private List<Integer> deletedSpotID, editedSpotID;
     private LinearLayoutManager linearLayoutManager;
 
     public ViewByPhotosFragment(){
@@ -56,14 +61,18 @@ public class ViewByPhotosFragment extends Fragment {
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         TravelViewActivity activity = (TravelViewActivity)getActivity();
         spotList = activity.getSpotList();
+        deletedSpotID = activity.getDeletedSpotID();
+        editedSpotID = activity.getEditedSpotID();
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        timeViewAdapter = new TimeViewAdapter(spotList);
+        timeViewAdapter = new TimeViewAdapter(spotList, null);
         timeRecyclerView.setAdapter(timeViewAdapter);
         timeRecyclerView.setLayoutManager(linearLayoutManager);
         timeRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        timeViewAdapter.setCallback(clickListener);
         return view;
 
         //get fragment view group
@@ -97,10 +106,46 @@ public class ViewByPhotosFragment extends Fragment {
         }
         */
 
-
-
-
     }
+    TimeViewAdapter.ClickListener clickListener = new TimeViewAdapter.ClickListener() {
+        @Override
+        public void onClickDelete(int position) {
+            final int pos = position;
+            AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
+            alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    deletedSpotID.add(spotList.get(pos).get_id());
+                    spotList.remove(pos);
+                    timeViewAdapter.notifyDataSetChanged();
+                }
+            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            AlertDialog alert = alert_delete.create();
+            alert.show();
+        }
+
+        @Override
+        public void onClickEdit(int position) {
+            spotList.get(position).setMission("Mission edited: " + position);
+            int spotID = spotList.get(position).get_id();
+            boolean isExist = false;
+
+            //avoid overlaps
+            for (int idx : editedSpotID){
+                if (idx == spotID){
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) editedSpotID.add(spotID);
+            timeViewAdapter.notifyDataSetChanged();
+        }
+    };
 }
 
 

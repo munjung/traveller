@@ -1,7 +1,9 @@
 package gamsung.traveller.frag;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.EditLocationActivity;
+import gamsung.traveller.activity.EmptyTravelActivity;
 import gamsung.traveller.activity.MainActivity;
 import gamsung.traveller.activity.SplashActivity;
 import gamsung.traveller.activity.TravelViewActivity;
@@ -34,19 +37,22 @@ public class ViewByScheduleFragment extends Fragment {
     private static final int REQUEST_INIT = 2;
     private static final int RESULT_EDIT = 3;
     private static final int RESULT_ADD = 4;
+    private int route_id;
     ViewGroup rootView;
     NestedScrollView scrollView;
     RelativeLayout layoutBase; //layout where lists are being drawn on
     ScheduleServiceAnimated scheduleService;
     private View referenceView;
-    List<Spot> spotList;
+    private List<Spot> spotList;
+    private List<Integer> deletedSpotID, editedSpotID;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         TravelViewActivity activity = (TravelViewActivity)getActivity();
         spotList = activity.getSpotList();
-        Spot temp = spotList.get(0);
-        temp.getRoute_id();
+        deletedSpotID = activity.getDeletedSpotID();
+        editedSpotID = activity.getEditedSpotID();
+        route_id = activity.getRoute_id();
 
         if (rootView == null) { //if rootview is not loaded, load.
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
@@ -85,6 +91,10 @@ public class ViewByScheduleFragment extends Fragment {
             });
             //end of calculation of coordinates.
         }
+
+        if (editedSpotID.size() >  0 || deletedSpotID.size() > 0)
+            scheduleService.updateSchedule(deletedSpotID, editedSpotID);
+
         return rootView;
     }
     View.OnClickListener startScheduling = new View.OnClickListener(){
@@ -93,7 +103,7 @@ public class ViewByScheduleFragment extends Fragment {
             Bundle bundle = new Bundle();
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
-            bundle.putInt("route id", spotList.get(0).getRoute_id());
+            bundle.putInt("route id", route_id);
             startActivityForResult(i, REQUEST_INIT, bundle);
         }
     };
@@ -105,7 +115,7 @@ public class ViewByScheduleFragment extends Fragment {
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","create");
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
-            bundle.putInt("route id", spotList.get(0).getRoute_id());
+            bundle.putInt("route id", route_id);
             startActivityForResult(i,REQUEST_ADD);
         }
     };
@@ -127,30 +137,56 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener clickRemoveSchedule = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(!scheduleService.removeSchedule(((View)view.getParent()).getId())){ //if less than 2 remaining
-                //removeSchedule returns false when the first screen needs to be drawn.
-                layoutBase.removeAllViews();
-                scheduleService.listSchedule.clear();
-                scheduleService.drawFirstScreen_Coordinator();
-            }
+            final int view_id = ((View)view.getParent()).getId();
+            AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
+            alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (scheduleService.listSchedule.size() > 2){
+                        scheduleService.removeSchedule(view_id);
+                    }
+                    else{
+                        layoutBase.removeAllViews();
+                        scheduleService.listSchedule.clear();
+                        spotList.clear();
+                        scheduleService.drawFirstScreen_Coordinator();/*
+                        Intent intent = new Intent(getActivity(), EmptyTravelActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();*/
+                    }
+                }
+            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+        AlertDialog alert = alert_delete.create();
+        alert.show();
         }
     };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ADD){
-            Spot tempSpot = new Spot();
-            tempSpot.set_id(spotList.size() - 1);
-            tempSpot.setMission("Temp mission" + tempSpot.get_id());
-            tempSpot.setPicture_id(0);
-            scheduleService.addSchedule(tempSpot);
+            //temporary creating spots
+            //Spot tempSpot = new Spot();
+            //tempSpot.set_id(spotList.size());
+            //tempSpot.setMission("This is a temp mission: " + tempSpot.get_id());
+            //spotList.add(tempSpot);
+            //the difference in the size between schedules and spot are number of items being created.
+            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
+            int num_added = spotList.size() - list_total;
+            scheduleService.isEditing = false;
+            processAdditionalSchedules(num_added, list_total);
         }
         else if (requestCode == REQUEST_INIT){
-            Spot tempSpot = new Spot();
-            tempSpot.set_id(110);
-            tempSpot.setMission("First mission");
-            tempSpot.setPicture_id(0);
-            scheduleService.initSchedule(tempSpot);
+            if (spotList.size() > 0) {
+                scheduleService.initSchedule();
+                int list_total = scheduleService.listSchedule.size() - 1;
+                int num_added = spotList.size() - list_total;
+                processAdditionalSchedules(num_added, list_total);
+            }
         }
         else if (requestCode == REQUEST_EDIT){
 
@@ -163,5 +199,11 @@ public class ViewByScheduleFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void processAdditionalSchedules(int num_added, int list_total){
+        for (int idx = 0; idx < num_added; idx++){
+            Spot newSpot = spotList.get(list_total + idx);
+            scheduleService.addSchedule(newSpot);
+        }
+    }
 }
 
