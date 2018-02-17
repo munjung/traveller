@@ -1,5 +1,6 @@
 package gamsung.traveller.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -51,6 +52,11 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity {
 
+//    public static final String KEY_SEND_ACTIVITY_IMAGE_LIST = "img_list";
+//    public static final String KEY_SEND_ACTIVITY_MEMO_LIST = "memo_list";
+    public static final String KEY_SEND_ACTIVITY_PHOTO_LIST = "photo_list";
+
+
     private ImageButton eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
@@ -59,11 +65,10 @@ public class EditLocationActivity extends AppCompatActivity {
     private Button btnAddPhoto;
     private Button btnRepresent;
     private ImageView memoImage,eat,buy,take,visit,anything;
-//    private ViewPager pager;
-    private String imgPath;
-    //private CustomPagerAdapter adapter;
+    private RecyclerView _recyclerView;
     private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
+    private int editSpotId = -1;
     private int CATEGORY_ID;
     RelativeLayout photoRelative;
 
@@ -73,12 +78,28 @@ public class EditLocationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_edit_location);
 
         _dataManager = DataManager.getInstance(this);
 
-//        pager= (ViewPager)findViewById(R.id.pager);
+        Intent intent = getIntent();
+        editSpotId = intent.getIntExtra("spotId", -1);
+        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
+        if(whatActivity != null) {
+            if (whatActivity.equals("create")) {
+                isEdit = false;
+            } else {
+                isEdit = true;
+            }
+        }
+
+        this.registerListener();
+        this.registerRecyclerView();
+        this.visibleOperationForEditMode();
+    }
+
+    private void registerListener(){
+
         eatBtn= (ImageButton)findViewById(R.id.eatBtn);
         buyBtn = (ImageButton)findViewById(R.id.buyBtn);
         takeBtn = (ImageButton)findViewById(R.id.takeBtn);
@@ -86,10 +107,7 @@ public class EditLocationActivity extends AppCompatActivity {
         anythingBtn = (ImageButton)findViewById(R.id.anythingBtn);
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
-        //tvMission = (EditText)findViewById(R.id.tvMission);
-        btnHome = (ImageButton)findViewById(R.id.btn_cancel_edit_location);
-        btnSave = (ImageButton)findViewById(R.id.btn_save_edit_location);
-        btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
+        photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
 
         eat = (ImageView) findViewById(R.id.eat);
         buy = (ImageView)findViewById(R.id.buy);
@@ -157,17 +175,6 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-        List<String> temp = new ArrayList<>();
-        _adapter = new CustomRecyclerAdapter(this, temp);
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_edit_lcoation);
-        recyclerView.setAdapter(_adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        PagerSnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerView);
-
-
-        photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
 
         layoutAddPhoto = (View)findViewById(R.id.layout_add_on_empty_edit_location);
         layoutAddPhoto.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +193,7 @@ public class EditLocationActivity extends AppCompatActivity {
 
             }
         });
+
         btnAddPhoto = (Button)findViewById(R.id.btn_add_photo_edit_location);
         btnAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,8 +204,7 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
-
-
+        btnHome = (ImageButton)findViewById(R.id.btn_cancel_edit_location);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +212,7 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
+        btnSave = (ImageButton)findViewById(R.id.btn_save_edit_location);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,27 +231,57 @@ public class EditLocationActivity extends AppCompatActivity {
             }
         });
 
+        btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
         btnNextPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    private void registerRecyclerView(){
+
+        if(editSpotId > 0){
+
+            ArrayList<Photograph> photoList = new ArrayList<>(_dataManager.getPhotoListWithSpot(editSpotId).values());
+            _adapter = new CustomRecyclerAdapter(this, photoList);
+        }
+        else{
+            _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>());
+        }
 
 
-        Intent intent = getIntent();
-        String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
-        if(whatActivity != null) {
-            if (whatActivity.equals("create")) {
-                isEdit = false;
-                photoRelative.setVisibility(View.GONE);
-                btnNextPlan.setVisibility(View.VISIBLE);
-                memoEdit.requestFocus();
-            } else if (whatActivity.equals("edit")) {
-                isEdit = true;
-                recyclerView.setVisibility(View.VISIBLE);
-                btnNextPlan.setVisibility(View.GONE);
+        _recyclerView = findViewById(R.id.recycler_edit_lcoation);
+        _recyclerView.setAdapter(_adapter);
+        _recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(_recyclerView);
+
+        _recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(EditLocationActivity.this, ImageSliderActivity.class);
+//                intent.putIntegerArrayListExtra(KEY_SEND_ACTIVITY_PHOTO_LIST, _adapter.getPhotoList().)
+//                intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_IMAGE_LIST, _adapter.getImgList());
+//                intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_MEMO_LIST, _adapter.getMemoList());
+
+                EditLocationActivity.this.startActivity(intent);
             }
+        });
+    }
+
+    private void visibleOperationForEditMode(){
+
+        if(!isEdit){
+            photoRelative.setVisibility(View.GONE);
+            btnNextPlan.setVisibility(View.VISIBLE);
+            memoEdit.requestFocus();
+        }
+        else{
+            _recyclerView.setVisibility(View.VISIBLE);
+            btnNextPlan.setVisibility(View.GONE);
         }
 
         if(memoEdit !=null)
@@ -253,8 +291,6 @@ public class EditLocationActivity extends AppCompatActivity {
             tvMission.clearFocus();
             tvMission.requestFocus();
         }
-
-        _dataManager = DataManager.getInstance(this);
     }
 
 
@@ -263,7 +299,7 @@ public class EditLocationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK){
 
-            imgPath = data.getExtras().getString("img");
+            String imgPath = data.getExtras().getString("img");
 
              if(_adapter.addImagePath(imgPath) > 0){
 
@@ -281,9 +317,4 @@ public class EditLocationActivity extends AppCompatActivity {
              }
         }
     }
-
-    public String getImgPath(){
-        return imgPath;
-    }
-
 }

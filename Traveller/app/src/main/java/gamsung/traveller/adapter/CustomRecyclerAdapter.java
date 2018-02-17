@@ -24,6 +24,7 @@ import java.util.List;
 import gamsung.traveller.R;
 import gamsung.traveller.activity.CustomGalleryActivity;
 import gamsung.traveller.activity.ImageSliderActivity;
+import gamsung.traveller.model.Photograph;
 
 /**
  * Created by jekan on 2018-02-10.
@@ -32,18 +33,16 @@ import gamsung.traveller.activity.ImageSliderActivity;
 public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAdapter.CustomViewHolder> implements Serializable{
 
     private Context _context;
-    private List<String> _items;
-    private static String[] pathArr;
-    //private static ArrayList<String> pathArr;
+    private ArrayList<Photograph> _items;
 
-    public CustomRecyclerAdapter(Context context, List<String> imgList) {
+    public CustomRecyclerAdapter(Context context, ArrayList<Photograph> photoList) {
 
-        if (imgList == null) {
+        if (photoList == null) {
             throw new IllegalArgumentException("data must not be null");
         }
 
         this._context = context;
-        this._items = imgList;
+        this._items = photoList;
     }
 
     @Override
@@ -58,10 +57,13 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     @Override
     public void onBindViewHolder(CustomRecyclerAdapter.CustomViewHolder viewHolder, int position) {
 
-        String item = _items.get(position);
-        if (!TextUtils.isEmpty(item)) {
-            Glide.with(_context).load(item).into(viewHolder.imageView);
+        String imgPath = _items.get(position).getPath();
+        if (!TextUtils.isEmpty(imgPath)) {
+            Glide.with(_context).load(imgPath).into(viewHolder.imageView);
         }
+
+        String memo = _items.get(position).getMemo();
+        viewHolder.txtMemo.setText(memo);
     }
 
     @Override
@@ -70,32 +72,32 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         return _items == null ? 0 : _items.size();
     }
 
+
+
     public int addImagePath(String path){
 
         path = path.replace("[", "");
         path = path.replace("]", "");
         path = path.replace(" ", "");
-        pathArr = path.split(",");
-        // Log.d("patharrrrr", pathArr.toString());
-
+        String[] pathArr = path.split(",");
         for(int i=0; i<pathArr.length; i++){
-            _items.add(pathArr[i]);
-        }
 
-        notifyDataSetChanged();
+            Photograph photograph = new Photograph();
+            photograph.setPath(pathArr[i]);
+
+            _items.add(photograph);
+
+            notifyItemChanged(_items.size()-1);
+        }
 
         return _items.size();
     }
 
-    public void addImagePath(List<String> path){
-        _items.addAll(path);
+    public ArrayList<Photograph> getPhotoList(){
+        return _items;
     }
 
-    public void removeImagePath(int position){
-
-    }
-
-    public static class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class CustomViewHolder extends RecyclerView.ViewHolder{
 
         Context context;
 
@@ -108,35 +110,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
             txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
-            imageView.setOnClickListener(this);
-
-        }
-
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(context, ImageSliderActivity.class);
-
-            for(int i=0; i<pathArr.length; i++){
-                 intent.putExtra("ImgPath", pathArr[i]);
-                //intent.putParcelableArrayListExtra("ImgPath", pathArr[i]);
-                Log.d("path2222", pathArr[i]);
-            }
-
-
-
-//            for(int i=0; i<pathArr.length; i++){
-//                intent.putExtra("ImgPath", pathArr[i]);
-//                Log.d("path2222", pathArr[i]);
-//            }
-
-
-            ArrayList<String> pathList = new ArrayList<String>(Arrays.asList(pathArr));
-            intent.putExtra("ImgPath", pathList.toString());
-
-
-            ((Activity)context).startActivity(intent);
-//            ((Activity)context).startActivityForResult(intent, 2);
         }
     }
 }

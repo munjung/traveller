@@ -164,13 +164,15 @@ public class TableManager {
         public static final String column_search_id     = "search_id";
         public static final String column_path          = "path";
         public static final String column_date          = "date";
+        public static final String column_memo          = "memo";
         public static  final String[] columns = {
                 column_id,
                 column_route_id,
                 column_spot_id,
                 column_search_id,
                 column_path,
-                column_date
+                column_date,
+                column_memo
         };
 
 
@@ -183,7 +185,8 @@ public class TableManager {
             sb.append(column_spot_id        + " INTEGER, ");
             sb.append(column_search_id      + " INTEGER, ");
             sb.append(column_path           + " TEXT, ");
-            sb.append(column_date           + " TEXT ");
+            sb.append(column_date           + " TEXT, ");
+            sb.append(column_memo           + " TEXT ");
             sb.append(")");
 
             return sb.toString();

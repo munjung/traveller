@@ -116,14 +116,6 @@ public class DataManager {
        return m_photoManager.updatePhoto(m_sqlHelper, photo);
     }
 
-//    public List<String> getPhotoListWithSpot(int spot_id){
-//        return new ArrayList<>();
-//    }
-//
-//    public List<String> getPhotoListWithRoute(int route_id){
-//        return new ArrayList<>();
-//    }
-
     public HashMap<Integer, Photograph> getPhotoListWithSpot(int spot_id){
         return m_photoManager.getPhotoListWithSpot(m_sqlHelper, spot_id);
     }
