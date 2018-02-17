@@ -71,6 +71,7 @@ public class EditLocationActivity extends AppCompatActivity {
     private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
     private int CATEGORY_ID;
+    public int searchID=0;
     RelativeLayout photoRelative;
 
     private HashMap<Integer, Photograph> photoList;
@@ -233,7 +234,9 @@ public class EditLocationActivity extends AppCompatActivity {
 
                 else {
                     Spot newSpot = new Spot();
-//                    newSpot.setCategory_id(CATEGORY_ID);
+
+                    newSpot.setSearch_id(searchID);
+                    newSpot.setCategory_id(CATEGORY_ID);
                     _dataManager.insertSpot(newSpot);
                 }
 
@@ -282,7 +285,8 @@ public class EditLocationActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_GO_MAP && resultCode == MAP_SELECTED){
             TextView address = findViewById(R.id.editLocation);
             HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
-            SearchPlace searchPlace =placelist.get(data.getIntExtra("placeID",0));
+            searchID =data.getIntExtra("placeID",0);
+            SearchPlace searchPlace =placelist.get(searchID);
             address.setText(searchPlace.getPlace_address());
 
         }
