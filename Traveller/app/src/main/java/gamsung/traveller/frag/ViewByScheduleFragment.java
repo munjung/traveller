@@ -60,7 +60,7 @@ public class ViewByScheduleFragment extends Fragment {
         isOrderChanged = activity.isOrderChanged();
         route_id = activity.getRoute_id();
 
-        dataManager = DataManager.getInstance(getContext());
+        dataManager = DataManager.getInstance(getActivity());
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         if (rootView == null) { //if rootview is not loaded, load.
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
@@ -137,8 +137,7 @@ public class ViewByScheduleFragment extends Fragment {
             i.putExtra("TAG_ACTIVITY","edit");
             int idx = scheduleService.toListIdx((int)view.getTag());
             Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
-            int view_idx = scheduleService.toListIdx((int)view.getTag());
-            bundle.putInt("spot list", scheduleService.listSchedule.get(view_idx).spot_ID);
+            bundle.putInt("spot list", scheduleService.listSchedule.get(idx).spot_ID);
             startActivityForResult(i, REQUEST_EDIT, bundle);
 
         }
@@ -193,6 +192,7 @@ public class ViewByScheduleFragment extends Fragment {
             }
         }
         else if (requestCode == REQUEST_EDIT){
+
             //Spot editedSPot = new Spot();
             //editedSPot.setMission("Hi");
             //

@@ -16,13 +16,14 @@
             android:layout_height="200dp"
             android:background="@color/colorAccent"
             android:layout_centerHorizontal="true"/>
+
         <ImageView
-            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/timeline_circle"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/timeline_circle" />
     </RelativeLayout>
     <RelativeLayout android:id="@+id/top_view_by_photos"
         android:layout_marginTop="20dp"
@@ -55,27 +56,35 @@
             android:layout_toLeftOf="@+id/btn_edit_view_by_photos"
             android:text="This is the mission."/>
 
-
         <ImageButton android:id="@+id/btn_edit_view_by_photos"
-            android:layout_width="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btn_delete_view_by_photos"
+            android:src="@drawable/btn_edit"
+            android:layout_marginRight="13dp"
+            android:backgroundTint="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/btn_delete_view_by_photos"
+            android:layout_width="16dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/btn_edit"
+            android:layout_marginRight="14dp"
+            android:src="@drawable/btn_time_delete"
             android:backgroundTint="@android:color/transparent"/>
 
         <HorizontalScrollView
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="110dp"
             android:layout_below="@+id/txt_mission_by_photos"
             android:scrollbars="horizontal">
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/time_view_photos_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
                 android:orientation="horizontal">
-            </LinearLayout>
+            </RelativeLayout>
         </HorizontalScrollView>
     </RelativeLayout>
 

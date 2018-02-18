@@ -71,15 +71,15 @@ public class TravelViewActivity extends AppCompatActivity {
 
         dataManager = DataManager.getInstance(this);
         route_id = intent.getIntExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
-        HashMap<Integer, Spot> spotHashMap = dataManager.getSpotListWithRouteId(route_id);
-        spotList = new ArrayList<Spot>(spotHashMap.values());
+        spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
 
-        for (int i = 0; i < 10; i++){
+        /*
+        for (int i = 0; i < 05; i++){
             Spot spot = new Spot();
             spot.setMission("Gamsung Mission num: " + i);
-            spot.set_id(i);
-            spotList.add(spot);
-        }
+            spot.setRoute_id(route_id);
+            dataManager.insertSpot(spot);
+        }*/
 
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
