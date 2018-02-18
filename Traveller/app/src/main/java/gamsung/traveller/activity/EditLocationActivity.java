@@ -60,6 +60,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     
     private final static int REQUEST_CODE_GO_ADD_PHOTO = 1;
     private final static int REQUEST_CODE_GO_MAP = 2;
+    private final static int EDIT_SPOT = 503;
     private final static int MAP_SELECTED=10;
     
     private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
@@ -79,14 +80,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private boolean isEdit = false;
     private int editSpotId = -1;
     private int CATEGORY_ID;
-    public int searchID=0;
+    public int searchID=-1;
     RelativeLayout photoRelative;
 
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
@@ -242,19 +243,37 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View v) {
 
-                if(isEdit) {
+                if (((EditText) findViewById(R.id.memoEdit)).getText().toString().trim() == "" || searchID == -1) {
+                    //입력을 하셔야 됩니다!
+                    return;
+                } else {
+                    if (isEdit) {
+                        Spot editSpot = new Spot();
+                        Bundle bundle = savedInstanceState;
+                        int route_id = bundle.getInt("route id");
+                        int spot_id = bundle.getInt("spot list");
+                        editSpot.setRoute_id(route_id);
+                        editSpot.set_id(spot_id);
+                        editSpot.setMission(memoEdit.getText().toString());
+                        editSpot.setSearch_id(searchID);
+                        editSpot.setCategory_id(CATEGORY_ID);
+                        _dataManager.updateSpot(editSpot);
+                        Intent intent = new Intent();
+                        intent.putExtra("spot_id", spot_id);
+                        setResult(EDIT_SPOT, intent);
+                    } else {
+                        Spot newSpot = new Spot();
+                        Bundle bundle = savedInstanceState;
+                        int route_id = bundle.getInt("route id");
+                        newSpot.setRoute_id(route_id);
+                        newSpot.setSearch_id(searchID);
+                        newSpot.setMission(memoEdit.getText().toString());
+                        newSpot.setCategory_id(CATEGORY_ID);
+                        _dataManager.insertSpot(newSpot);
+                    }
 
+                    finish();
                 }
-
-                else {
-                    Spot newSpot = new Spot();
-
-                    newSpot.setSearch_id(searchID);
-                    newSpot.setCategory_id(CATEGORY_ID);
-                    _dataManager.insertSpot(newSpot);
-                }
-
-                finish();
             }
         });
 
