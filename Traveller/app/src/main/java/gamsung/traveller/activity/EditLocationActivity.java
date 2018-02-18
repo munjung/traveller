@@ -86,13 +86,15 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
 
+    public Bundle mbundle;
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
         _dataManager = DataManager.getInstance(this);
-
+        mbundle = savedInstanceState;
         Intent intent = getIntent();
         editSpotId = intent.getIntExtra("spotId", -1);
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
@@ -249,7 +251,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 } else {
                     if (isEdit) {
                         Spot editSpot = new Spot();
-                        Bundle bundle = savedInstanceState;
+                        Bundle bundle = mbundle;
                         int route_id = bundle.getInt("route id");
                         int spot_id = bundle.getInt("spot list");
                         editSpot.setRoute_id(route_id);
@@ -263,7 +265,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                         setResult(EDIT_SPOT, intent);
                     } else {
                         Spot newSpot = new Spot();
-                        Bundle bundle = savedInstanceState;
+                        Bundle bundle = mbundle;
                         int route_id = bundle.getInt("route id");
                         newSpot.setRoute_id(route_id);
                         newSpot.setSearch_id(searchID);
