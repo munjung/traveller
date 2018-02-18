@@ -70,13 +70,15 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
 
+    public Bundle mbundle;
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
         _dataManager = DataManager.getInstance(this);
-
+        mbundle = savedInstanceState;
         Intent intent = getIntent();
         this.editRouteId = intent.getIntExtra("route id", -1);
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");

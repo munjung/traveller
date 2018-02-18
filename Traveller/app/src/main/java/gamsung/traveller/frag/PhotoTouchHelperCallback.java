@@ -57,6 +57,11 @@ public class PhotoTouchHelperCallback extends ItemTouchHelper.Callback{
     }
 
     @Override
+    public boolean isItemViewSwipeEnabled() { //swipe disabled
+        return false;
+    }
+
+    @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
             float alpha = 1 - (Math.abs(dX) / recyclerView.getWidth());

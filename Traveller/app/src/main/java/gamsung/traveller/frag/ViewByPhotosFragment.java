@@ -24,11 +24,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.TravelViewActivity;
 import gamsung.traveller.adapter.TimeViewAdapter;
+import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dao.SpotManager;
 import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
@@ -44,6 +46,7 @@ public class ViewByPhotosFragment extends Fragment {
     private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged;
     private LinearLayoutManager linearLayoutManager;
+    private DataManager dataManager;
     TravelViewActivity activity;
     public ViewByPhotosFragment(){
 
@@ -60,9 +63,11 @@ public class ViewByPhotosFragment extends Fragment {
         View view = (View)inflater.inflate(R.layout.fragment_view_by_photos, container, false);
         //ViewGroup viewGroup = (ViewGroup)view.findViewById(R.id.base_layout_photos);
 
+        dataManager = DataManager.getInstance(getActivity());
+
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
-        spotList = activity.getSpotList();
+        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(activity.getRoute_id()).values());
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();
@@ -115,7 +120,7 @@ public class ViewByPhotosFragment extends Fragment {
             spotList.get(position).setMission("Mission edited: " + position);
             int spotID = spotList.get(position).get_id();
             boolean isExist = false;
-
+            dataManager.updateSpot(spotList.get(position));
             //avoid overlaps
             for (int idx : editedSpotID){
                 if (idx == spotID){

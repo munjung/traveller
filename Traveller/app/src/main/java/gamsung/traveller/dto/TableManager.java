@@ -40,10 +40,11 @@ public class TableManager {
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
-            sb.append(column_title          + " TEXT, ");
+            sb.append(column_title          + " TEXT NOT NULL, ");
             sb.append(column_from_date      + " TEXT, ");
             sb.append(column_to_date        + " TEXT, ");
             sb.append(column_picture_path   + " TEXT ");
+            //sb.append("FOREIGN KEY ("+ column_picture_id +") REFERENCES "+ TableManager.PictureTable.name +"("+ PictureTable.column_id + " ON UPDATE CASCADE ");
 
             sb.append(")");
 
@@ -59,7 +60,6 @@ public class TableManager {
         public static final String column_route_id =        "route_id";    //route table id
         public static final String column_next_spot_id =    "next_spot_id";
         public static final String column_picture_id =      "picture_id";   //대표 사진 id
-        public static final String column_picture_list =    "picture_list"; //연결된 사진 리스트
         public static final String column_mission =         "mission";
         public static final String column_search_id =       "search_id";    //search table id
         public static final String column_category_id =     "category_id";
@@ -70,7 +70,6 @@ public class TableManager {
                 column_route_id,
                 column_next_spot_id,
                 column_picture_id,
-                column_picture_list,
                 column_mission,
                 column_search_id,
                 column_category_id
@@ -81,13 +80,16 @@ public class TableManager {
             StringBuffer sb = new StringBuffer();
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
-            sb.append(column_route_id       + " INTEGER, ");
-            sb.append(column_next_spot_id   + " INTEGER, ");
+            sb.append(column_route_id       + " INTEGER NOT NULL, ");
+            sb.append(column_next_spot_id   + " INTEGER NOT NULL, ");
             sb.append(column_picture_id     + " INTEGER, ");
-            sb.append(column_picture_list   + " TEXT, ");
-            sb.append(column_mission        + " TEXT, ");
+            sb.append(column_mission        + " TEXT NOT NULL, ");
             sb.append(column_search_id      + " INTEGER, ");
-            sb.append(column_category_id    + " INTEGER ");
+            sb.append(column_category_id    + " INTEGER, ");
+            sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+")" + " ON DELETE CASCADE ON UPDATE CASCADE, ");
+            sb.append("FOREIGN KEY ("+ column_picture_id +") REFERENCES "+ TableManager.PictureTable.name +"("+ PictureTable.column_id+") ON UPDATE CASCADE, ");
+            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");
+
             sb.append(")");
 
             return sb.toString();
@@ -186,7 +188,11 @@ public class TableManager {
             sb.append(column_search_id      + " INTEGER, ");
             sb.append(column_path           + " TEXT, ");
             sb.append(column_date           + " TEXT, ");
-            sb.append(column_memo           + " TEXT ");
+            sb.append(column_memo           + " TEXT, ");
+            sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+") ON UPDATE CASCADE, ");
+            sb.append("FOREIGN KEY ("+ column_spot_id +") REFERENCES "+ TableManager.SpotTable.name +"("+ SpotTable.column_id+") ON UPDATE CASCADE, ");
+            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");
+
             sb.append(")");
 
             return sb.toString();

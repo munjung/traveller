@@ -41,6 +41,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys = 1;");
+    }
+
 //    public void excuteQuery(String query){
 //
 //        SQLiteDatabase db = this.getWritableDatabase();
