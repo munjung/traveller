@@ -120,27 +120,35 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener createNewSchedule = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            Bundle bundle = new Bundle();
+
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("route id", route_id);
+
+            Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
+
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","create");
-            Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
-            bundle.putInt("route id", route_id);
-            startActivityForResult(i,REQUEST_ADD);
+            i.putExtra("route id", route_id);
+            startActivityForResult(i, REQUEST_ADD);
         }
     };
 
     View.OnClickListener editSchedule = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            Bundle bundle = new Bundle();
-            Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
-            i.putExtra("TAG_ACTIVITY","edit");
             int idx = scheduleService.toListIdx((int)view.getTag());
             Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
-            int view_idx = scheduleService.toListIdx((int)view.getTag());
-            bundle.putInt("spot list", scheduleService.listSchedule.get(view_idx).spot_ID);
-            startActivityForResult(i, REQUEST_EDIT, bundle);
 
+            int view_idx = scheduleService.toListIdx((int)view.getTag());
+
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("spot list", scheduleService.listSchedule.get(view_idx).spot_ID);
+
+            Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
+            i.putExtra("TAG_ACTIVITY","edit");
+            i.putExtra("route id", route_id);
+            i.putExtra("spot id", scheduleService.listSchedule.get(view_idx).spot_ID);
+            startActivityForResult(i, REQUEST_EDIT);
         }
     };
 

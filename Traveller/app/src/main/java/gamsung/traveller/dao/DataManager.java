@@ -60,6 +60,10 @@ public class DataManager {
         return m_routeManager.getRouteList(m_sqlHelper);
     }
 
+    public Route getRouteWithID(int id){
+        return m_routeManager.getRouteWithID(m_sqlHelper, id);
+    }
+
     public boolean deleteRoute(Integer id){
        return m_routeManager.deleteRoute(m_sqlHelper, id);
 

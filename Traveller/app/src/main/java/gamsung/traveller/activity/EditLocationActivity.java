@@ -1,22 +1,12 @@
 package gamsung.traveller.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.hardware.Camera;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,24 +18,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import gamsung.traveller.R;
-import gamsung.traveller.adapter.CustomPagerAdapter;
 import gamsung.traveller.adapter.CustomRecyclerAdapter;
 import gamsung.traveller.dao.DataManager;
-import gamsung.traveller.dao.PhotographManager;
 import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Route;
 import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
-import gamsung.traveller.util.DebugToast;
 
 /**
  * Created by mj on 2018-01-24.
@@ -60,28 +43,29 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     
     private final static int REQUEST_CODE_GO_ADD_PHOTO = 1;
     private final static int REQUEST_CODE_GO_MAP = 2;
+    private final static int CREATE_SPOT = 502;
     private final static int EDIT_SPOT = 503;
     private final static int MAP_SELECTED=10;
     
     private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
     private EditText memoEdit,tvMission;
-    private TextView editLocation;
+    private TextView editLocation, txtTitle;
     private View layoutAddPhoto;
-    private Button btnAddPhoto;
-    private Button btnRepresent;
-    private ImageView memoImage,eat,buy,take,visit,anything;
+    private Button btnAddPhoto,btnRepresent;
+    private ImageView eat,buy,take,visit,anything;
     
     private LinearLayout llGotoMap;
-    private String imgPath;
     
     private RecyclerView _recyclerView;
     private CustomRecyclerAdapter _adapter;
+    private RelativeLayout photoRelative;
+
     private boolean isEdit = false;
+    private int editRouteId = -1;
     private int editSpotId = -1;
-    private int CATEGORY_ID;
     public int searchID=-1;
-    RelativeLayout photoRelative;
+    private int CATEGORY_ID;
 
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
@@ -94,16 +78,25 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         _dataManager = DataManager.getInstance(this);
 
         Intent intent = getIntent();
-        editSpotId = intent.getIntExtra("spotId", -1);
+        this.editRouteId = intent.getIntExtra("route id", -1);
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
         if(whatActivity != null) {
             if (whatActivity.equals("create")) {
-                isEdit = false;
+
+                //create spot
+                this.isEdit = false;
             } else {
-                isEdit = true;
+
+                //edit spot
+                this.isEdit = true;
+                this.editSpotId = intent.getIntExtra("spot id", -1);
+                if(this.editSpotId < 0){
+                    //error
+                    Log.e("edit spot id", "need edit spot id, not -1");
+                    Toast.makeText(this, "error: need edit spot id, not -1", Toast.LENGTH_LONG).show();
+                }
             }
         }
-        isEdit = true;
 
         this.registerListener();
         this.registerRecyclerView();
@@ -120,6 +113,12 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         memoEdit = (EditText)findViewById(R.id.memoEdit);
         editLocation = (TextView)findViewById(R.id.editLocation);
         photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
+        txtTitle = (TextView) findViewById(R.id.txt_title_edit_location);
+        if(this.editRouteId > 0) {
+            Route route = _dataManager.getRouteWithID(this.editRouteId);
+            txtTitle.setText(route.getTitle());
+        }
+
 
         eat = (ImageView) findViewById(R.id.eat);
         buy = (ImageView)findViewById(R.id.buy);
@@ -248,28 +247,10 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     return;
                 } else {
                     if (isEdit) {
-                        Spot editSpot = new Spot();
-                        Bundle bundle = savedInstanceState;
-                        int route_id = bundle.getInt("route id");
-                        int spot_id = bundle.getInt("spot list");
-                        editSpot.setRoute_id(route_id);
-                        editSpot.set_id(spot_id);
-                        editSpot.setMission(memoEdit.getText().toString());
-                        editSpot.setSearch_id(searchID);
-                        editSpot.setCategory_id(CATEGORY_ID);
-                        _dataManager.updateSpot(editSpot);
-                        Intent intent = new Intent();
-                        intent.putExtra("spot_id", spot_id);
-                        setResult(EDIT_SPOT, intent);
+                        updateSpot();
+
                     } else {
-                        Spot newSpot = new Spot();
-                        Bundle bundle = savedInstanceState;
-                        int route_id = bundle.getInt("route id");
-                        newSpot.setRoute_id(route_id);
-                        newSpot.setSearch_id(searchID);
-                        newSpot.setMission(memoEdit.getText().toString());
-                        newSpot.setCategory_id(CATEGORY_ID);
-                        _dataManager.insertSpot(newSpot);
+                        createSpot();
                     }
 
                     finish();
@@ -302,7 +283,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         _recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(_recyclerView);
-
     }
 
     private void visibleOperationForEditMode(){
@@ -326,6 +306,59 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    private void updateSpot(){
+
+//                        Bundle bundle = savedInstanceState;
+//                        int route_id = bundle.getInt("route id");
+//                        int spot_id = bundle.getInt("spot list");
+
+        Spot editSpot = new Spot();
+        editSpot.set_id(editSpotId);
+        editSpot.setRoute_id(editRouteId);
+        editSpot.setMission(memoEdit.getText().toString());
+        editSpot.setSearch_id(searchID);
+        editSpot.setCategory_id(CATEGORY_ID);
+        if(_dataManager.updateSpot(editSpot) > 0){
+
+            Intent intent = new Intent();
+            intent.putExtra("spot_id", editSpotId);
+            setResult(EDIT_SPOT, intent);
+
+            Toast.makeText(EditLocationActivity.this, "변경되었습니다", Toast.LENGTH_LONG);
+        }
+        else{
+
+            Log.e("update spot", "error : not updated");
+            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);
+        }
+    }
+
+    private void createSpot(){
+
+//                        Bundle bundle = savedInstanceState;
+//                        int route_id = bundle.getInt("route id");
+
+        Spot newSpot = new Spot();
+        newSpot.setRoute_id(editRouteId);
+        newSpot.setMission(memoEdit.getText().toString());
+        newSpot.setSearch_id(searchID);
+        newSpot.setCategory_id(CATEGORY_ID);
+        int spot_id = (int)_dataManager.insertSpot(newSpot);
+        if(spot_id > 0){
+
+            Intent intent = new Intent();
+            intent.putExtra("spot_id", spot_id);
+            setResult(CREATE_SPOT, intent);
+
+            Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
+        }
+        else{
+
+            Log.e("insert spot", "error : not inserted");
+            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -336,7 +369,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             searchID =data.getIntExtra("placeID",0);
             SearchPlace searchPlace =placelist.get(searchID);
             address.setText(searchPlace.getPlace_address());
-
         }
 
         if (requestCode == REQUEST_CODE_GO_ADD_PHOTO && resultCode == RESULT_OK){

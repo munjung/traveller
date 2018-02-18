@@ -48,6 +48,11 @@ public class RouteManager {
         return m_routeMap;
     }
 
+    public Route getRouteWithID(SQLiteHelper dbHelper, int id){
+
+        return _getRouteWithID(dbHelper, id);
+    }
+
     public boolean deleteRoute(SQLiteHelper dbHelper, Integer id){
 
         if(!_deleteRoute(dbHelper, id))
@@ -92,11 +97,11 @@ public class RouteManager {
             while (c.moveToNext()){
 
                 Route route = new Route();
-                route.set_id(c.getInt(0));                          //id
-                route.setTitle(c.getString(1));                     //title
+                route.set_id(c.getInt(0));                                                  //id
+                route.setTitle(c.getString(1));                                             //title
                 route.setFromDate(Converter.convertStringToDate(c.getString(2)));          //from date
                 route.setToDate(Converter.convertStringToDate(c.getString(3)));            //to date
-                route.setPicturPath(c.getString(4));                //picture path
+                route.setPicturPath(c.getString(4));                                        //picture path
 
                 routeMap.put(route.get_id(), route);
             }
@@ -105,6 +110,32 @@ public class RouteManager {
         db.close();
 
         return routeMap;
+    }
+
+    private Route _getRouteWithID(SQLiteHelper dbHelper, int id){
+
+        Route route = new Route();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.RouteTable.column_id + " = " + id);
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+
+                route.set_id(c.getInt(0));                                                  //id
+                route.setTitle(c.getString(1));                                             //title
+                route.setFromDate(Converter.convertStringToDate(c.getString(2)));          //from date
+                route.setToDate(Converter.convertStringToDate(c.getString(3)));            //to date
+                route.setPicturPath(c.getString(4));                                        //picture path
+            }
+            c.close();
+        }
+        db.close();
+
+        return route;
     }
 
     private boolean _deleteRoute(SQLiteHelper dbHelper, Integer id){
@@ -147,6 +178,7 @@ public class RouteManager {
         values.put(TableManager.RouteTable.column_title, route.getTitle());                                             //title
         values.put(TableManager.RouteTable.column_from_date, Converter.convertSqlDateFormat(route.getFromDate()));      //from
         values.put(TableManager.RouteTable.column_to_date, Converter.convertSqlDateFormat(route.getToDate()));          //to
+        values.put(TableManager.RouteTable.column_picture_path, route.getPicturePath());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.RouteTable.column_id + " = " + route.get_id();

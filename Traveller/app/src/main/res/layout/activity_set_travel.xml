@@ -6,6 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_horizontal"
+    android:background="@drawable/bg_bottom"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -74,7 +75,7 @@
         <ImageView
             android:id="@+id/image_represent_set_travel"
             android:layout_width="match_parent"
-            android:layout_height="196dp"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/testimage" />
@@ -91,34 +92,36 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_width="367dp"
+        android:layout_height="44dp"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/round_border">
+        android:background="@drawable/round_border"
+        android:orientation="vertical">
 
-        <EditText android:id="@+id/txt_name_set_travel"
+        <EditText
+            android:id="@+id/txt_name_set_travel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:hint="여행명을 입력하세요."
             android:layout_above="@+id/img_line_set_travel"
-            android:textSize="15sp"
-            android:textColor="#212121"
-            android:gravity="center"
-            android:maxLines="1"
-            android:background="@android:color/transparent"/>
-
-        <ImageView android:id="@+id/img_line_set_travel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:hint="여행명을 입력하세요."
+            android:maxLines="1"
+            android:textColor="#212121"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/img_line_set_travel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/line_title"/>
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/line_title" />
 
     </RelativeLayout>
 

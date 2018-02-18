@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.BatchUpdateException;
 
@@ -16,26 +17,24 @@ import gamsung.traveller.dao.DataManager;
 
 public class EmptyTravelActivity extends AppCompatActivity {
 
-    DataManager _dataManager;
-
+    private int routeId = -1;
+    private String routeTitle = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_travel);
 
-        _dataManager = DataManager.getInstance(this);
-
-        int routeId = getIntent().getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID,0);
+        this.routeId = getIntent().getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID,-1);
+        this.routeTitle = getIntent().getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
         if(routeId > 0){
-            String travelTitle = _dataManager.getRouteList().get(routeId).getTitle().toString();
             TextView txtTravelName = (TextView) findViewById(R.id.textTitle);
-            txtTravelName.setText(travelTitle);
+            txtTravelName.setText(this.routeTitle);
         }
         else{
             //exception
             Log.e("empty travel activity", "get invalid route id");
-            finish();
+            Toast.makeText(this, "error : get invalid route id", Toast.LENGTH_LONG).show();
         }
 
 
@@ -47,6 +46,7 @@ public class EmptyTravelActivity extends AppCompatActivity {
 
                 Intent i = new Intent(EmptyTravelActivity.this, EditLocationActivity.class);
                 i.putExtra("TAG_ACTIVITY", "create");
+                i.putExtra("route id", routeId);
                 startActivity(i);
             }
         });
@@ -59,6 +59,5 @@ public class EmptyTravelActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }

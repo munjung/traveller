@@ -48,11 +48,9 @@ import gamsung.traveller.util.ImageSupporter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //permission code
-    private final int PERMISSION_CODE = 0;
-
     //intent tag name for route id
     public final static String KEY_SEND_TO_ACTIVITY_ROUTE_ID = "routeId";
+    public final static String KEY_SEND_TO_ACTIVITY_ROUTE_TITLE = "routeTitle";
     public final static String KEY_SEND_TO_ACTIVITY_POSITION = "position";
 
     //Activity Result Request Code
@@ -153,8 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.tryPermCheck();        //권한체크
-
         //data load
         _dataManager = DataManager.getInstance(this);
         _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
@@ -169,9 +165,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.setRecyclerView();     //여행기록화면 세팅
         this.setImageView();        //빈화면 세팅
         this.setRegisterEvent();    //버튼 이벤트 등록
-
-        //temp code
-//        photoList = ImageSupporter.getPathOfAllImages(this);
     }
 
 
@@ -207,8 +200,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
                 startActivityForResult(intent,REQUEST_CODE_GO_SET_TRAVEL);
-               //중평님 코드 잠시 기절시킴
-               //addRouteItem();
             }
         });
 
@@ -222,45 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    //PERMISSON
-    public void tryPermCheck(){
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},PERMISSION_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_CODE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[2] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
-                } else {
-                    //1
-                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    });
-                    alert.setMessage("권한 설정이 필요합니다.");
-                    alert.show();
-                }
-                break;
-        }
-    }
 
 
 
@@ -328,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Intent imgClickIntent = new Intent(this, EmptyTravelActivity.class);
                     imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route.getTitle());
                     startActivityForResult(imgClickIntent, REQUEST_CODE_GO_EDIT_LOCATION);
                 }
                 else{
@@ -438,7 +392,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         @Override
                         public void onClick(View view) {
 
-                            DebugToast.show(_context, "삭제");
                             hideDeleteView();
 
                             _clickListenerArgs.setSend_id(RouteItemClickListenerArguments.DELETE_CLICK);
@@ -447,6 +400,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
                             //remove view holder position(saved viewholder position in deleteview's tag)
                             removeItem((int)_deleteView.getTag());
+                            Toast.makeText(_context, "삭제되었습니다", Toast.LENGTH_LONG).show();
                         }
                     });
 
@@ -456,7 +410,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         @Override
                         public void onClick(View view) {
 
-                            DebugToast.show(_context, "취소");
                             hideDeleteView();
                         }
                     });

@@ -102,12 +102,14 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
                 String travelName = editTxtTravelName.getText().toString();
                 if(TextUtils.isEmpty(travelName)){
                     //안내메세지
+                    Toast.makeText(SetTravelActivity.this, "여행명을 입력해주세요", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 List<Date> selectedDates = calendarFragment.getSelectedDates();
                 if(selectedDates.size() <= 1){
                     //안내 메세지
+                    Toast.makeText(SetTravelActivity.this, "일정을 입력해주세요", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -123,10 +125,14 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
                 intent.putExtra("backDate", backDate.getTime());
                 intent.putExtra("picturePath", picturePath);
 
-                if(isEditMode)
+                if(isEditMode) {
                     setResult(RESULT_CODE_EDIT, intent);
-                else
-                    setResult(RESULT_CODE_CREATE, intent);
+                    Toast.makeText(SetTravelActivity.this, "변경되었습니다", Toast.LENGTH_LONG).show();
+                }
+                else {
+                   setResult(RESULT_CODE_CREATE, intent);
+                    Toast.makeText(SetTravelActivity.this, "저장되었습니다", Toast.LENGTH_LONG).show();
+                }
 
                 finish();
             }
