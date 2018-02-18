@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -113,6 +114,7 @@ public class PhotographManager {
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
                 photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
             }
@@ -150,6 +152,7 @@ public class PhotographManager {
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
         values.put(TableManager.PictureTable.column_path, photo.getPath());
         values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
+        values.put(TableManager.PictureTable.column_memo, photo.getMemo());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
@@ -166,6 +169,7 @@ public class PhotographManager {
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
         values.put(TableManager.PictureTable.column_path, photo.getPath());
         values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
+        values.put(TableManager.PictureTable.column_memo, photo.getMemo());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.PictureTable.column_id + " = " + photo.get_id();
@@ -181,7 +185,8 @@ public class PhotographManager {
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
-        sb.append("SELECT * FROM " + TABLE_NAME  + " where " + TableManager.PictureTable.column_spot_id + "='" + spot_id + "'" );
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.PictureTable.column_spot_id + " = " + spot_id);  //이렇게 사용하는게 좋아요
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
@@ -192,7 +197,8 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(new Date(c.getLong(5) * 1000));
+                photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
 
@@ -210,7 +216,8 @@ public class PhotographManager {
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
-        sb.append("SELECT * FROM " + TABLE_NAME  + " where " + TableManager.PictureTable.column_route_id + "='" + route_id + "'" );
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.PictureTable.column_route_id + " = " + route_id);    //이렇게 사용하는게 좋아요
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
@@ -221,10 +228,10 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(new Date(c.getString(5)));
+                photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
-
             }
             c.close();
         }

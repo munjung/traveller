@@ -24,22 +24,22 @@ public class ImageSliderActivity extends AppCompatActivity {
     private static int currentPage = 0;
     private static final Integer[] XMEN = {};
     private ArrayList<String> selectImagePath = new ArrayList<>();
-    private String[] pathArr;
+    private ArrayList<String> selectMemoPath = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_slider);
         Intent intent = getIntent();
+        ArrayList<String> imgPath = intent.getStringArrayListExtra(EditLocationActivity.KEY_SEND_ACTIVITY_IMAGE_LIST);
+        ArrayList<String> memoPath = intent.getStringArrayListExtra(EditLocationActivity.KEY_SEND_ACTIVITY_MEMO_LIST);
 
-        String pathBulk = intent.getStringExtra("ImgPath");
-        pathBulk = pathBulk.replace("[","");
-        pathBulk = pathBulk.replace("]","");
-        pathBulk = pathBulk.replace(" ","");
-        pathArr = pathBulk.split(",");
-        for(int i=0; i<pathArr.length; i++) {
-            selectImagePath.add(pathArr[i]);
-            Log.d("pagh", pathArr[i]); //넌뭐야
+        for (int i=0; i<imgPath.size(); i++){
+            selectImagePath.add(imgPath.get(i));
+        }
+
+        for (int i=0; i<memoPath.size(); i++){
+            selectMemoPath.add(memoPath.get(i));
         }
 
         init();
@@ -47,9 +47,7 @@ public class ImageSliderActivity extends AppCompatActivity {
     private void init() {
 
         mPager = (ViewPager) findViewById(R.id.pager);
-      //  mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),XMENArray));
-
-        mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),selectImagePath));
+        mPager.setAdapter(new ImageSliderAdapter(getApplicationContext(),selectImagePath,selectMemoPath));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(mPager);
 

@@ -16,7 +16,7 @@ public class Photograph {
     private int spot_id;
     private int search_id;
     private String path;
-    private String tag;
+    private String memo;
     private Date date;
 
     public int get_id() {
@@ -65,5 +65,13 @@ public class Photograph {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 }

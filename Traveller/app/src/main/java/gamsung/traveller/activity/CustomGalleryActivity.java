@@ -29,18 +29,22 @@ import gamsung.traveller.adapter.GridView_Adapter;
  */
 
 //갤러리에서 이미지 다중선택 부분(22번 화면)
-public class
-CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener {
+public class CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     private static Button selectImages;
     private static GridView galleryImagesGridView;
     private static ArrayList<String> galleryImageUrls;
     private static GridView_Adapter imagesAdapter;
+    private int addedImageCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_gallery);
+
+
+        Intent intent = getIntent();
+        addedImageCount = intent.getIntExtra(EditLocationActivity.KEY_SEND_ACTIVITY_IMAGE_COUNT, 0);
 
         if (checkPermissionREAD_EXTERNAL_STORAGE(this)) {
             initViews();
@@ -48,6 +52,7 @@ CustomGalleryActivity extends AppCompatActivity implements View.OnClickListener 
             fetchGalleryImages();
             setUpGridView();
         }
+
     }
 
     //Init all views

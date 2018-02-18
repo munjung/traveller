@@ -29,15 +29,14 @@
             android:text="내가 인스타그램에서 처음으로 접했던 도시"
             android:textColor="#ffffff"
             android:layout_marginLeft="10dp"
-            android:hint="태그(=메모)" />
-
+            android:hint="태그(=메모)"/>
     </RelativeLayout>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/img_inner_shadow_2">
+        android:background="@drawable/img_b_g_photo_tag">
         <!--백그라운드 이미지 쉐도우 요청=> represent 버튼이 안보임 -->
     </RelativeLayout>
 </RelativeLayout>

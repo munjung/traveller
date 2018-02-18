@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="10dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true"
     android:layout_margin="10dp">
 
     <LinearLayout
@@ -16,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <ImageView android:id="@+id/image_route_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:visibility="invisible"
-                android:background="@drawable/img_inner_shadow_2"/>
+                android:background="@drawable/img_b_g_photo_tag"/>
 
             <RelativeLayout
                 android:id="@+id/btn_goto_picture"

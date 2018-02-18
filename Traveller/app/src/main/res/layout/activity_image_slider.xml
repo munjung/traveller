@@ -54,7 +54,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
                     android:src="@drawable/btn_represent_photo_off"/>
-                <!--별표 버튼이 다운이 안된다...-->
 
             </RelativeLayout>
 
