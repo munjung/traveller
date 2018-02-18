@@ -33,7 +33,7 @@ public class GridView_Adapter extends BaseAdapter {
     private DisplayImageOptions options;
     private boolean isCustomGalleryActivity;//Variable to check if gridview is to setup for Custom Gallery or not
     private CheckBox mCheckBox;
-    private int count;
+    private int addedImageCount;
 
     public GridView_Adapter(Context context, ArrayList<String> imageUrls, boolean isCustomGalleryActivity) {
         this.context = context;
@@ -45,6 +45,21 @@ public class GridView_Adapter extends BaseAdapter {
                 .resetViewBeforeLoading(true).cacheOnDisk(true)
                 .considerExifParams(true).bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
+    }
+
+
+    public GridView_Adapter(Context context, ArrayList<String> imageUrls, boolean isCustomGalleryActivity, int addedImageCount) {
+        this.context = context;
+        this.imageUrls = imageUrls;
+        this.isCustomGalleryActivity = isCustomGalleryActivity;
+        mSparseBooleanArray = new SparseBooleanArray();
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .resetViewBeforeLoading(true).cacheOnDisk(true)
+                .considerExifParams(true).bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+
+        this.addedImageCount = addedImageCount;
     }
 
     //Method to return selected Images
@@ -81,6 +96,7 @@ public class GridView_Adapter extends BaseAdapter {
             view = inflater.inflate(R.layout.custom_gridview_item, viewGroup, false);//Inflate layout
 
         mCheckBox = (CheckBox) view.findViewById(R.id.selectCheckBox);
+
         final ImageView imageView = (ImageView) view.findViewById(R.id.galleryImageView);
 
         //If Context is MainActivity then hide checkbox
@@ -100,6 +116,12 @@ public class GridView_Adapter extends BaseAdapter {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            //사진갯수 제한은 삭제가 가능할때 반영합시다!
+//            if(getCheckedItems().size() + addedImageCount > 5){
+//                Toast.makeText(context, "선택된 사진은 5장을 넘길 수 없습니다", Toast.LENGTH_LONG).show();
+//                return;
+//            }
             mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);//Insert selected checkbox value inside boolean array
             ((CustomGalleryActivity) context).showSelectButton();//call custom gallery activity method
         }

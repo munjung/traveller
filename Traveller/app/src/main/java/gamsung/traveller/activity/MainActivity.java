@@ -149,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         this.tryPermCheck();        //권한체크
 
         //data load
@@ -162,15 +165,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, REQUEST_CODE_GO_SET_TRAVEL);
         }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
         this.setRecyclerView();     //여행기록화면 세팅
         this.setImageView();        //빈화면 세팅
         this.setRegisterEvent();    //버튼 이벤트 등록
 
         //temp code
-        photoList = ImageSupporter.getPathOfAllImages(this);
+//        photoList = ImageSupporter.getPathOfAllImages(this);
     }
 
 
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Route route = new Route();
         route.setTitle(String.valueOf(idx));
-        if(photoList.size() > 0){
+        if(photoList != null && photoList.size() > 0){
 
             route.setPicturPath(photoList.get(temp_id++));
         }

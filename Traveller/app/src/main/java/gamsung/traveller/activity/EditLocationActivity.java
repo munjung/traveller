@@ -50,12 +50,12 @@ import gamsung.traveller.util.DebugToast;
  * 문정이가 다 만들어줄 6,14,15화면
  */
 
-public class EditLocationActivity extends AppCompatActivity {
+public class EditLocationActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-//    public static final String KEY_SEND_ACTIVITY_IMAGE_LIST = "img_list";
-//    public static final String KEY_SEND_ACTIVITY_MEMO_LIST = "memo_list";
-    public static final String KEY_SEND_ACTIVITY_PHOTO_LIST = "photo_list";
+    public static final String KEY_SEND_ACTIVITY_IMAGE_LIST = "img_list";
+    public static final String KEY_SEND_ACTIVITY_MEMO_LIST = "memo_list";
+    public static final String KEY_SEND_ACTIVITY_IMAGE_COUNT = "img_count";
     
     private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
@@ -82,7 +82,6 @@ public class EditLocationActivity extends AppCompatActivity {
 
         _dataManager = DataManager.getInstance(this);
 
-<<<<<<< HEAD
         Intent intent = getIntent();
         editSpotId = intent.getIntExtra("spotId", -1);
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
@@ -93,6 +92,7 @@ public class EditLocationActivity extends AppCompatActivity {
                 isEdit = true;
             }
         }
+        isEdit = true;
 
         this.registerListener();
         this.registerRecyclerView();
@@ -201,6 +201,7 @@ public class EditLocationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
+                i.putExtra(KEY_SEND_ACTIVITY_IMAGE_COUNT, _adapter.getItemCount());
                 startActivityForResult(i,1);
             }
         });
@@ -246,12 +247,11 @@ public class EditLocationActivity extends AppCompatActivity {
         if(editSpotId > 0){
 
             ArrayList<Photograph> photoList = new ArrayList<>(_dataManager.getPhotoListWithSpot(editSpotId).values());
-            _adapter = new CustomRecyclerAdapter(this, photoList);
+            _adapter = new CustomRecyclerAdapter(this, photoList, this);
         }
         else{
-            _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>());
+            _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(), this);
         }
-
 
         _recyclerView = findViewById(R.id.recycler_edit_lcoation);
         _recyclerView.setAdapter(_adapter);
@@ -259,18 +259,6 @@ public class EditLocationActivity extends AppCompatActivity {
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(_recyclerView);
 
-        _recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(EditLocationActivity.this, ImageSliderActivity.class);
-//                intent.putIntegerArrayListExtra(KEY_SEND_ACTIVITY_PHOTO_LIST, _adapter.getPhotoList().)
-//                intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_IMAGE_LIST, _adapter.getImgList());
-//                intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_MEMO_LIST, _adapter.getMemoList());
-
-                EditLocationActivity.this.startActivity(intent);
-            }
-        });
     }
 
     private void visibleOperationForEditMode(){
@@ -317,5 +305,15 @@ public class EditLocationActivity extends AppCompatActivity {
                      layoutFrame.setVisibility(View.INVISIBLE);
              }
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        Intent intent = new Intent(EditLocationActivity.this, ImageSliderActivity.class);
+        intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_IMAGE_LIST, _adapter.getImgPathList());
+        intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_MEMO_LIST, _adapter.getMemoList());
+
+        EditLocationActivity.this.startActivity(intent);
     }
 }
