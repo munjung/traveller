@@ -78,7 +78,7 @@ public class EditLocationActivity extends AppCompatActivity {
     private DataManager _dataManager;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_location);
@@ -234,7 +234,9 @@ public class EditLocationActivity extends AppCompatActivity {
 
                 else {
                     Spot newSpot = new Spot();
-
+                    Bundle bundle = savedInstanceState;
+                    int route_id = bundle.getInt("route id");
+                    newSpot.setRoute_id(route_id);
                     newSpot.setSearch_id(searchID);
                     newSpot.setCategory_id(CATEGORY_ID);
                     _dataManager.insertSpot(newSpot);
