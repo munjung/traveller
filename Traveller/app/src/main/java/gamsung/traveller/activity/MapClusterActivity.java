@@ -24,11 +24,15 @@ import com.google.maps.android.ui.IconGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import gamsung.traveller.R;
 import gamsung.traveller.dao.DataManager;
+import gamsung.traveller.model.Photograph;
+import gamsung.traveller.model.SearchPlace;
 
 /**
  *  10번 화면.
@@ -194,7 +198,18 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
     private void addItems(){
         DataManager dataManager = DataManager.getInstance(this);
-        dataManager.getPhotoList();
+        HashMap<Integer, Photograph> photoList = dataManager.getPhotoList();
+        HashMap<Integer, SearchPlace> locallist = dataManager.getSearchPlaceList();
+/*        for(Entry<Integer,Photograph> e:photoList.entrySet()){
+            Photograph photo = e.getValue();
+            int localkey = photo.getSearch_id();
+            double lat = locallist.get(localkey).getLat();
+            double lon = locallist.get(localkey).getLon();
+            LatLng point = new LatLng(lat,lon);
+            mClusterManager.addItem(new PhotoCluster(point,photo.getPath(),photo.getPath()));
+        }
+        데이터연동용 코드. 아직 다른쪽이 완성안돼서 테스트코드만 활성화했음
+        */
         mClusterManager.addItem(new PhotoCluster(position(), "1","test_1.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "2","test_2.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "3","test_3.jpg"));
