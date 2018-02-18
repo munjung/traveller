@@ -11,6 +11,7 @@ import android.support.v7.widget.FitWindowsLinearLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,9 @@ public class ViewByPhotosFragment extends Fragment {
     private TimeViewAdapter timeViewAdapter;
     private List<Spot> spotList;
     private List<Integer> deletedSpotID, editedSpotID;
+    private boolean isOrderChanged;
     private LinearLayoutManager linearLayoutManager;
-
+    TravelViewActivity activity;
     public ViewByPhotosFragment(){
 
     }
@@ -59,10 +61,11 @@ public class ViewByPhotosFragment extends Fragment {
         //ViewGroup viewGroup = (ViewGroup)view.findViewById(R.id.base_layout_photos);
 
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
-        TravelViewActivity activity = (TravelViewActivity)getActivity();
+        activity = (TravelViewActivity)getActivity();
         spotList = activity.getSpotList();
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
+        isOrderChanged = activity.isOrderChanged();
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -72,57 +75,35 @@ public class ViewByPhotosFragment extends Fragment {
         timeRecyclerView.setLayoutManager(linearLayoutManager);
         timeRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
+        PhotoTouchHelperCallback touchHelperCallback = new PhotoTouchHelperCallback(timeViewAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(touchHelperCallback);
+        touchHelper.attachToRecyclerView(timeRecyclerView);
         timeViewAdapter.setCallback(clickListener);
         return view;
-
-        //get fragment view group
-        /*
-
-
-        //get spot list from activity (for sync data)
-        TravelViewActivity activity = (TravelViewActivity)getActivity();
-        List<Spot> spotList = activity.getSpotList();
-/*
-        //dynamic add custom layout list
-        for (int i=spotList.size()-1; i >= 0; i--) {
-            Spot spot = spotList.get(i);
-
-            View spotView = LayoutInflater.from(activity).inflate(R.layout.layout_view_by_photos_template, viewGroup);
-            //mission text
-            TextView tv = spotView.findViewById(R.id.txt_view_by_photos);
-            tv.setText(spot.getMission());
-            //edit button
-            Button btn = spotView.findViewById(R.id.btn_view_by_photos);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-            //picture layout
-//            RecyclerView recyclerView = (RecyclerView)spotView.findViewById(R.id.recycler_view_by_photos);
-//            recyclerView.setAdapter(new RecyclerViewAdapter(activity, activity.getImageListWithSpot(spot.get_id())));
-//            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
-        }
-        */
 
     }
     TimeViewAdapter.ClickListener clickListener = new TimeViewAdapter.ClickListener() {
         @Override
-        public void onClickDelete(int position) {
+        public void onClickDelete(final int position) {
             final int pos = position;
+            final Spot targetSpot = spotList.get(pos);
             AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
             alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    deletedSpotID.add(spotList.get(pos).get_id());
+                    deletedSpotID.add(targetSpot.get_id());
                     spotList.remove(pos);
-                    timeViewAdapter.notifyDataSetChanged();
+                    timeViewAdapter.updateColorGab();
+                    timeViewAdapter.notifyItemRemoved(pos);
+                    timeViewAdapter.notifyItemRangeRemoved(0, spotList.size());
+                    //timeViewAdapter.notifyDataSetChanged();
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
+                    timeViewAdapter.notifyItemChanged(pos);
+                    timeRecyclerView.scrollToPosition(pos);
                 }
             });
             AlertDialog alert = alert_delete.create();
@@ -144,6 +125,11 @@ public class ViewByPhotosFragment extends Fragment {
             }
             if (!isExist) editedSpotID.add(spotID);
             timeViewAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void notifyOrderChanged() {
+            activity.setOrderChanged(true);
         }
     };
 }

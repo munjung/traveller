@@ -24,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dao.PhotographManager;
 import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Route;
+import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
 
@@ -52,10 +54,13 @@ import gamsung.traveller.util.DebugToast;
 
 public class EditLocationActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     public static final String KEY_SEND_ACTIVITY_IMAGE_LIST = "img_list";
     public static final String KEY_SEND_ACTIVITY_MEMO_LIST = "memo_list";
     public static final String KEY_SEND_ACTIVITY_IMAGE_COUNT = "img_count";
+    
+    private final static int REQUEST_CODE_GO_ADD_PHOTO = 1;
+    private final static int REQUEST_CODE_GO_MAP = 2;
+    private final static int MAP_SELECTED=10;
     
     private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
@@ -65,11 +70,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private Button btnAddPhoto;
     private Button btnRepresent;
     private ImageView memoImage,eat,buy,take,visit,anything;
+    
+    private LinearLayout llGotoMap;
+    private String imgPath;
+    
     private RecyclerView _recyclerView;
     private CustomRecyclerAdapter _adapter;
     private boolean isEdit = false;
     private int editSpotId = -1;
     private int CATEGORY_ID;
+    public int searchID=0;
     RelativeLayout photoRelative;
 
     private HashMap<Integer, Photograph> photoList;
@@ -115,6 +125,18 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         take = (ImageView)findViewById(R.id.photo);
         visit = (ImageView)findViewById(R.id.visit);
         anything = (ImageView)findViewById(R.id.anything);
+
+        llGotoMap = (LinearLayout)findViewById(R.id.layoutLocation);
+
+        llGotoMap.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditLocationActivity.this,MapActivity.class);
+                startActivityForResult(intent,REQUEST_CODE_GO_MAP);
+            }
+        });
+
 
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +205,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
-                startActivityForResult(i,1);
+                startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
 
@@ -201,8 +223,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
+                
                 i.putExtra(KEY_SEND_ACTIVITY_IMAGE_COUNT, _adapter.getItemCount());
-                startActivityForResult(i,1);
+                startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
 
@@ -225,7 +248,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
                 else {
                     Spot newSpot = new Spot();
-//                    newSpot.setCategory_id(CATEGORY_ID);
+
+                    newSpot.setSearch_id(searchID);
+                    newSpot.setCategory_id(CATEGORY_ID);
                     _dataManager.insertSpot(newSpot);
                 }
 
@@ -286,7 +311,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK){
+        if(requestCode == REQUEST_CODE_GO_MAP && resultCode == MAP_SELECTED){
+            TextView address = findViewById(R.id.editLocation);
+            HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
+            searchID =data.getIntExtra("placeID",0);
+            SearchPlace searchPlace =placelist.get(searchID);
+            address.setText(searchPlace.getPlace_address());
+
+        }
+
+        if (requestCode == REQUEST_CODE_GO_ADD_PHOTO && resultCode == RESULT_OK){
 
             String imgPath = data.getExtras().getString("img");
 

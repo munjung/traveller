@@ -58,6 +58,7 @@ public class TravelViewActivity extends AppCompatActivity {
     private List<Spot> spotList;
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
+    private boolean isOrderChanged = false;
     private int route_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,16 +73,17 @@ public class TravelViewActivity extends AppCompatActivity {
         route_id = intent.getIntExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
         HashMap<Integer, Spot> spotHashMap = dataManager.getSpotListWithRouteId(route_id);
         spotList = new ArrayList<Spot>(spotHashMap.values());
-        /* temporary adding spots
-        for (int i = 0; i < 100; i++){
+
+        for (int i = 0; i < 10; i++){
             Spot spot = new Spot();
             spot.setMission("Gamsung Mission num: " + i);
             spot.set_id(i);
             spotList.add(spot);
         }
-*/
+
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
+
         findViews();
         implementEvents();
 
@@ -211,6 +213,12 @@ public class TravelViewActivity extends AppCompatActivity {
     }
     public List<Integer> getEditedSpotID(){
         return editedSpotID;
+    }
+    public boolean isOrderChanged() {
+        return isOrderChanged;
+    }
+    public void setOrderChanged(boolean orderChanged){
+        isOrderChanged = orderChanged;
     }
     public int getRoute_id(){
         return route_id;

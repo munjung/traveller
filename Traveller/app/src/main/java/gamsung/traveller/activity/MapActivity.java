@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gamsung.traveller.R;
+import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 
@@ -72,12 +73,14 @@ import gamsung.traveller.model.Spot;
 
 public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
 
+    public static final int MAP_SELECTED = 10;
+    DataManager dataManager = DataManager.getInstance(this);
     private GoogleMap mMap;
     private Marker mMarker;
 
     private GoogleApiClient mGoogleApiClient;
 
-    BufferPlace bufferplace=new BufferPlace(0,0,null,null);
+    SearchPlace bufferplace=new SearchPlace();
 
     @Override
     protected void startmap() {
@@ -117,15 +120,21 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
         findViewById(R.id.mSelectll).setVisibility(View.GONE);
 
-        Button bt = findViewById(R.id.btmsearch);
+        final Button bt = findViewById(R.id.btmsearch);
         Button buttongo = findViewById(R.id.btchooseplace);
         buttongo.setOnClickListener(new Button.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapActivity.this,EditLocationActivity.class);
-                intent.putExtra("bufferplace",bufferplace);
-                Toast.makeText(getApplicationContext(), "lat:"+bufferplace.getLat()+"lon: "+bufferplace.getLon()+"name: "+bufferplace.getPlace_name()+"address: "+bufferplace.getPlace_address(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                SearchPlace searchPlace = new SearchPlace();
+                searchPlace.setPlace_address(bufferplace.getPlace_address());
+                searchPlace.setLat(bufferplace.getLat());
+                searchPlace.setLon(bufferplace.getLon());
+                dataManager.insertSearchPlace(searchPlace);
+                intent.putExtra("placeID",searchPlace.get_id());
+                setResult(MAP_SELECTED,intent);
+                finish();
                 /**
                  * 지원님 여기에요
                  *
@@ -218,7 +227,9 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         locality=", "+locality;
                     }
                     currentLocationName = kaddress.get(0).getCountryName()+locality;
-                    bufferplace=new BufferPlace(marker.getPosition().latitude,marker.getPosition().longitude,currentLocationName,currentLocationAddress);
+                    bufferplace.setPlace_address(currentLocationAddress);
+                    bufferplace.setLat(marker.getPosition().latitude);
+                    bufferplace.setLon(marker.getPosition().longitude);
                 }
             }
         }catch (IOException e) {
@@ -262,7 +273,10 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         locality=", "+locality;
                     }
                     currentLocationName = kaddress.get(0).getCountryName()+locality;
-                    bufferplace=new BufferPlace(latLng.latitude,latLng.longitude,currentLocationName,currentLocationAddress);
+                    bufferplace.setPlace_address(currentLocationAddress);
+                    bufferplace.setLat(latLng.latitude);
+                    bufferplace.setLon(latLng.longitude);
+
                 }
             }
         }catch (IOException e) {
@@ -364,6 +378,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
@@ -436,10 +451,15 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     @Override
                     public void onClick(View view) {
 
-                        bufferplace= new BufferPlace(mPlace.getLatLng().latitude,mPlace.getLatLng().longitude,mPlace.getName().toString(),mPlace.getAddress().toString());
-                        Intent intent = new Intent(MapActivity.this,EditLocationActivity.class);
-                        intent.putExtra("bufferplace",bufferplace);
-                        Toast.makeText(getApplicationContext(), "lat:"+bufferplace.getLat()+"lon: "+bufferplace.getLon()+"name: "+bufferplace.getPlace_name()+"address: "+bufferplace.getPlace_address(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        SearchPlace nameplace = new SearchPlace();
+                        nameplace.setPlace_address(mPlace.getAddress().toString());
+                        nameplace.setLat(mPlace.getLatLng().latitude);
+                        nameplace.setLon(mPlace.getLatLng().longitude);
+                        dataManager.insertSearchPlace(nameplace);
+                        intent.putExtra("placeID",nameplace.get_id());
+                        setResult(MAP_SELECTED,intent);
+                        finish();
                         /**
                          * 지원님 여기에요
                          *
@@ -467,14 +487,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
-    }
-    class BufferPlace extends SearchPlace implements Serializable{
-        public BufferPlace(double lat, double lon, String name, String address){
-            this.setLat(lat);
-            this.setLon(lon);
-            this.setPlace_name(name);
-            this.setPlace_address(address);
-        }
     }
 }
 
