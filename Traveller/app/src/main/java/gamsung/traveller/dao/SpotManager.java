@@ -91,6 +91,7 @@ public class SpotManager {
                 spot.setPicture_id(c.getInt(3));                 //picture
                 spot.setMission(c.getString(4));                 //mission
                 spot.setSearch_id(c.getInt(5));                  //search
+                spot.setCategory_id(c.getInt(6));                //category (Eat,buy..)
 
                 placeMap.put(spot.get_id(), spot);
             }
@@ -121,6 +122,7 @@ public class SpotManager {
                 spot.setPicture_id(c.getInt(3));                 //picture
                 spot.setMission(c.getString(4));                 //mission
                 spot.setSearch_id(c.getInt(5));                  //search
+                spot.setCategory_id(c.getInt(6));                //category(eat, buy,,,)
 
                 placeMap.put(spot.get_id(), spot);
             }
@@ -159,6 +161,7 @@ public class SpotManager {
         values.put(TableManager.SpotTable.column_picture_id, spot.getPicture_id());
         values.put(TableManager.SpotTable.column_mission, spot.getMission());
         values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());
+        values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
@@ -175,10 +178,11 @@ public class SpotManager {
         values.put(TableManager.SpotTable.column_picture_id, spot.getPicture_id());
         values.put(TableManager.SpotTable.column_mission, spot.getMission());
         values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());
+        values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
 
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String selection = TableManager.RouteTable.column_id + " = " + spot.get_id();
+        String selection = TableManager.SpotTable.column_id + " = " + spot.get_id();
         int count = db.update(TABLE_NAME, values, selection, null);
         db.close();
 
