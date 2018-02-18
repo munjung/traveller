@@ -74,7 +74,7 @@ public class TravelViewActivity extends AppCompatActivity {
         HashMap<Integer, Spot> spotHashMap = dataManager.getSpotListWithRouteId(route_id);
         spotList = new ArrayList<Spot>(spotHashMap.values());
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 10; i++){
             Spot spot = new Spot();
             spot.setMission("Gamsung Mission num: " + i);
             spot.set_id(i);
@@ -83,7 +83,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
-        //isOrderChanged = false;
+
         findViews();
         implementEvents();
 
