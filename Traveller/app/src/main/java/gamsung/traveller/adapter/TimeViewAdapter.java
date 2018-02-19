@@ -78,7 +78,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         spotList.add(newPosition, spot);
         notifyItemMoved(oldPosition, newPosition);
         //notifyDataSetChanged();
-        callback.notifyOrderChanged();
+        callback.notifyOrderChanged(oldPosition, newPosition);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     public interface ClickListener{
         void onClickDelete(int position);
         void onClickEdit(int position);
-        void notifyOrderChanged();
+        void notifyOrderChanged(int oldPos, int newPos);
     }
 
     public void setCallback(ClickListener callback){
@@ -110,7 +110,8 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     public void onBindViewHolder(TimeViewAdapter.TimeViewHolder holder, int position) {
         RelativeLayout.LayoutParams layoutParams;
         holder.txtMission.setText(spotList.get(position).getMission());
-        holder.txtTitle.setText(spotList.get(position).getMission());
+        int pos = spotList.get(position).get_id();
+        holder.txtTitle.setText("Spot ID: " + pos);
         holder.callback = callback;
         layoutParams = (RelativeLayout.LayoutParams)holder.imageTimeLine.getLayoutParams();
         if (position == 0){
