@@ -43,6 +43,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     
     private final static int REQUEST_CODE_GO_ADD_PHOTO = 1;
     private final static int REQUEST_CODE_GO_MAP = 2;
+    private final static int REQUEST_CODE_EMPTY = 3;
+
     private final static int CREATE_SPOT = 502;
     private final static int EDIT_SPOT = 503;
     private final static int MAP_SELECTED=10;
@@ -63,6 +65,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     private boolean isEdit = false;
     private int editRouteId = -1;
+    private String editRotueTitle ="";
     private int editSpotId = -1;
     public int searchID=-1;
     private int CATEGORY_ID;
@@ -79,15 +82,27 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
         _dataManager = DataManager.getInstance(this);
         mbundle = savedInstanceState;
+
         Intent intent = getIntent();
         this.editRouteId = intent.getIntExtra("route id", -1);
+        this.editRotueTitle = intent.getStringExtra("route title");
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
         if(whatActivity != null) {
             if (whatActivity.equals("create")) {
 
                 //create spot
                 this.isEdit = false;
-            } else {
+            }
+            else if (whatActivity.equals("empty")){
+
+                //create spot
+                this.isEdit = false;
+                Intent i = new Intent(this, EmptyTravelActivity.class);
+                i.putExtra("route id", this.editRouteId);
+                i.putExtra("route title", this.editRotueTitle);
+                startActivityForResult(i, REQUEST_CODE_EMPTY);
+            }
+            else {
 
                 //edit spot
                 this.isEdit = true;
@@ -391,6 +406,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                  if(layoutFrame.getVisibility() == View.VISIBLE)
                      layoutFrame.setVisibility(View.INVISIBLE);
              }
+        }
+
+        if(requestCode == REQUEST_CODE_EMPTY && resultCode == RESULT_CANCELED){
+            //empty에서 취소
+            finish();
         }
     }
 

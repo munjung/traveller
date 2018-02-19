@@ -69,16 +69,21 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="196dp"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_vertical">
+        android:background="#FFFFFFFF">
 
         <ImageView
             android:id="@+id/image_represent_set_travel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/testimage" />
+            android:scaleType="centerCrop"/>
+
+        <ImageView android:id="@+id/image_empty_set_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/grap_4_noimage"/>
 
         <ImageView
             android:id="@+id/image_add_photo_set_travel"
@@ -92,9 +97,8 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="367dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_gravity="center"
         android:layout_margin="10dp"
         android:background="@drawable/round_border"
         android:orientation="vertical">

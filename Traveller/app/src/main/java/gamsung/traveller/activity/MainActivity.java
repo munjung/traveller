@@ -58,15 +58,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int REQUEST_CODE_GO_MAP_PICTURE = 2;
     private final static int REQUEST_CODE_GO_EDIT_LOCATION = 3;
 
-    private ImageView _imageView;
+    private ImageView _imageViewEmpty;
 
     private RecyclerView _recyclerView;
     private RecyclerViewAdapter _recyclerAdapter;
 
     private DataManager _dataManager;
-    private List<Route> _routeList;
 
-    private List<String> photoList;
+    private List<String> tempPhotoList;
     private int temp_id;
 
 
@@ -122,8 +121,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (resultCode){
             case SetTravelActivity.RESULT_CODE_CREATE:  //add route recycler item
-                if(_dataManager.insertRoute(route) > 0)
+                if(_dataManager.insertRoute(route) > 0) {
                     _recyclerAdapter.addItem(route);
+
+                    this.visibleEmptyImageView();
+                }
                 break;
 
             case SetTravelActivity.RESULT_CODE_EDIT:    //update route recycler item
@@ -153,8 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //data load
         _dataManager = DataManager.getInstance(this);
-        _routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
-        if(_routeList.size() == 0){
+        ArrayList<Route> routeList = new ArrayList<Route>(_dataManager.getRouteList().values());
+        if(routeList.size() == 0){
 
             //data가 없는 경우 바로 SetTravelActivity로 이동
             Intent intent = new Intent(MainActivity.this, SetTravelActivity.class);
@@ -162,9 +164,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, REQUEST_CODE_GO_SET_TRAVEL);
         }
 
-        this.setRecyclerView();     //여행기록화면 세팅
-        this.setImageView();        //빈화면 세팅
+        this.setRecyclerView(routeList);     //여행기록화면 세팅
         this.setRegisterEvent();    //버튼 이벤트 등록
+        this.setEmptyImageView();        //빈화면 세팅
+        this.visibleEmptyImageView();
     }
 
 
@@ -172,24 +175,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
      * initiazlie
      */
-    private void setRecyclerView(){
+    private void setRecyclerView(ArrayList<Route> routeList){
 
-        _recyclerAdapter = new RecyclerViewAdapter(this, _routeList, this);
+        _recyclerAdapter = new RecyclerViewAdapter(this, routeList, this);
 
         _recyclerView = (RecyclerView)findViewById(R.id.recycler_main_content);
         _recyclerView.setAdapter(_recyclerAdapter);
         _recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
 
-    private void setImageView(){
+    private void setEmptyImageView(){
 
-        _imageView = (ImageView) findViewById(R.id.image_empty_main);
-        _imageView.setOnClickListener(new View.OnClickListener() {
+        _imageViewEmpty = (ImageView) findViewById(R.id.image_empty_main);
+        _imageViewEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                Button btnAddItem = (Button)findViewById(R.id.btn_add_main);
+                btnAddItem.callOnClick();
             }
         });
+    }
+
+    public void visibleEmptyImageView(){
+
+        if(_recyclerAdapter.getItemCount() > 0){
+            _imageViewEmpty.setVisibility(View.INVISIBLE);
+        }
+        else{
+            _imageViewEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setRegisterEvent(){
@@ -222,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
      * UI Operation
      */
-    private void addRouteItem(){
+    private void addTempRouteItem(){
 
        if(_recyclerAdapter.getItemCount() == 0){
 
@@ -237,15 +252,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Route route = new Route();
         route.setTitle(String.valueOf(idx));
-        if(photoList != null && photoList.size() > 0){
+        if(tempPhotoList != null && tempPhotoList.size() > 0){
 
-            route.setPicturPath(photoList.get(temp_id++));
+            route.setPicturPath(tempPhotoList.get(temp_id++));
         }
 
         _recyclerAdapter.addItem(route);
-
-
-
     }
 
     public void hideKeypad(){
@@ -276,20 +288,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case RouteItemClickListenerArguments.IMAGE_CLICK:
-                int spotSize = _dataManager.getSpotListWithRouteId(route.get_id()).size();
-                if(spotSize == 0){
 
-                    Intent imgClickIntent = new Intent(this, EmptyTravelActivity.class);
-                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
-                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route.getTitle());
-                    startActivityForResult(imgClickIntent, REQUEST_CODE_GO_EDIT_LOCATION);
-                }
-                else{
-
-                    Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
-                    imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
-                    startActivityForResult(imgClickIntent, REQUEST_CODE_GO_EDIT_LOCATION);
-                }
+                Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
+                imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+                imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route.getTitle());
+                startActivity(imgClickIntent);
                 break;
 
             case RouteItemClickListenerArguments.GOTO_PICTURE_CLICK:
@@ -342,6 +345,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
         final RouteViewHolder viewHolder = new RouteViewHolder(_context, itemView);
 
 
+        //click image on view holder -> edit location
         viewHolder.getImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -352,7 +356,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             }
         });
 
-        //click edit button on view holder
+        //click edit button on view holder -> set travel (edit mode)
         viewHolder.getBtnEdit().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -364,6 +368,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             }
         });
 
+        //click go-to-picture button on view holder -> Grid In Cluster Activity
         viewHolder.getBtnGoToPicture().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -400,6 +405,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
                             //remove view holder position(saved viewholder position in deleteview's tag)
                             removeItem((int)_deleteView.getTag());
+
+                            ((MainActivity)_context).visibleEmptyImageView();
                             Toast.makeText(_context, "삭제되었습니다", Toast.LENGTH_LONG).show();
                         }
                     });
@@ -414,9 +421,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         }
                     });
                 }
-                else{
-                    showDeleteView();
-                }
 
                 //set view holder position
                 _deleteView.setTag(viewHolder.getAdapterPosition());
@@ -429,6 +433,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                 //set image => delete view(image)
                 ImageView imageView = (ImageView)_deleteView.findViewById(R.id.image_main_delete_target);
                 imageView.setImageBitmap(getBitmapFromView(viewHolder.itemView));
+
+                showDeleteView();
             }
         });
 

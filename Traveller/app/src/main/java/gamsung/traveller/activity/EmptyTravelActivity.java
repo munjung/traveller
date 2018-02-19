@@ -25,8 +25,8 @@ public class EmptyTravelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_travel);
 
-        this.routeId = getIntent().getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID,-1);
-        this.routeTitle = getIntent().getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
+        this.routeId = getIntent().getIntExtra("route id",-1);
+        this.routeTitle = getIntent().getStringExtra("route title");
         if(routeId > 0){
             TextView txtTravelName = (TextView) findViewById(R.id.textTitle);
             txtTravelName.setText(this.routeTitle);
@@ -44,10 +44,12 @@ public class EmptyTravelActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(EmptyTravelActivity.this, EditLocationActivity.class);
-                i.putExtra("TAG_ACTIVITY", "create");
-                i.putExtra("route id", routeId);
-                startActivity(i);
+//                Intent i = new Intent(EmptyTravelActivity.this, EditLocationActivity.class);
+//                i.putExtra("TAG_ACTIVITY", "create");
+//                i.putExtra("route id", routeId);
+//                startActivity(i);
+                setResult(RESULT_OK);
+                finish();
             }
         });
 
@@ -56,8 +58,15 @@ public class EmptyTravelActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_CANCELED);
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }

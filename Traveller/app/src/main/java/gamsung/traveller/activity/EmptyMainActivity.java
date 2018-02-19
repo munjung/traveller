@@ -26,8 +26,6 @@ public class EmptyMainActivity extends AppCompatActivity {
 
                 setResult(RESULT_OK);
                 finish();
-//                Intent i = new Intent(EmptyMainActivity.this, SetTravelActivity.class);
-//                startActivity(i);
             }
         });
     }

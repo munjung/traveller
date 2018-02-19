@@ -51,6 +51,7 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
     private CalendarFragment calendarFragment;
     private ImageView imageRepresent, imageAddPhoto;
+    private ImageView imageEmpty;
     private TextView txtGo, txtBack;
     private EditText editTxtTravelName;
     private ImageButton btnCancel, btnSave;
@@ -75,6 +76,13 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         imageRepresent = (ImageView)findViewById(R.id.image_represent_set_travel);
         imageAddPhoto = (ImageView) findViewById(R.id.image_add_photo_set_travel);
         imageAddPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doTakeAlbumAction();
+            }
+        });
+        imageEmpty = (ImageView) findViewById(R.id.image_empty_set_travel);
+        imageEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doTakeAlbumAction();
@@ -214,6 +222,8 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
         if(path != null && path.length() > 0) {
             Glide.with(this).load(path).into(imageRepresent);
             imageRepresent.setTag(path);
+
+            imageEmpty.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -44,6 +44,8 @@ public class TravelViewActivity extends AppCompatActivity {
      * 준규가 다 만들어줄 9,13화면
      */
 
+    private static final int REQUEST_CODE_TO_EMPTY_ITEM = 101;
+
     private ImageButton btnAddLocation, btnHome, btnCamera;
     private ViewSwitcher viewSwitcher;
     private EditText editTitle;
@@ -53,25 +55,49 @@ public class TravelViewActivity extends AppCompatActivity {
     private android.support.v4.app.Fragment selectedFrag;
 
 
-    //temp code activity<->fragment
-
-    private List<Spot> spotList;
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged = false;
     private int route_id;
+    private String route_title;
+    private List<Spot> spotList;
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case REQUEST_CODE_TO_EMPTY_ITEM:
+                if(resultCode == RESULT_OK){
+
+        //            add item (refresh)
+        //            viewByScheduleFragment
+        //            viewByPhotosFragment
+                }
+                break;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_view);
 
-        Intent intent = getIntent();
-
-
         dataManager = DataManager.getInstance(this);
-        route_id = intent.getIntExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
+
+        Intent intent = getIntent();
+        route_id = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
+        route_title = intent.getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
         spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
+        if(spotList.size() == 0){
+            Intent editLocationIntent = new Intent(this, EditLocationActivity.class);
+            editLocationIntent.putExtra("route id", route_id);
+            editLocationIntent.putExtra("route title", route_title);
+            editLocationIntent.putExtra("TAG_ACTIVITY", "empty");
+            startActivityForResult(editLocationIntent, REQUEST_CODE_TO_EMPTY_ITEM);
+        }
 
         /*
         for (int i = 0; i < 05; i++){

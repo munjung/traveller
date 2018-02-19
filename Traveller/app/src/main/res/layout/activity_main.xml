@@ -63,20 +63,30 @@
                 android:background="@drawable/a_btn"/>
         </RelativeLayout>
 
-        <!--empty image-->
-        <ImageView android:id="@+id/image_empty_main"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/layout_top_main"/>
-
-        <!--item view-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
             android:layout_below="@id/layout_top_main">
-        </android.support.v7.widget.RecyclerView>
+
+            <!--item view-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_main_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical">
+            </android.support.v7.widget.RecyclerView>
+
+            <!--empty image-->
+            <ImageView android:id="@+id/image_empty_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/img_nodocument"
+                android:visibility="invisible"/>
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -87,8 +97,7 @@
     </RelativeLayout>
 
     <!--add new item button-->
-    <Button
-        android:id="@+id/btn_add_main"
+    <Button android:id="@+id/btn_add_main"
         android:layout_width="78dp"
         android:layout_height="78dp"
         android:layout_gravity="bottom|right|end"
