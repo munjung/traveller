@@ -68,6 +68,7 @@ public class ViewByPhotosFragment extends Fragment {
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(activity.getRoute_id()).values());
+        spotList = activity.getSpotList();
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();

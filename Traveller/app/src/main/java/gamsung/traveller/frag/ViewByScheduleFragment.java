@@ -54,14 +54,19 @@ public class ViewByScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         TravelViewActivity activity = (TravelViewActivity)getActivity();
-        spotList = activity.getSpotList();
+
+
+
+
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();
         route_id = activity.getRoute_id();
 
         dataManager = DataManager.getInstance(getActivity());
+
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        spotList = activity.getSpotList();
         if (rootView == null) { //if rootview is not loaded, load.
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
 

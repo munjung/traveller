@@ -114,7 +114,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         holder.callback = callback;
         layoutParams = (RelativeLayout.LayoutParams)holder.imageTimeLine.getLayoutParams();
         if (position == 0){
-            layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 25), 0, 0);
+            layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 35), 0, 0);
             layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 185);
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
@@ -179,6 +179,8 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
             btnEdit = itemView.findViewById(R.id.btn_edit_view_by_photos);
             btnDelete = itemView.findViewById(R.id.btn_delete_view_by_photos);
             RelativeLayout layout = itemView.findViewById(R.id.time_view_photos_layout);
+
+
             for (int i = 0; i < MAX_NUM_IMAGES; i++){ //create image items + bookmark
                 images[i] = new ImageView(itemView.getContext());
                 images[i].setId(i + 1);
@@ -204,7 +206,6 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
                 //images[i].setImageResource(R.drawable.grap_noimage);
                 layout.addView(images[i]);
                 //load pictures
-                //load pictures;
             }
             imageBookmark.bringToFront();
             btnEdit.setOnClickListener(new View.OnClickListener() {
