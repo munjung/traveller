@@ -58,7 +58,7 @@ public class TravelViewActivity extends AppCompatActivity {
     private List<Spot> spotList;
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
-    private boolean isOrderChanged = false;
+    private boolean isOrderChanged = false, isChangeMade = false;
     private int route_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +68,8 @@ public class TravelViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-
         dataManager = DataManager.getInstance(this);
         route_id = intent.getIntExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
-
-
 /*
         for (int i = 0; i < 05; i++) {
             Spot spot = new Spot();
@@ -81,9 +78,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
             dataManager.insertSpot(spot);
         }*/
-        dataManager = DataManager.getInstance(this);
 
-        spotList = new ArrayList<Spot>(dataManager.getSpotList().values());
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
 
@@ -99,7 +94,6 @@ public class TravelViewActivity extends AppCompatActivity {
         viewSwitcher = findViewById(R.id.viewSwitcher);
         editTitle = findViewById(R.id.editTitle);
         textTitle = findViewById(R.id.textTitle);
-
 
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
@@ -208,6 +202,7 @@ public class TravelViewActivity extends AppCompatActivity {
      * Activity <-> Fragment
      */
 
+
     public List<Spot> getSpotList(){
         return spotList;
     }
@@ -226,7 +221,12 @@ public class TravelViewActivity extends AppCompatActivity {
     public int getRoute_id(){
         return route_id;
     }
-
+    public boolean getChangeMade(){
+        return  isChangeMade;
+    }
+    public void setChangeMade(boolean isChangeMade){
+        this.isChangeMade = isChangeMade;
+    }
     public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){
         return dataManager.getPhotoListWithSpot(spot_id);
     }

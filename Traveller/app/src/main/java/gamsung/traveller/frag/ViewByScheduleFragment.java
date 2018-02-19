@@ -50,13 +50,11 @@ public class ViewByScheduleFragment extends Fragment {
     private List<Integer> deletedSpotID, editedSpotID;
     private DataManager dataManager;
     private boolean isOrderChanged;
+    private TravelViewActivity activity;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        TravelViewActivity activity = (TravelViewActivity)getActivity();
-
-
-
+        activity = (TravelViewActivity)getActivity();
 
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
@@ -64,7 +62,9 @@ public class ViewByScheduleFragment extends Fragment {
         route_id = activity.getRoute_id();
 
         dataManager = DataManager.getInstance(getActivity());
-        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+
+        if (activity.getChangeMade() || spotList == null) spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        activity.setChangeMade(false);
 
         if (rootView == null) { //if rootview is not loaded, load.
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
@@ -110,6 +110,8 @@ public class ViewByScheduleFragment extends Fragment {
         }
         return rootView;
     }
+
+
     View.OnClickListener startScheduling = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -134,6 +136,9 @@ public class ViewByScheduleFragment extends Fragment {
             i.putExtra("TAG_ACTIVITY","create");
             i.putExtra("route id", route_id);
             startActivityForResult(i, REQUEST_ADD);
+
+            activity.setChangeMade(true);
+
         }
     };
 
@@ -152,6 +157,8 @@ public class ViewByScheduleFragment extends Fragment {
             i.putExtra("route id", route_id);
             i.putExtra("spot id", scheduleService.listSchedule.get(view_idx).spot_ID);
             startActivityForResult(i, REQUEST_EDIT);
+
+            activity.setChangeMade(true);
         }
     };
 
@@ -176,6 +183,8 @@ public class ViewByScheduleFragment extends Fragment {
                         scheduleService.drawFirstScreen_Coordinator();
                     }
 
+                    activity.setChangeMade(true);
+
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
                 @Override
@@ -190,20 +199,18 @@ public class ViewByScheduleFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         if (requestCode == REQUEST_ADD){
             //temporary creating spots
 
             //the difference in the size between schedules and spot are number of items being created.
             int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
-            int num_added;
-            
-            spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
-            num_added = spotList.size() - list_total;
+            int num_added = spotList.size() - list_total;
             scheduleService.isEditing = false;
             processAdditionalSchedules(num_added, list_total);
         }
         else if (requestCode == REQUEST_INIT){
-            spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+
             if (spotList.size() > 0) {
                 scheduleService.initSchedule();
                 int list_total = scheduleService.listSchedule.size() - 1;
@@ -212,7 +219,10 @@ public class ViewByScheduleFragment extends Fragment {
             }
         }
         else if (requestCode == REQUEST_EDIT){
-            int spot_id = data.getExtras().getInt("spot id", -1);
+            int spot_id;
+            try {
+                spot_id = data.getExtras().getInt("spot id", -1);
+            } catch(NullPointerException e) {return;}
             if (spot_id == -1) return;
 
             int spot_total = spotList.size();

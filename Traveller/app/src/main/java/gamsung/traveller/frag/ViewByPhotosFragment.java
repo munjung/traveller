@@ -67,7 +67,9 @@ public class ViewByPhotosFragment extends Fragment {
 
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
-        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(activity.getRoute_id()).values());
+
+        if (activity.getChangeMade() || spotList == null) spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(activity.getRoute_id()).values());
+        activity.setChangeMade(false);
 
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
@@ -104,15 +106,16 @@ public class ViewByPhotosFragment extends Fragment {
                     timeViewAdapter.updateColorGab();
                     timeViewAdapter.notifyItemRemoved(pos);
                     timeViewAdapter.notifyItemRangeRemoved(0, spotList.size());
+                    activity.setChangeMade(true);
                     //timeViewAdapter.notifyDataSetChanged();
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     timeViewAdapter.notifyItemChanged(pos);
-                    timeRecyclerView.scrollToPosition(pos);
                 }
             });
+            timeRecyclerView.scrollToPosition(pos);
             AlertDialog alert = alert_delete.create();
             alert.show();
         }
@@ -132,12 +135,14 @@ public class ViewByPhotosFragment extends Fragment {
             }
             if (!isExist) editedSpotID.add(spotID);
             timeViewAdapter.notifyDataSetChanged();
+
+            activity.setChangeMade(true);
         }
 
         @Override
         public void notifyOrderChanged(int oldPos, int newPos) {
             activity.setOrderChanged(true);
-
+            activity.setChangeMade(true);
         }
     };
 }

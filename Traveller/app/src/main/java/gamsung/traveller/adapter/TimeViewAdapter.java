@@ -126,7 +126,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
         }
-        adjustBookmark(holder, position % 10);
+        adjustBookmark(holder, spotList.get(position).getPicture_id());
     }
 
     private void adjustBookmark (TimeViewAdapter.TimeViewHolder holder, int position){

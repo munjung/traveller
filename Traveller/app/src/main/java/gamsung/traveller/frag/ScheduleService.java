@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -237,6 +238,9 @@ public class ScheduleService {
         ((TextView)editView.findViewById(R.id.contents_right)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.title_left)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.title_right)).setText(editedSpot.getMission());
+
+        if(editedSpot.getPicture_path() == null) Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
+        else Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         //change image
 
     }
@@ -327,11 +331,16 @@ public class ScheduleService {
                 break;
         }
 
-        int photo_id = spot.getPicture_id();
-        if (photo_id == 0)
+//        int photo_id = spot.getPicture_id();
+        if (spot.getPicture_path() == null)
             Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
-        else
-            circleCopy.setImageResource(tempSelected);
+        else {
+            try {
+                Glide.with(appContext).load(spot.getPicture_id()).dontAnimate().into(circleCopy);
+            }catch(Exception e){
+                Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
+            }
+        }
 
         RelativeLayout.LayoutParams circleSize = new RelativeLayout.LayoutParams((int)toDp(appContext, IMAGE_SIZE), (int)toDp(appContext, IMAGE_SIZE));
         circleCopy.setLayoutParams(circleSize);
@@ -595,7 +604,7 @@ public class ScheduleService {
         else
             return view.getTop() + getRelativeTop((View)view.getParent(), root);
     }
-    public void heightUpdate(){
+    private void heightUpdate(){
         layoutBase.getLayoutParams().height = listSchedule.size() * coordinateInformation.layout_height + this.EMPTY_CIRCLE_BIGGER;
     }
 
@@ -659,7 +668,6 @@ public class ScheduleService {
                 setScheduleVis(listSchedule.get(idx).view, idx);
             heightUpdate();
             deletedSpotID.clear();
-
             if (listSchedule.size() <= 1) {
                 layoutBase.removeAllViews();
                 listSchedule.clear();
