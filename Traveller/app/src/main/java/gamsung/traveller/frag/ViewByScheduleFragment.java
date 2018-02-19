@@ -196,11 +196,7 @@ public class ViewByScheduleFragment extends Fragment {
             //the difference in the size between schedules and spot are number of items being created.
             int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
             int num_added;
-            Spot tempSpot = new Spot();
-            tempSpot.setRoute_id(route_id);
-            tempSpot.setMission("yo");
-            tempSpot.set_id(1000);
-            dataManager.insertSpot(tempSpot);
+            
             spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
             num_added = spotList.size() - list_total;
             scheduleService.isEditing = false;
