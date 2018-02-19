@@ -40,6 +40,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     private Context _context;
     private ArrayList<Photograph> _items;
     private View.OnClickListener _clickListener;
+    private String imgPath;
 
     public CustomRecyclerAdapter(Context context, ArrayList<Photograph> photoList, View.OnClickListener clickListener) {
 
@@ -72,7 +73,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     @Override
     public void onBindViewHolder(CustomRecyclerAdapter.CustomViewHolder viewHolder, int position) {
 
-        String imgPath = _items.get(position).getPath();
+        imgPath = _items.get(position).getPath();
         if (!TextUtils.isEmpty(imgPath)) {
             Glide.with(_context).load(imgPath).into(viewHolder.imageView);
         }
@@ -82,6 +83,11 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         viewHolder.getTxtMemo().setText(memo);
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
     }
+
+    public String getImgPath(){
+        return imgPath;
+    }
+
 
     @Override
     public int getItemCount() {
