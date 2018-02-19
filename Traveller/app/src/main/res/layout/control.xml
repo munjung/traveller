@@ -100,15 +100,6 @@
             android:gravity="center">
 
             <Spinner
-                android:id="@+id/dropDownRoute"
-                android:layout_width="300dp"
-                android:layout_height="40dp"
-                style="@style/SpinnerStyle"
-                android:layout_marginTop="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"/>
-
-            <Spinner
                 android:id="@+id/dropDownSpot"
                 android:layout_width="300dp"
                 android:layout_height="40dp"

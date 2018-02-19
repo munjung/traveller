@@ -90,18 +90,24 @@
                     android:scrollbars="horizontal">
                 </android.support.v7.widget.RecyclerView>
 
-                <RelativeLayout android:id="@+id/layout_frame_edit_location"
+                <RelativeLayout
+                    android:id="@+id/layout_frame_edit_location"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:background="@drawable/img_frame">
 
-                    <RelativeLayout android:id="@+id/layout_add_on_empty_edit_location"
+                    <RelativeLayout
+                        android:id="@+id/layout_add_on_empty_edit_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true">
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true">
 
-                        <ImageView android:id="@+id/image_camera_edit_location"
+                        <ImageView
+                            android:id="@+id/image_camera_edit_location"
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/btn_camera_widget" />
@@ -110,11 +116,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/image_camera_edit_location"
                             android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/image_camera_edit_location"
                             android:text="해당 버튼을 눌러\n사진을 추가해 주세요"
-                            android:textSize="15sp"
-                            android:textColor="#5d5d5d"/>
+                            android:textColor="#5d5d5d"
+                            android:textSize="15sp" />
 
                     </RelativeLayout>
                 </RelativeLayout>

@@ -57,7 +57,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
-    private boolean isOrderChanged = false;
+    private boolean isOrderChanged = false, isChangeMade = false;
     private int route_id;
     private String route_title;
     private List<Spot> spotList;
@@ -71,6 +71,7 @@ public class TravelViewActivity extends AppCompatActivity {
             case REQUEST_CODE_TO_EMPTY_ITEM:
                 if(resultCode == RESULT_OK){
 
+                    //준규가 마법을 부릴 edit Location 리턴 결과
         //            add item (refresh)
         //            viewByScheduleFragment
         //            viewByPhotosFragment
@@ -92,20 +93,13 @@ public class TravelViewActivity extends AppCompatActivity {
         route_title = intent.getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
         spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
         if(spotList.size() == 0){
+            //등록된 일정이 없는 경우, edit location으로 직행
             Intent editLocationIntent = new Intent(this, EditLocationActivity.class);
             editLocationIntent.putExtra("route id", route_id);
             editLocationIntent.putExtra("route title", route_title);
             editLocationIntent.putExtra("TAG_ACTIVITY", "empty");
             startActivityForResult(editLocationIntent, REQUEST_CODE_TO_EMPTY_ITEM);
         }
-
-        /*
-        for (int i = 0; i < 05; i++){
-            Spot spot = new Spot();
-            spot.setMission("Gamsung Mission num: " + i);
-            spot.setRoute_id(route_id);
-            dataManager.insertSpot(spot);
-        }*/
 
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
@@ -122,7 +116,6 @@ public class TravelViewActivity extends AppCompatActivity {
         viewSwitcher = findViewById(R.id.viewSwitcher);
         editTitle = findViewById(R.id.editTitle);
         textTitle = findViewById(R.id.textTitle);
-
 
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
@@ -231,6 +224,7 @@ public class TravelViewActivity extends AppCompatActivity {
      * Activity <-> Fragment
      */
 
+
     public List<Spot> getSpotList(){
         return spotList;
     }
@@ -249,7 +243,12 @@ public class TravelViewActivity extends AppCompatActivity {
     public int getRoute_id(){
         return route_id;
     }
-
+    public boolean getChangeMade(){
+        return  isChangeMade;
+    }
+    public void setChangeMade(boolean isChangeMade){
+        this.isChangeMade = isChangeMade;
+    }
     public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){
         return dataManager.getPhotoListWithSpot(spot_id);
     }

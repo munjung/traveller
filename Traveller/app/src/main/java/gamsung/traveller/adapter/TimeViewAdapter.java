@@ -78,7 +78,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         spotList.add(newPosition, spot);
         notifyItemMoved(oldPosition, newPosition);
         //notifyDataSetChanged();
-        callback.notifyOrderChanged();
+        callback.notifyOrderChanged(oldPosition, newPosition);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     public interface ClickListener{
         void onClickDelete(int position);
         void onClickEdit(int position);
-        void notifyOrderChanged();
+        void notifyOrderChanged(int oldPos, int newPos);
     }
 
     public void setCallback(ClickListener callback){
@@ -110,11 +110,12 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     public void onBindViewHolder(TimeViewAdapter.TimeViewHolder holder, int position) {
         RelativeLayout.LayoutParams layoutParams;
         holder.txtMission.setText(spotList.get(position).getMission());
-        holder.txtTitle.setText(spotList.get(position).getMission());
+        int pos = spotList.get(position).get_id();
+        holder.txtTitle.setText("Spot ID: " + pos);
         holder.callback = callback;
         layoutParams = (RelativeLayout.LayoutParams)holder.imageTimeLine.getLayoutParams();
         if (position == 0){
-            layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 25), 0, 0);
+            layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 35), 0, 0);
             layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 185);
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
@@ -125,7 +126,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
         }
-        adjustBookmark(holder, position % 10);
+        adjustBookmark(holder, spotList.get(position).getPicture_id());
     }
 
     private void adjustBookmark (TimeViewAdapter.TimeViewHolder holder, int position){
@@ -179,6 +180,8 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
             btnEdit = itemView.findViewById(R.id.btn_edit_view_by_photos);
             btnDelete = itemView.findViewById(R.id.btn_delete_view_by_photos);
             RelativeLayout layout = itemView.findViewById(R.id.time_view_photos_layout);
+
+
             for (int i = 0; i < MAX_NUM_IMAGES; i++){ //create image items + bookmark
                 images[i] = new ImageView(itemView.getContext());
                 images[i].setId(i + 1);
@@ -204,7 +207,6 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
                 //images[i].setImageResource(R.drawable.grap_noimage);
                 layout.addView(images[i]);
                 //load pictures
-                //load pictures;
             }
             imageBookmark.bringToFront();
             btnEdit.setOnClickListener(new View.OnClickListener() {

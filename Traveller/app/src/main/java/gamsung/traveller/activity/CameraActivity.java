@@ -72,10 +72,10 @@ public class CameraActivity extends AppCompatActivity {
     ImageView shadowBackground;
     final int RESULT_SAVEIMAGE = 0;
     private static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
-    ArrayList<String> routeTitleList, spotTitleList;
+    ArrayList<String> spotTitleList;
     DataManager _datamanager;
-    String routeName, spotName;
-    Spinner routeSpinner,spotSpinner;
+    String spotName;
+    Spinner spotSpinner;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -91,15 +91,11 @@ public class CameraActivity extends AppCompatActivity {
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
-        routeTitleList = new ArrayList<>();
-        routeTitleList.add(getString(R.string.selectroute));
-
         spotTitleList = new ArrayList<>();
         spotTitleList.add(getString(R.string.selectspot));
 
         _datamanager = DataManager.getInstance(this);
-        for(int i = 0 ; i < _datamanager.getRouteList().size() ; i++ ){
-            routeTitleList.add(_datamanager.getRouteList().get(i).getTitle());
+        for(int i = 0 ; i < _datamanager.getSpotList().size() ; i++ ){
             spotTitleList.add(_datamanager.getSpotList().get(i).getMission());
         }
 
@@ -123,24 +119,6 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 changeToSelectMode();
-
-                ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, routeTitleList);
-                //스피너 속성
-                routeSpinner = (Spinner) findViewById(R.id.dropDownRoute);
-                routeSpinner.setAdapter(mAdapter);
-                routeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        routeName = routeSpinner.getSelectedItem().toString();
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
 
                 ArrayAdapter<String> nAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, spotTitleList);
                 //스피너 속성

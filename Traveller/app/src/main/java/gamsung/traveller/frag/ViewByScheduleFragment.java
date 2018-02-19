@@ -50,18 +50,22 @@ public class ViewByScheduleFragment extends Fragment {
     private List<Integer> deletedSpotID, editedSpotID;
     private DataManager dataManager;
     private boolean isOrderChanged;
+    private TravelViewActivity activity;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        TravelViewActivity activity = (TravelViewActivity)getActivity();
-        spotList = activity.getSpotList();
+        activity = (TravelViewActivity)getActivity();
+
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();
         route_id = activity.getRoute_id();
 
         dataManager = DataManager.getInstance(getActivity());
-        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+
+        if (activity.getChangeMade() || spotList == null) spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        activity.setChangeMade(false);
+
         if (rootView == null) { //if rootview is not loaded, load.
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
 
@@ -106,6 +110,8 @@ public class ViewByScheduleFragment extends Fragment {
         }
         return rootView;
     }
+
+
     View.OnClickListener startScheduling = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -130,6 +136,9 @@ public class ViewByScheduleFragment extends Fragment {
             i.putExtra("TAG_ACTIVITY","create");
             i.putExtra("route id", route_id);
             startActivityForResult(i, REQUEST_ADD);
+
+            activity.setChangeMade(true);
+
         }
     };
 
@@ -148,6 +157,8 @@ public class ViewByScheduleFragment extends Fragment {
             i.putExtra("route id", route_id);
             i.putExtra("spot id", scheduleService.listSchedule.get(view_idx).spot_ID);
             startActivityForResult(i, REQUEST_EDIT);
+
+            activity.setChangeMade(true);
         }
     };
 
@@ -159,6 +170,9 @@ public class ViewByScheduleFragment extends Fragment {
             alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    //assumed that the indexes for spotlist and listschedule are synchronized
+                    int idx_view = scheduleService.toListIdx(view_id);
+                    dataManager.deleteSpot(scheduleService.listSchedule.get(idx_view).spot_ID);
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }
@@ -168,6 +182,9 @@ public class ViewByScheduleFragment extends Fragment {
                         spotList.clear();
                         scheduleService.drawFirstScreen_Coordinator();
                     }
+
+                    activity.setChangeMade(true);
+
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
                 @Override
@@ -182,6 +199,7 @@ public class ViewByScheduleFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         if (requestCode == REQUEST_ADD){
             //temporary creating spots
 
@@ -192,6 +210,7 @@ public class ViewByScheduleFragment extends Fragment {
             processAdditionalSchedules(num_added, list_total);
         }
         else if (requestCode == REQUEST_INIT){
+
             if (spotList.size() > 0) {
                 scheduleService.initSchedule();
                 int list_total = scheduleService.listSchedule.size() - 1;
@@ -200,12 +219,21 @@ public class ViewByScheduleFragment extends Fragment {
             }
         }
         else if (requestCode == REQUEST_EDIT){
+            int spot_id;
+            try {
+                spot_id = data.getExtras().getInt("spot id", -1);
+            } catch(NullPointerException e) {return;}
+            if (spot_id == -1) return;
 
-            //Spot editedSPot = new Spot();
-            //editedSPot.setMission("Hi");
-            //
-            //scheduleService.editSchedule((int)REQUEST_EDIT, editedSPot);
-            //수정된 view_id값을 다시 editSchedule에다가 보내면 수정완료!
+            int spot_total = spotList.size();
+            for (int idx = 0; idx < spot_total; idx++){
+                if (spotList.get(idx).get_id() == spot_id){
+                    dataManager.updateSpot(spotList.get(idx));
+                    break;
+                }
+            }
+            editedSpotID.add(spot_id);
+            scheduleService.updateSchedule(deletedSpotID, editedSpotID, false);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -216,5 +244,7 @@ public class ViewByScheduleFragment extends Fragment {
             scheduleService.addSchedule(newSpot);
         }
     }
+
+
 }
 

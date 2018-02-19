@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.CustomRecyclerAdapter;
@@ -70,8 +71,10 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     public int searchID=-1;
     private int CATEGORY_ID;
 
+    private List<Spot> spotList;
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
+    public String picpath="nopath";
 
     public Bundle mbundle;
 
@@ -79,6 +82,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
+
 
         _dataManager = DataManager.getInstance(this);
         mbundle = savedInstanceState;
@@ -230,6 +234,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         btnRepresent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = getIntent();
+                int spotId = intent.getExtras().getInt("spot id"); //나중에 준규오빠한테 전달해달래(intent data)
+                int rootId = intent.getExtras().getInt("root id");
+                spotList = new ArrayList<>(_dataManager.getSpotListWithRouteId(rootId).values());
+
+                Log.d("머야ㅓㅑㅑ",_adapter.getImgPath());
+                picpath = _adapter.getImgPath();
+    //            spotList.get(spotId).setPicture_path(_adapter.getImgPath());
+                updateSpot();
+                // 이거하기전에 spotid는 준규오빠가 넘겨줄거야 ㅠㅠ 그걸 통해서 스팟을 불러내-> 스팟의 픽쳐아이디를 바꿔(대표사진) -> 업데이트
 
             }
         });
@@ -335,12 +349,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
+        if(picpath!="nopath")
+        editSpot.setPicture_path(picpath);
         if(_dataManager.updateSpot(editSpot) > 0){
 
             Intent intent = new Intent();
             intent.putExtra("spot_id", editSpotId);
             setResult(EDIT_SPOT, intent);
-
+            finish();
             Toast.makeText(EditLocationActivity.this, "변경되었습니다", Toast.LENGTH_LONG);
         }
         else{
@@ -360,13 +376,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setMission(memoEdit.getText().toString());
         newSpot.setSearch_id(searchID);
         newSpot.setCategory_id(CATEGORY_ID);
+        if(picpath!="nopath")
+            newSpot.setPicture_path(picpath);
         int spot_id = (int)_dataManager.insertSpot(newSpot);
         if(spot_id > 0){
-
-            Intent intent = new Intent();
+            Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
-
+            finish();//+
             Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
         }
         else{

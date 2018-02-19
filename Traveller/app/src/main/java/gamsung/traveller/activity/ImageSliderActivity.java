@@ -6,6 +6,9 @@ import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,11 +28,20 @@ public class ImageSliderActivity extends AppCompatActivity {
     private static final Integer[] XMEN = {};
     private ArrayList<String> selectImagePath = new ArrayList<>();
     private ArrayList<String> selectMemoPath = new ArrayList<>();
+    private ImageButton btnHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_slider);
+        btnHome= (ImageButton)findViewById(R.id.btnHome);
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         Intent intent = getIntent();
         ArrayList<String> imgPath = intent.getStringArrayListExtra(EditLocationActivity.KEY_SEND_ACTIVITY_IMAGE_LIST);
         ArrayList<String> memoPath = intent.getStringArrayListExtra(EditLocationActivity.KEY_SEND_ACTIVITY_MEMO_LIST);
