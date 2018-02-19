@@ -68,7 +68,7 @@ public class ViewByPhotosFragment extends Fragment {
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(activity.getRoute_id()).values());
-        spotList = activity.getSpotList();
+
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();
@@ -99,6 +99,7 @@ public class ViewByPhotosFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     deletedSpotID.add(targetSpot.get_id());
+                    dataManager.deleteSpot(targetSpot.get_id());
                     spotList.remove(pos);
                     timeViewAdapter.updateColorGab();
                     timeViewAdapter.notifyItemRemoved(pos);
@@ -134,71 +135,10 @@ public class ViewByPhotosFragment extends Fragment {
         }
 
         @Override
-        public void notifyOrderChanged() {
+        public void notifyOrderChanged(int oldPos, int newPos) {
             activity.setOrderChanged(true);
+
         }
     };
 }
 
-
-//View Holder Adaper
-class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ImageViewHolder> {
-
-    private Context _context;
-    private List<String> _items;
-
-    public RecyclerViewAdapter(Context context, List<String> imgPathList) {
-
-        if (imgPathList == null) {
-            throw new IllegalArgumentException("route data must not be null");
-        }
-
-        this._context = context;
-        this._items = imgPathList;
-    }
-
-    @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_view_by_photos_item, viewGroup, false);
-
-        return new ImageViewHolder(_context, itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
-
-        String item = _items.get(position);
-
-        if (!TextUtils.isEmpty(item)) {
-
-            Glide.with(_context).load(item).into(holder.imageView);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return _items.size();
-    }
-
-    //View Holder
-    public static class ImageViewHolder extends RecyclerView.ViewHolder {
-
-        private Context _context;
-        public ImageView imageView;
-
-        public ImageViewHolder(Context context, View itemView) {
-            super(itemView);
-
-            _context = context;
-
-            imageView = (ImageView) itemView.findViewById(R.id.image_view_by_photos);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DebugToast.show(_context, "image clicked");
-                }
-            });
-        }
-    }
-}

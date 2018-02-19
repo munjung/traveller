@@ -18,7 +18,7 @@
         android:layout_marginRight="16dp"
         android:layout_centerVertical="true"
         android:src="@drawable/btn_w_camera"
-        />
+        android:id="@+id/imageView2" />
 
     <ImageView
         android:layout_marginLeft="18dp"
@@ -28,12 +28,13 @@
         android:scaleType="fitXY"/>
 
     <TextView
+        android:id="@+id/tvTodowidget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="37dp"
-        android:textSize="16.1sp"
-        android:text="카오산로드 방문"/>
+        android:layout_marginTop="20dp"
+        android:text="카오산로드 방문"
+        android:textSize="16.1sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,16 +42,18 @@
         android:layout_marginTop="40dp"
         android:layout_marginLeft="37dp"
         android:textSize="10sp"
-        android:text="Thanon Khosan, Bangkok"/>
+        android:text="Thanon Khosan, Bangkok"
+        android:id="@+id/tvTodolocal" />
 
     <TextView
+        android:id="@+id/tvTodonext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="37dp"
-        android:textSize="12.1sp"
-        android:text="나이쏘이 갈비국수 먹기"/>
+        android:layout_alignLeft="@+id/tvTodolocal"
+        android:layout_alignStart="@+id/tvTodolocal"
+        android:layout_below="@+id/imageView2"
+        android:text="나이쏘이 갈비국수 먹기"
+        android:textSize="12.1sp" />
 
     <ImageView
         android:layout_width="14dp"

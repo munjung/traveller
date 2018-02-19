@@ -285,7 +285,7 @@ public class ScheduleService {
         return layoutSchedule;
     }
 
-    private CircleImageView createCircleImage(int coord_x, int coord_y, int spot_idx){
+    private CircleImageView createCircleImage(int coord_x, int coord_y, Spot spot){
         //static_temp
         CircleImageView circleCopy = new CircleImageView(appContext);
         circleCopy.setX(coord_x);
@@ -327,7 +327,7 @@ public class ScheduleService {
                 break;
         }
 
-        int photo_id = spotList.get(spot_idx).getPicture_id();
+        int photo_id = spot.getPicture_id();
         if (photo_id == 0)
             Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
         else
@@ -349,7 +349,7 @@ public class ScheduleService {
 
         View createdView = addFilledSchedule(isLeft, newSpot);
         CircleImageView circleImageView = createCircleImage(coordinateInformation.circleX[isLeft ? 0 : 1],
-                allocateViewCoordinateY(listSchedule.size() - 1) + coordinateInformation.first_margin, idx);
+                allocateViewCoordinateY(listSchedule.size() - 1) + coordinateInformation.first_margin, newSpot);
         circleImageView.setOnClickListener(editSchedule);
 
         layoutBase.addView(createdView);
@@ -511,7 +511,7 @@ public class ScheduleService {
         scrollView.setLayoutParams(coordParms);
 
         View createdView = addFilledSchedule(false, spotList.get(0));
-        CircleImageView circleImageView = createCircleImage(coordinateInformation.circleX[1], (coordinateInformation.first_margin), 0);
+        CircleImageView circleImageView = createCircleImage(coordinateInformation.circleX[1], (coordinateInformation.first_margin), spotList.get(0));
 
         circleImageView.setOnClickListener(editSchedule);
         DrawnLine lineView[] = draw_lines(listSchedule.size());
@@ -610,7 +610,6 @@ public class ScheduleService {
             layoutBase.removeView(listSchedule.get(idxDelete).lines[0]);
             layoutBase.removeView(listSchedule.get(idxDelete).lines[1]);
             listSchedule.remove(idxDelete);
-            spotList.remove(idxDelete);
             isEditing = false;
 
             updateYCoordinateViews(idxDelete);
