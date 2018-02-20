@@ -81,7 +81,7 @@ public class TableManager {
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
             sb.append(column_route_id       + " INTEGER NOT NULL, ");
-            sb.append(column_next_spot_id   + " INTEGER NOT NULL, ");
+            sb.append(column_next_spot_id   + " INTEGER, ");
             sb.append(column_picture_id     + " INTEGER, ");
             sb.append(column_mission        + " TEXT NOT NULL, ");
             sb.append(column_search_id      + " INTEGER, ");
