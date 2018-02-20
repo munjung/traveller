@@ -19,7 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -242,7 +244,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 Log.d("머야ㅓㅑㅑ",_adapter.getImgPath());
                 picpath = _adapter.getImgPath();
     //            spotList.get(spotId).setPicture_path(_adapter.getImgPath());
-                updateSpot();
                 // 이거하기전에 spotid는 준규오빠가 넘겨줄거야 ㅠㅠ 그걸 통해서 스팟을 불러내-> 스팟의 픽쳐아이디를 바꿔(대표사진) -> 업데이트
 
             }
@@ -349,8 +350,28 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
+        ArrayList<String> photolist = _adapter.getImgPathList();
+        ArrayList<String> memolist = _adapter.getMemoList();
+        for(int i=0;i<photolist.size();i++){
+            Photograph photoforSet = new Photograph();
+            photoforSet.setPath(photolist.get(i));
+            photoforSet.setMemo(memolist.get(i));
+            photoforSet.setRoute_id(editRouteId);
+            photoforSet.setSpot_id(editSpotId);
+            photoforSet.setSearch_id(searchID);
+            photoforSet.setDate(new Date(System.currentTimeMillis()));
+            _dataManager.insertPhoto(photoforSet);
+        }
+
         if(picpath!="nopath")
         editSpot.setPicture_path(picpath);
+
+
+        //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
+        int a = _dataManager.updateSpot(editSpot);
+
+
+        //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
         if(_dataManager.updateSpot(editSpot) > 0){
 
             Intent intent = new Intent();
