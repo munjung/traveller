@@ -88,7 +88,7 @@ public class SpotManager {
                 spot.set_id(c.getInt(0));                          //id
                 spot.setRoute_id(c.getInt(1));                   //route_id
                 spot.setNext_spot_id(c.getInt(2));              //next_place
-                spot.setPicture_id(c.getInt(3));                 //picture
+                spot.setPicture_path(c.getString(3));           //picture
                 spot.setMission(c.getString(4));                 //mission
                 spot.setSearch_id(c.getInt(5));                  //search
                 spot.setCategory_id(c.getInt(6));                //category (Eat,buy..)
@@ -119,7 +119,7 @@ public class SpotManager {
                 spot.set_id(c.getInt(0));                          //id
                 spot.setRoute_id(c.getInt(1));                   //route_id
                 spot.setNext_spot_id(c.getInt(2));              //next_place
-                spot.setPicture_id(c.getInt(3));                 //picture
+                spot.setPicture_path(c.getString(3));                   //picture
                 spot.setMission(c.getString(4));                 //mission
                 spot.setSearch_id(c.getInt(5));                  //search
                 spot.setCategory_id(c.getInt(6));                //category(eat, buy,,,)
@@ -158,7 +158,7 @@ public class SpotManager {
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_route_id, spot.getRoute_id());
         values.put(TableManager.SpotTable.column_next_spot_id, spot.getNext_spot_id());
-        values.put(TableManager.SpotTable.column_picture_id, spot.getPicture_id());
+        values.put(TableManager.SpotTable.column_picture_path, spot.getPicture_path());
         values.put(TableManager.SpotTable.column_mission, spot.getMission());
         values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());
         values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
@@ -175,7 +175,7 @@ public class SpotManager {
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_route_id, spot.getRoute_id());
         values.put(TableManager.SpotTable.column_next_spot_id, spot.getNext_spot_id());
-        values.put(TableManager.SpotTable.column_picture_id, spot.getPicture_id());
+        values.put(TableManager.SpotTable.column_picture_path, spot.getPicture_path());
         values.put(TableManager.SpotTable.column_mission, spot.getMission());
         values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());
         values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
