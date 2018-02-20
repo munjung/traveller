@@ -113,7 +113,7 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                if(c.getString(5) != null) photo.setDate(Converter.convertStringToDate(c.getString(5)));
                 photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
@@ -151,7 +151,7 @@ public class PhotographManager {
         values.put(TableManager.PictureTable.column_spot_id, photo.getSpot_id());
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
         values.put(TableManager.PictureTable.column_path, photo.getPath());
-        values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
+        if(photo.getDate() != null) values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
         values.put(TableManager.PictureTable.column_memo, photo.getMemo());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -168,7 +168,7 @@ public class PhotographManager {
         values.put(TableManager.PictureTable.column_spot_id, photo.getSpot_id());
         values.put(TableManager.PictureTable.column_search_id, photo.getSearch_id());
         values.put(TableManager.PictureTable.column_path, photo.getPath());
-        values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
+        if(photo.getDate() != null) values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
         values.put(TableManager.PictureTable.column_memo, photo.getMemo());
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -180,7 +180,6 @@ public class PhotographManager {
     }
 
     public HashMap<Integer, Photograph> _getPhotoListWithSpot(SQLiteHelper dbHelper, Integer spot_id){
-
 
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
@@ -197,7 +196,7 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                if(c.getString(5) != null) photo.setDate(Converter.convertStringToDate(c.getString(5)));
                 photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
@@ -228,7 +227,7 @@ public class PhotographManager {
                 photo.setSpot_id(c.getInt(2));
                 photo.setSearch_id(c.getInt(3));
                 photo.setPath(c.getString(4));
-                photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                if(c.getString(5) != null) photo.setDate(Converter.convertStringToDate(c.getString(5)));
                 photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
