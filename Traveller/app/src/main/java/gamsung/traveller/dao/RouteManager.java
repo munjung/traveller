@@ -53,6 +53,17 @@ public class RouteManager {
         return _getRouteWithID(dbHelper, id);
     }
 
+    public HashMap<Integer, Route> getRouteHasToday(SQLiteHelper dbHelper){
+
+        if(m_routeMap.size() > 0) {
+            return m_routeMap;
+        }
+
+        Date today = new Date();
+        m_routeMap.putAll(_getRouteHasToday(dbHelper, today));
+        return m_routeMap;
+    }
+
     public boolean deleteRoute(SQLiteHelper dbHelper, Integer id){
 
         if(!_deleteRoute(dbHelper, id))
@@ -136,6 +147,37 @@ public class RouteManager {
         db.close();
 
         return route;
+    }
+
+    private HashMap<Integer, Route> _getRouteHasToday(SQLiteHelper dbHelper, Date today){
+
+        HashMap<Integer, Route> routeMap = new HashMap<>();
+
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME);
+
+
+        sb.append(" WHERE strftime('%s', '" + today + "') >= strftime('%s', " + TableManager.RouteTable.column_from_date + ")" +
+                  " AND " + "strftime('%s', '"+ today + "') <= strftime('%s' , " + TableManager.RouteTable.column_to_date + ")");
+
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+                Route route = new Route();
+                route.set_id(c.getInt(0));                                                  //id
+                route.setTitle(c.getString(1));                                             //title
+                route.setFromDate(Converter.convertStringToDate(c.getString(2)));          //from date
+                route.setToDate(Converter.convertStringToDate(c.getString(3)));            //to date
+                route.setPicturPath(c.getString(4));                                        //picture path
+            }
+            c.close();
+        }
+        db.close();
+
+        return routeMap;
     }
 
     private boolean _deleteRoute(SQLiteHelper dbHelper, Integer id){

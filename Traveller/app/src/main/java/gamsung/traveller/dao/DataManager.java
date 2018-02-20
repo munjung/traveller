@@ -64,6 +64,10 @@ public class DataManager {
         return m_routeManager.getRouteWithID(m_sqlHelper, id);
     }
 
+    public HashMap<Integer, Route> getRouteHasToday(){
+        return m_routeManager.getRouteHasToday(m_sqlHelper);
+    }
+
     public boolean deleteRoute(Integer id){
        return m_routeManager.deleteRoute(m_sqlHelper, id);
 
