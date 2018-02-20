@@ -46,7 +46,6 @@ public class ViewByPhotosFragment extends Fragment {
     private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged;
     private LinearLayoutManager linearLayoutManager;
-    private DataManager dataManager;
     TravelViewActivity activity;
     public ViewByPhotosFragment(){
 
@@ -63,12 +62,11 @@ public class ViewByPhotosFragment extends Fragment {
         View view = (View)inflater.inflate(R.layout.fragment_view_by_photos, container, false);
         //ViewGroup viewGroup = (ViewGroup)view.findViewById(R.id.base_layout_photos);
 
-        dataManager = DataManager.getInstance(getActivity());
 
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
 
-        if (activity.getChangeMade() || spotList == null) spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(activity.getRoute_id()).values());
+        if (activity.getChangeMade() || spotList == null) spotList = activity.refreshSpotList();
         activity.setChangeMade(false);
 
         deletedSpotID = activity.getDeletedSpotID();
@@ -101,7 +99,7 @@ public class ViewByPhotosFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     deletedSpotID.add(targetSpot.get_id());
-                    dataManager.deleteSpot(targetSpot.get_id());
+                    activity.deleteSpotFromDB(targetSpot.get_id());
                     spotList.remove(pos);
                     timeViewAdapter.updateColorGab();
                     timeViewAdapter.notifyItemRemoved(pos);
@@ -125,7 +123,7 @@ public class ViewByPhotosFragment extends Fragment {
             spotList.get(position).setMission("Mission edited: " + position);
             int spotID = spotList.get(position).get_id();
             boolean isExist = false;
-            dataManager.updateSpot(spotList.get(position));
+            activity.updateSpotFromDB(spotList.get(position));
             //avoid overlaps
             for (int idx : editedSpotID){
                 if (idx == spotID){
