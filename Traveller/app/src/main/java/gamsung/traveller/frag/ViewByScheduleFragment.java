@@ -103,6 +103,7 @@ public class ViewByScheduleFragment extends Fragment {
         }
 
         if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
+            scheduleService.update_spots(spotList);
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
             activity.setOrderChanged(false);
         }
@@ -198,9 +199,10 @@ public class ViewByScheduleFragment extends Fragment {
         }
     };
 
-    @Override
+        @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         spotList = activity.refreshSpotList();
+        scheduleService.update_spots(spotList);
         if (requestCode == REQUEST_ADD){
             //temporary creating spots
 
