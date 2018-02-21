@@ -82,7 +82,7 @@ public class CameraActivity extends AppCompatActivity {
     HashMap <Integer, Route> routeList;
     HashMap<Integer, Spot> tempSpotHashMap;
     DataManager _datamanager;
-    String spotName;
+    String spotName,routeName;
     Spinner routeSpinner, spotSpinner;
     private boolean isEdit = false;
     private int editRouteId = -1;
@@ -152,26 +152,29 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                        ArrayList<Route> tempRouteList = new ArrayList<>();
-                        tempRouteList.addAll(routeList.values());
+                        spotTitleList.clear();
+                        spotTitleList.add(getString(R.string.selectspot));
+                        spotSpinner.setSelection(0);
+                        routeName = routeSpinner.getSelectedItem().toString();
 
-                        int routeId = 0;
+                        if(!routeSpinner.getSelectedItem().toString().equals(getString(R.string.selectroute))) {
 
-                        for (Route e : tempRouteList) {
-                            if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
-                                routeId = e.get_id();
-                                editRouteId = routeId;
-                                tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
-                                ArrayList<Spot> tempSpotList = new ArrayList<>();
-                                tempSpotList.addAll(tempSpotHashMap.values());
-                                spotTitleList.clear();
-                                for(int i = 0 ; i < tempSpotList.size() ; i++) {
-                                    spotTitleList.add(tempSpotList.get(i).getMission());
+                            ArrayList<Route> tempRouteList = new ArrayList<>();
+                            tempRouteList.addAll(routeList.values());
+
+                            int routeId = 0;
+
+                            for (Route e : tempRouteList) {
+                                if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
+                                    routeId = e.get_id();
+                                    editRouteId = routeId;
+                                    tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
+                                    ArrayList<Spot> tempSpotList = new ArrayList<>();
+                                    tempSpotList.addAll(tempSpotHashMap.values());
+                                    for (int i = 0; i < tempSpotList.size(); i++) {
+                                        spotTitleList.add(tempSpotList.get(i).getMission());
+                                    }
                                 }
-                            }
-
-                            else {
-                                spotTitleList.clear();
                             }
                         }
                     }
@@ -190,11 +193,9 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                        if(spotSpinner.getSelectedItem().equals(R.string.selectspot)) {
+                        spotName = spotSpinner.getSelectedItem().toString();
 
-                        }
-
-                        else {
+                        if(!spotSpinner.getSelectedItem().equals(getString(R.string.selectspot))) {
                             editSpotTitle = spotSpinner.getSelectedItem().toString();
                             ArrayList<Spot> tempSpotList = new ArrayList<>();
                             tempSpotList.addAll(tempSpotHashMap.values());
@@ -203,10 +204,12 @@ public class CameraActivity extends AppCompatActivity {
                                     editSpotId = s.get_id();
                                     searchID = s.getSearch_id();
                                     CATEGORY_ID = s.getCategory_id();
+                                    picturePath = s.getPicture_path();
                                 }
 
                             }
                         }
+
                     }
 
                     @Override
@@ -244,9 +247,13 @@ public class CameraActivity extends AppCompatActivity {
                     Toast.makeText(CameraActivity.this,R.string.warning_spinner,Toast.LENGTH_LONG).show();
                 }
 
+                else if(routeName.equals(getString(R.string.selectroute))) {
+                    Toast.makeText(CameraActivity.this,R.string.warning_spinner,Toast.LENGTH_LONG).show();
+                }
+
                 else {
                     new SaveImageTask().execute(currentData);
-                    changeToSaveMode();
+                    changeToCameraMode();
                     resetCam();
                 }
             }
@@ -456,6 +463,9 @@ public class CameraActivity extends AppCompatActivity {
                 String fileName = String.format("%d.jpg", System.currentTimeMillis());
                 File outFile = new File(dir, fileName);
 
+                updateSpot();
+                updatePhoto(sdCard.getAbsolutePath() + "/yeogi/"+fileName);
+
                 outStream = new FileOutputStream(outFile);
                 outStream.write(currentData);
                 outStream.flush();
@@ -545,7 +555,17 @@ public class CameraActivity extends AppCompatActivity {
         btnBack.setVisibility(View.VISIBLE);
     }
 
-    private void updateSpot(String filepath){
+    private void updatePhoto(String filepath) {
+        Photograph photoforSet = new Photograph();
+        photoforSet.setPath(filepath);
+        photoforSet.setRoute_id(editRouteId);
+        photoforSet.setSpot_id(editSpotId);
+        photoforSet.setSearch_id(searchID);
+        photoforSet.setDate(new Date(System.currentTimeMillis()));
+        _datamanager.insertPhoto(photoforSet);
+    }
+
+    private void updateSpot(){
 
 //                        Bundle bundle = savedInstanceState;
 //                        int route_id = bundle.getInt("route id");
@@ -557,14 +577,14 @@ public class CameraActivity extends AppCompatActivity {
         editSpot.setMission(editSpotTitle);
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
-        editSpot.setPicture_path(filepath);
+        editSpot.setPicture_path(picturePath);
 
         //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
-        // int a = _datamanager.updateSpot(editSpot);
+        int a = _datamanager.updateSpot(editSpot);
 
         if(_datamanager.updateSpot(editSpot) > 0){
             //finish();
-            Toast.makeText(CameraActivity.this, "저장되었습니다.", Toast.LENGTH_LONG).show();
+            //Toast.makeText(CameraActivity.this, "저장되었습니다.", Toast.LENGTH_LONG).show();
         }
         else{
 
