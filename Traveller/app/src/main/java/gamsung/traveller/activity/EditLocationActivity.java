@@ -126,8 +126,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
-        isEdit = true;
-
         this.registerListener();
         this.registerRecyclerView();
         this.visibleOperationForEditMode();
