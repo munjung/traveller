@@ -176,6 +176,7 @@ public class ViewByScheduleFragment extends Fragment {
                     int idx_view = scheduleService.toListIdx(view_id);
                     activity.deleteSpotFromDB(scheduleService.listSchedule.get(idx_view).spot_ID);
                     spotList.remove(scheduleService.toListIdx(scheduleService.listSchedule.get(idx_view).spot_ID)); //temporarily manual deletion of list.
+                    Toast.makeText(getContext(), "Deleted spot ID: " + scheduleService.listSchedule.get(idx_view).spot_ID + " route id: " + route_id, Toast.LENGTH_SHORT).show();
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }

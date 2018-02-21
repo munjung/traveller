@@ -63,10 +63,11 @@
         app:layout_constraintTop_toBottomOf="@+id/title_left"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_delete_schedule_left"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:src="@drawable/btn_tag_x"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleimageview_left"
@@ -75,11 +76,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_delete_schedule_right"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
+        android:src="@drawable/btn_tag_x"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleimageview_right"
         app:layout_constraintHorizontal_bias="1"

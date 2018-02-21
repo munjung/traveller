@@ -80,6 +80,7 @@ public class TravelViewActivity extends AppCompatActivity {
         //            viewByScheduleFragment
         //            viewByPhotosFragment
                 }
+                else
                 break;
         }
     }
