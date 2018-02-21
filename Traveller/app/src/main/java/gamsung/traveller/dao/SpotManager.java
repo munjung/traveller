@@ -57,9 +57,9 @@ public class SpotManager {
         return true;
     }
 
-    public long insertSpot(SQLiteHelper dbHelper, Spot spot){
+    public long insertSpot(SQLiteHelper dbHelper, Spot spot, Integer index){
 
-        long rowId = _insertSpot(dbHelper, spot);
+        long rowId = _insertSpot(dbHelper, spot, index);
         if(rowId > 0)
             spot.set_id((int)rowId);
 
@@ -182,11 +182,11 @@ public class SpotManager {
         return true;
     }
 
-    private long _insertSpot(SQLiteHelper dbHelper, Spot spot){
+    private long _insertSpot(SQLiteHelper dbHelper, Spot spot, Integer index){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_route_id, spot.getRoute_id());
-        values.put(TableManager.SpotTable.column_index_id, spot.getIndex_id());
+        values.put(TableManager.SpotTable.column_index_id, index);
         values.put(TableManager.SpotTable.column_picture_path, spot.getPicture_path());
         values.put(TableManager.SpotTable.column_mission, spot.getMission());
         values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());

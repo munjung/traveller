@@ -26,6 +26,7 @@ import gamsung.traveller.model.SearchPlace;
 public class DataManager {
 
     private static DataManager m_instance;
+    private int index;
 
     public static DataManager getInstance(Context context){
 
@@ -95,7 +96,15 @@ public class DataManager {
     }
 
     public long insertSpot(Spot spot){
-       return  m_spotManager.insertSpot(m_sqlHelper, spot);
+
+        Spot lastspot = getLastIndexSpot();
+        if(lastspot == null){
+            index = 1;
+        }else{
+            index = lastspot.get_id()+1;
+        }
+
+       return  m_spotManager.insertSpot(m_sqlHelper, spot, index);
     }
 
     public int updateSpot(Spot spot){
