@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -54,6 +56,7 @@ import com.bumptech.glide.Glide;
 import gamsung.traveller.R;
 import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.model.Route;
+import gamsung.traveller.model.Spot;
 
 
 /**
@@ -74,7 +77,7 @@ public class CameraActivity extends AppCompatActivity {
     final int RESULT_SAVEIMAGE = 0;
     private static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
     ArrayList<String> routeTitleList, spotTitleList;
-    ArrayList<Route> routeList;
+    HashMap <Integer, Route> routeList;
     DataManager _datamanager;
     String spotName;
     Spinner routeSpinner, spotSpinner;
@@ -100,11 +103,14 @@ public class CameraActivity extends AppCompatActivity {
         spotTitleList.add(0, getString(R.string.selectspot));
 
         _datamanager = DataManager.getInstance(this);
-        routeList = new ArrayList<>();
-        routeList.addAll(_datamanager.getRouteList().values());
+        routeList = new HashMap<>();
+        routeList = _datamanager.getRouteList();
 
-        for ( Route route :routeList) {
-            routeTitleList.add(route.getTitle());
+        ArrayList<Route> tempList = new ArrayList<>();
+        tempList.addAll(routeList.values());
+
+        for ( Route e : tempList) {
+            routeTitleList.add(e.getTitle());
         }
 
         try {
@@ -136,6 +142,27 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                        ArrayList<Route> tempRouteList = new ArrayList<>();
+                        tempRouteList.addAll(routeList.values());
+
+                        int routeId = 0;
+
+                        for (Route e : tempRouteList) {
+                            if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
+                                routeId = e.get_id();
+                                HashMap<Integer, Spot> tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
+                                ArrayList<Spot> tempSpotList = new ArrayList<>();
+                                tempSpotList.addAll(tempSpotHashMap.values());
+                                spotTitleList.clear();
+                                for(int i = 0 ; i < tempSpotList.size() ; i++) {
+                                    spotTitleList.add(tempSpotList.get(i).getMission());
+                                }
+                            }
+
+                            else {
+                                spotTitleList.clear();
+                            }
+                        }
                     }
 
                     @Override

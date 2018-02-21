@@ -95,7 +95,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
         if(whatActivity != null) {
             if (whatActivity.equals("create")) {
-
                 //create spot
                 this.isEdit = false;
             }
@@ -125,8 +124,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         }
-
-        isEdit = true;
 
         this.registerListener();
         this.registerRecyclerView();
@@ -335,6 +332,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             memoEdit.requestFocus();
         }
         else{
+            photoRelative.setVisibility(View.VISIBLE);
             _recyclerView.setVisibility(View.VISIBLE);
             btnNextPlan.setVisibility(View.GONE);
         }
@@ -388,12 +386,12 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             intent.putExtra("spot_id", editSpotId);
             setResult(EDIT_SPOT, intent);
             //finish();
-            Toast.makeText(EditLocationActivity.this, "변경되었습니다", Toast.LENGTH_LONG);
+            Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
         }
         else{
 
             Log.e("update spot", "error : not updated");
-            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);
+            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -415,11 +413,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
             //finish();//+
-            Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
+            Toast.makeText(EditLocationActivity.this, "추가되었습니다.", Toast.LENGTH_LONG).show();
         } else {
 
             Log.e("insert spot", "error : not inserted");
-            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);
+            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
         }
     }
 
