@@ -238,10 +238,10 @@ public class ScheduleService {
         View editView = listSchedule.get(idx).view;
         Spot editedSpot = spotList.get(toListIdx(view_id));
 
+        ((TextView)editView.findViewById(R.id.title_left)).setText("Spot ID: " + editedSpot.get_id());
+        ((TextView)editView.findViewById(R.id.title_right)).setText("Spot ID: " + editedSpot.get_id());
         ((TextView)editView.findViewById(R.id.contents_left)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.contents_right)).setText(editedSpot.getMission());
-        ((TextView)editView.findViewById(R.id.title_left)).setText(editedSpot.getMission());
-        ((TextView)editView.findViewById(R.id.title_right)).setText(editedSpot.getMission());
 
         if(editedSpot.getPicture_path() == "nopath") Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         else Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
@@ -478,7 +478,7 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).spot_ID);
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
-
+        
 
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
@@ -702,7 +702,7 @@ public class ScheduleService {
     }
     private int findScheduleIDFromSpotID(int spotID){
         int list_total = listSchedule.size();
-        for (int idx = 0; idx < list_total; idx++){
+        for (int idx = 0; idx < list_total - 1; idx++){
             if (listSchedule.get(idx).spot_ID == spotID){
                 return listSchedule.get(idx).view.getId();
             }

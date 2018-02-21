@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
@@ -272,8 +273,14 @@ public class TravelViewActivity extends AppCompatActivity {
     }
     public List<Spot> refreshSpotList(){
         Toast.makeText(getApplicationContext(), "Spotlist updated.", Toast.LENGTH_SHORT).show();
-        return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
-        //return spotList; //temporarily
+        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        for (Spot spot : spotList){
+            Log.d("SPOT VALUES: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
+
+        }
+
+        //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        return spotList; //temporarily
     }
     public void updateSpotFromDB(Spot spot){
         dataManager.updateSpot(spot);

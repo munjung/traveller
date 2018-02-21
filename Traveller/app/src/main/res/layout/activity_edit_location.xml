@@ -125,12 +125,6 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-                <Button android:id="@+id/btn_represent_edit_location"
-                    android:layout_width="12dp"
-                    android:layout_height="18dp"
-                    android:layout_margin="10dp"
-                    android:visibility="invisible"
-                    android:background="@drawable/btn_represent_photo_off"/>
 
                 <Button android:id="@+id/btn_add_photo_edit_location"
                     android:layout_width="28dp"
