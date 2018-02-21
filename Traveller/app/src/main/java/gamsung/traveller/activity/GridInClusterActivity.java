@@ -16,9 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import gamsung.traveller.R;
 import gamsung.traveller.adapter.PhotoAdapter;
+import gamsung.traveller.dao.DataManager;
+import gamsung.traveller.model.Photograph;
 
 /**
  * 그리드뷰로 사진들을 보여주는 액티비티.
@@ -32,15 +36,31 @@ public class GridInClusterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grid_in_cluster);
 
-        Intent intent = getIntent();
-        ArrayList<String> photolist= (ArrayList<String>)intent.getStringArrayListExtra("phototosend").clone();
-        String sentname = (String)intent.getStringExtra("localname");
+        ArrayList<String> photolist = new ArrayList<>();
         TextView textView = findViewById(R.id.tvlocalname);
-        textView.setText(sentname);
-        PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(),R.layout.gridrow,photolist);
 
-        GridView gv = (GridView)findViewById(R.id.gvphoto);
-        gv.setAdapter(adapter);
+        Intent intent = getIntent();
+        int routeId = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID,-1);
+        if(routeId==-1) {
+            photolist = (ArrayList<String>) intent.getStringArrayListExtra("phototosend").clone();
+
+            String sentname = (String) intent.getStringExtra("localname");
+
+            textView.setText(sentname);
+        }
+        else{
+            DataManager dataManager = DataManager.getInstance(this);
+            HashMap<Integer,Photograph> photomap = dataManager.getPhotoListWithRoute(routeId);
+            for(Map.Entry<Integer,Photograph> e : photomap.entrySet()){
+                photolist.add(e.getValue().getPath());
+            }
+            String sentname = intent.getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
+            textView.setText(sentname);
+        }
+           PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(), R.layout.gridrow, photolist);
+            GridView gv = (GridView) findViewById(R.id.gvphoto);
+            gv.setAdapter(adapter);
+
     }
 }
 

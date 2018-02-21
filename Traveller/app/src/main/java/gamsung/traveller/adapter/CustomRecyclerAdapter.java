@@ -56,7 +56,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     }
 
     @Override
-    public CustomRecyclerAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public CustomRecyclerAdapter.CustomViewHolder onCreateViewHolder(final ViewGroup viewGroup, int viewType) {
 
         final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_edit_chlid_item, viewGroup, false);
         final CustomViewHolder customViewHolder = new CustomViewHolder(_context, itemView, new CustomTextChangeListener());
@@ -81,7 +81,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 _args.setItem(_items.get(position));
                 _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT);
                 _clickListener.onClick(view);
-
                 view.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
             }
         });

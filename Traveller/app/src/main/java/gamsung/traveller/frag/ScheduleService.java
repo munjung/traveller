@@ -243,9 +243,10 @@ public class ScheduleService {
         ((TextView)editView.findViewById(R.id.contents_left)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.contents_right)).setText(editedSpot.getMission());
 
-        if(editedSpot.getPicture_path() == "nopath") Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
-        else Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
+        if(editedSpot.getPicture_path() == "nopath" || editedSpot.getPicture_path() == null) Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
+        else Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().error(R.drawable.grap_noimage).into((CircleImageView)listSchedule.get(idx).circleImage);
         //change image
+
 
     }
 
@@ -336,16 +337,11 @@ public class ScheduleService {
         }
 
 //        int photo_id = spot.getPicture_id();
-        if (spot.getPicture_path() == null)
+        if (spot.getPicture_path() == "nopath" || spot.getPicture_path() == null)
             Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
         else {
-            try { //if failed to load the pic, load the no_image.
-                Glide.with(appContext).load(spot.getPicture_id()).dontAnimate().into(circleCopy);
-            }catch(Exception e){
-                Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
-            }
+            Glide.with(appContext).load(spot.getPicture_path()).dontAnimate().error(R.drawable.grap_noimage).into(circleCopy);
         }
-
         RelativeLayout.LayoutParams circleSize = new RelativeLayout.LayoutParams((int)toDp(appContext, IMAGE_SIZE), (int)toDp(appContext, IMAGE_SIZE));
         circleCopy.setLayoutParams(circleSize);
         circleCopy.setOnLongClickListener(startEditing);
@@ -471,7 +467,7 @@ public class ScheduleService {
     }
 
     public void moveSchedule(int idxA, int idxB){
-        //A 레이아웃을 B로 이동. A + 1 ~ B는 위로 한칸 이동
+        //B 레이아웃을 A로 이동. A + 1 ~ B는 위로 한칸 이동
 
         if (idxA == idxB) return; //같을경우 리턴
 
@@ -480,17 +476,19 @@ public class ScheduleService {
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
 
-
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
                 Collections.swap(spotList,i, i - 1);
+
             int temp = idxA;
             idxA = idxB;
             idxB = temp;
+
         }
         else{
             for (int i = idxA; i < idxB; i++)
                 Collections.swap(spotList, i, i + 1);
+
 
         }
 
@@ -723,7 +721,9 @@ public class ScheduleService {
                 isEditing = true;
             }
             else{ //start drag drop
-                ClipData.Item item = new ClipData.Item((CharSequence) view.getTag().toString());
+                int view_id = view.getId();
+
+                ClipData.Item item = new ClipData.Item((CharSequence) Integer.toString(view_id));
                 String[] mimeType = {ClipDescription.MIMETYPE_TEXT_PLAIN};
 
                 ClipData data = new ClipData(view.getTag().toString(), mimeType, item); //pass on the tag of the selected layout

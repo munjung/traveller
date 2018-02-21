@@ -49,9 +49,8 @@ public class TravelViewActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_TO_EMPTY_ITEM = 101;
 
-    private ImageButton btnAddLocation, btnHome, btnCamera;
-    private ViewSwitcher viewSwitcher;
-    private EditText editTitle;
+    private View btnGoToPicture, btnHome;
+    private ImageButton btnCamera;
     private TextView textTitle;
     private ViewByPhotosFragment viewByPhotosFragment;
     private ViewByScheduleFragment viewByScheduleFragment;
@@ -133,18 +132,16 @@ public class TravelViewActivity extends AppCompatActivity {
     }
 
     private void findViews(){ //find friends
-        btnAddLocation = findViewById(R.id.btnAddLocation);
-        btnHome = findViewById(R.id.btnHome);
-        viewSwitcher = findViewById(R.id.viewSwitcher);
-        editTitle = findViewById(R.id.editTitle);
-        textTitle = findViewById(R.id.textTitle);
+        btnGoToPicture = findViewById(R.id.btn_goto_picture_travle_view);
+        btnHome = findViewById(R.id.btn_home_travle_view);
+        textTitle = findViewById(R.id.txt_title_travel_view);
 
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
     }
 
     private void implementEvents(){
-        btnAddLocation.setOnClickListener(new View.OnClickListener() {
+        btnGoToPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(TravelViewActivity.this, EditLocationActivity.class);
@@ -157,49 +154,34 @@ public class TravelViewActivity extends AppCompatActivity {
                 finish();
             }
         });
-        //Switches between edit and text
-        textTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewSwitcher.showNext();
-            }
-        });
-        editTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textTitle.setText(editTitle.getText().toString());
-                viewSwitcher.showNext();
-            }
-        });
-        //end of switches
-
-        editTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                //hide keyboard and switch views when done
-                if (i == EditorInfo.IME_ACTION_DONE){
-                    viewSwitcher.showNext();
-                    textTitle.setText(editTitle.getText().toString());
-                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(editTitle.getWindowToken(), inputManager.HIDE_NOT_ALWAYS);
-                    return true;
-                }
-                return false;
-            }
-        });
-        editTitle.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                //when enter is detected while editing the title
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getAction() == keyEvent.KEYCODE_ENTER){
-                    viewSwitcher.showNext();
-                    textTitle.setText(editTitle.getText().toString());
-                    editTitle.clearFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
+//
+//        editTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+//                //hide keyboard and switch views when done
+//                if (i == EditorInfo.IME_ACTION_DONE){
+//                    viewSwitcher.showNext();
+//                    textTitle.setText(editTitle.getText().toString());
+//                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    inputManager.hideSoftInputFromWindow(editTitle.getWindowToken(), inputManager.HIDE_NOT_ALWAYS);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//        editTitle.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                //when enter is detected while editing the title
+//                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getAction() == keyEvent.KEYCODE_ENTER){
+//                    viewSwitcher.showNext();
+//                    textTitle.setText(editTitle.getText().toString());
+//                    editTitle.clearFocus();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         //draw and implement events for the tab
         TabLayout tabsTravel = findViewById(R.id.tabsTravelView);

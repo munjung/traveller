@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="center"
+        android:backgroundTint="@android:color/transparent"
         android:layout_margin="35dp"
         android:layout_above="@+id/layout_main_delete_warning"/>
 
