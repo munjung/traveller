@@ -188,7 +188,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Toast.makeText(this,"실패했다",Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -452,6 +452,10 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 }.execute(mPlace.getId());
                 ImageView ivmarker=findViewById(R.id.ivmapmarker);
                 ivmarker.setImageResource(R.drawable.icn_marker_map);
+                ImageView ivpremarker = findViewById(R.id.ivpremap);
+                ivpremarker.setImageResource(0);
+                TextView tvpretext = findViewById(R.id.tvpremap);
+                tvpretext.setText("");
                 PlaceName.setText(mPlace.getName());
                 PlaceAddress.setText(mPlace.getAddress());
                 final LinearLayout infoll = findViewById(R.id.mInfoll);

@@ -8,19 +8,15 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.squareup.timessquare.CalendarPickerView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import gamsung.traveller.R;
+
 
 /**
  * Created by jekan on 2018-01-30.
@@ -39,7 +35,6 @@ public class CalendarFragment extends Fragment {
 
         Calendar nextYear = Calendar.getInstance();
         nextYear.add(Calendar.YEAR, 1);
-
         calendar.init(new Date(), nextYear.getTime()).inMode(CalendarPickerView.SelectionMode.RANGE);
         /*calendar.init(today, nextYear.getTime())
                 .withSelectedDate(today)
