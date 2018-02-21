@@ -169,6 +169,9 @@ public class ScheduleService {
 
         return rtrLine;
     }
+    public void update_spots(List<Spot> spotList){
+        this.spotList = spotList;
+    }
     public void load_Spots(){
         int spot_total = spotList.size();
         if (spot_total == 0){
@@ -179,6 +182,7 @@ public class ScheduleService {
             for (int idx = 1; idx < spot_total; idx++){
                 addSchedule(spotList.get(idx));
             }
+
         }
     }
 
@@ -239,7 +243,7 @@ public class ScheduleService {
         ((TextView)editView.findViewById(R.id.title_left)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.title_right)).setText(editedSpot.getMission());
 
-        if(editedSpot.getPicture_path() == null) Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
+        if(editedSpot.getPicture_path() == "nopath") Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         else Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         //change image
 
@@ -363,7 +367,7 @@ public class ScheduleService {
 
         layoutBase.addView(createdView);
         layoutBase.addView(circleImageView);
-        circleImageView.setTag(createdView.getId());
+        //circleImageView.setTag(createdView.getId());
         DrawnLine[] lineView = draw_lines(listSchedule.size() - 1);
         layoutBase.addView(lineView[0]);
         layoutBase.addView(lineView[1]);
@@ -531,7 +535,7 @@ public class ScheduleService {
         lineView[1].setVisibility(View.VISIBLE);
         layoutBase.addView(circleImageView);
         layoutBase.addView(createdView);
-        circleImageView.setTag(createdView.getId());
+        //circleImageView.setTag(createdView.getId());
         //heightUpdate();
 
         createdView = addEmptySchedule(); //not necessary to create a new circle image.
