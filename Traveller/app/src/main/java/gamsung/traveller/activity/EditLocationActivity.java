@@ -274,10 +274,17 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View v) {
 
-                if (((EditText) findViewById(R.id.memoEdit)).getText().toString().trim() == "" || searchID == -1) {
-                    //입력을 하셔야 됩니다!
+                if (memoEdit.getText().toString().equals("") || memoEdit.getText()==null) {
+                    Toast.makeText(EditLocationActivity.this,"할일을 입력해주세요.",Toast.LENGTH_SHORT).show();
                     return;
-                } else {
+                }
+                else if(editLocation.getText().toString().equals("") || editLocation.getText()==null) {
+                    Toast.makeText(EditLocationActivity.this,"장소를 선택해주세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                else {
+
                     if (isEdit) {
                         updateSpot();
 
@@ -294,7 +301,20 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         btnNextPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (memoEdit.getText().toString().equals("") || memoEdit.getText()==null) {
+                    Toast.makeText(EditLocationActivity.this,"할일을 입력해주세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(editLocation.getText().toString().equals("") || editLocation.getText()==null) {
+                    Toast.makeText(EditLocationActivity.this,"장소를 선택해주세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                else {
+                    createSpot();
+                    memoEdit.setText("");
+                    editLocation.setText("");
+                }
             }
         });
     }
@@ -377,7 +397,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             Intent intent = new Intent();
             intent.putExtra("spot_id", editSpotId);
             setResult(EDIT_SPOT, intent);
-            finish();
+            //finish();
             Toast.makeText(EditLocationActivity.this, "변경되었습니다", Toast.LENGTH_LONG);
         }
         else{
@@ -404,7 +424,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
-            finish();//+
+            //finish();//+
             Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
         }
         else{
@@ -419,11 +439,10 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_GO_MAP && resultCode == MAP_SELECTED){
-            TextView address = findViewById(R.id.editLocation);
             HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
             searchID =data.getIntExtra("placeID",0);
             SearchPlace searchPlace =placelist.get(searchID);
-            address.setText(searchPlace.getPlace_address());
+            editLocation.setText(searchPlace.getPlace_address());
         }
 
         if (requestCode == REQUEST_CODE_GO_ADD_PHOTO && resultCode == RESULT_OK){
