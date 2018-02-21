@@ -106,6 +106,11 @@ public class DataManager {
         return m_spotManager.getSpotListWithRouteId(m_sqlHelper, routeId);
     }
 
+    public Spot getLastIndexSpot(){
+        return m_spotManager.getLastIndexSpot(m_sqlHelper);
+    }
+
+
 
     //photograph data interface
     public HashMap<Integer, Photograph> getPhotoList(){
