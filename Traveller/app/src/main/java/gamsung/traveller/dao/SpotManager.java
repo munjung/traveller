@@ -57,6 +57,20 @@ public class SpotManager {
         return true;
     }
 
+    public boolean deleteSpotWithRouteID(SQLiteHelper dbHelper, Integer route_id){
+
+        if(!_deleteSpotWithRouteID(dbHelper, route_id))
+            return false;
+
+//        if (m_spotMap.containsKey(id)) {
+//            m_spotMap.remove(id);
+//        }
+
+        return true;
+    }
+
+
+
     public long insertSpot(SQLiteHelper dbHelper, Spot spot, Integer index){
 
         long rowId = _insertSpot(dbHelper, spot, index);
@@ -218,5 +232,22 @@ public class SpotManager {
         return count;
     }
 
+    public boolean _deleteSpotWithRouteID(SQLiteHelper dbHelper, Integer id) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("DELETE FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + id);
+
+        try {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db.execSQL(sb.toString());
+            db.close();
+        }
+        catch (Exception ex){
+            Log.e("delete place", ex.getMessage());
+            return false;
+        }
+
+        return true;
+    }
 }
 
