@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,7 @@ public class ImageSliderActivity extends AppCompatActivity {
     private ArrayList<String> selectImagePath = new ArrayList<>();
     private ArrayList<String> selectMemoPath = new ArrayList<>();
     private ImageButton btnHome;
+    private TextView titleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +46,14 @@ public class ImageSliderActivity extends AppCompatActivity {
             }
         });
 
+        titleText = (TextView)findViewById(R.id.txt_image_slider_title);
+
         Intent intent = getIntent();
+        String title = intent.getExtras().getString("title");
         ArrayList<String> imgPath = intent.getStringArrayListExtra(EditLocationActivity.KEY_SEND_ACTIVITY_IMAGE_LIST);
         ArrayList<String> memoPath = intent.getStringArrayListExtra(EditLocationActivity.KEY_SEND_ACTIVITY_MEMO_LIST);
 
+        titleText.setText(title);
         for (int i=0; i<imgPath.size(); i++){
             selectImagePath.add(imgPath.get(i));
         }

@@ -34,7 +34,7 @@
                     android:layout_centerVertical="true"/>
 
                 <TextView
-                    android:id="@+id/textTitle"
+                    android:id="@+id/txt_image_slider_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="나의 일정_1"
@@ -52,8 +52,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:src="@drawable/btn_represent_photo_off"/>
+                    android:layout_marginRight="20dp"/>
 
             </RelativeLayout>
 
