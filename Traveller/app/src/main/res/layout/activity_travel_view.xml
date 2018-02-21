@@ -33,7 +33,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:backgroundTint="@android:color/transparent"
-                    android:src="@drawable/home_btn"/>
+                    android:src="@drawable/btn_home"/>
 
                 <ViewSwitcher
                     android:id="@+id/viewSwitcher"
