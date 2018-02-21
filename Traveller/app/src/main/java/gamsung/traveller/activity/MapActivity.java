@@ -113,12 +113,17 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         TextView tvnaming=findViewById(R.id.tvPlaceName);
         TextView tvaddress=findViewById(R.id.tvPlaceAddress);
         mapiv.setImageResource(0);
-        tvnaming.setText("장소를 선택해주세요!");
+        tvnaming.setText("");
         tvaddress.setText("");
         mMap.clear();
         findViewById(R.id.mInfoll).setClickable(false);
         findViewById(R.id.mInfoll).setVisibility(View.VISIBLE);
+
         findViewById(R.id.mSelectll).setVisibility(View.GONE);
+
+
+        ImageView ivmarker = findViewById(R.id.ivmapmarker);
+        ivmarker.setImageResource(0);
 
         final Button bt = findViewById(R.id.btmsearch);
         Button buttongo = findViewById(R.id.btchooseplace);
@@ -149,8 +154,10 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 ImageView mapiv=findViewById(R.id.ivPlace);
                 TextView tvname=findViewById(R.id.tvPlaceName);
                 TextView tvaddress=findViewById(R.id.tvPlaceAddress);
+
                 mapiv.setImageResource(0);
-                tvname.setText("장소를 선택해주세요!");
+
+                tvname.setText("");
                 tvaddress.setText("");
                 openAutocompleteActivity();
                 mMap.clear();
@@ -443,6 +450,8 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         }
                     }
                 }.execute(mPlace.getId());
+                ImageView ivmarker=findViewById(R.id.ivmapmarker);
+                ivmarker.setImageResource(R.drawable.icn_marker_map);
                 PlaceName.setText(mPlace.getName());
                 PlaceAddress.setText(mPlace.getAddress());
                 final LinearLayout infoll = findViewById(R.id.mInfoll);
