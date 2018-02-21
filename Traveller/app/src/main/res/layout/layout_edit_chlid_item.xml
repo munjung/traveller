@@ -35,6 +35,8 @@
             android:maxLines="2"
             android:background="@null"
             android:hint="여기에 이 사진에 대한 메모를 남겨보세요."/>
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
