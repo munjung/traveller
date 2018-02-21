@@ -129,9 +129,6 @@ public class ViewByScheduleFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-//            Bundle bundle = new Bundle();
-//            bundle.putInt("route id", route_id);
-
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
 
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
@@ -151,8 +148,6 @@ public class ViewByScheduleFragment extends Fragment {
             Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
 
             int view_idx = scheduleService.toListIdx((int)view.getId());
-//            Bundle bundle = new Bundle();
-//            bundle.putInt("spot list", scheduleService.listSchedule.get(view_idx).spot_ID);
 
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","edit");

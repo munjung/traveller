@@ -79,16 +79,15 @@
             android:gravity="left|center"/>
 
         <RelativeLayout android:id="@+id/btn_edit_route_item"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:layout_centerVertical="true"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true">
 
             <Button
                 android:layout_width="18dp"
                 android:layout_height="13dp"
                 android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
                 android:background="@drawable/btn_edit"/>
         </RelativeLayout>
 

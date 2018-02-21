@@ -8,72 +8,61 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="102dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
+            android:id="@+id/toolTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
             android:elevation="1dp"
-            android:id="@+id/toolTitle"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:contentInsetStart="0dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="40dp">
 
-                <ImageButton
-                    android:id="@+id/btnHome"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:backgroundTint="@android:color/transparent"
-                    android:src="@drawable/home_btn"/>
+                <RelativeLayout
+                    android:id="@+id/btn_home_travle_view"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp">
 
-                <ViewSwitcher
-                    android:id="@+id/viewSwitcher"
+                    <Button
+                        android:layout_width="26dp"
+                        android:layout_height="34dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/home_btn" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/btnHome"
-                    android:layout_toRightOf="@+id/btnHome"
-                    android:layout_toStartOf="@+id/btnAddLocation"
-                    android:layout_toLeftOf="@+id/btnAddLocation">
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/btn_goto_picture_travle_view"
+                    android:layout_toRightOf="@id/btn_home_travle_view"
+                    android:gravity="center"
+                    android:text="Trip_Name"
+                    android:textColor="#000000"
+                    android:textSize="15.2sp" />
 
-                    <EditText
-                        android:id="@+id/editTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:imeOptions="actionDone"
-                        android:singleLine="true"
-                        android:text="Trip_Name"
-                        android:textColor="#000000"
-                        android:textSize="15.2sp" />
-
-                    <TextView
-                        android:id="@+id/textTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Trip_Name"
-                        android:textColor="#000000"
-                        android:textSize="15.2sp" />
-
-                </ViewSwitcher>
-
-                <ImageButton
-                    android:id="@+id/btnAddLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
+                <RelativeLayout
+                    android:id="@+id/btn_goto_picture_travle_view"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/a_btn" />
+                    android:layout_marginRight="5dp">
+
+                    <Button
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/a_btn" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -83,19 +72,21 @@
             android:id="@+id/tabsTravelView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="1dp"
             android:background="@android:color/background_light"
-            app:tabTextAppearance="@style/TabTextAppearance"
-            app:tabMode="fixed"
+            android:elevation="1dp"
             app:tabGravity="fill"
-            app:tabTextColor="#5d5d5d"
-            app:tabSelectedTextColor="#111100"
             app:tabIndicatorColor="#ff0077"
-            app:tabIndicatorHeight="5dp">
+            app:tabIndicatorHeight="5dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#111100"
+            app:tabTextAppearance="@style/TabTextAppearance"
+            app:tabTextColor="#5d5d5d">
+
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="일정별" />
+
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
