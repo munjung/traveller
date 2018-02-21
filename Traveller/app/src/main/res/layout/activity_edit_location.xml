@@ -118,7 +118,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10dp"
                             android:layout_toRightOf="@+id/image_camera_edit_location"
-                            android:text="해당 버튼을 눌러\n사진을 추가해 주세요"
+                            android:text="여기를 눌러\n사진을 추가해 주세요"
                             android:textColor="#5d5d5d"
                             android:textSize="15sp" />
 
@@ -132,7 +132,8 @@
                     android:visibility="invisible"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:layout_margin="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
                     android:background="@drawable/btn_add_photos"/>
                 
             </RelativeLayout>

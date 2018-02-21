@@ -60,10 +60,9 @@ class ViewIdGenerator {
 }
 
 class DrawnLine extends AppCompatImageView{
-    static int endPaddingY = 0;
-    static int endPaddingX = 0;
-    static int startPaddingY = 0;
-    static int startPaddingX = 0;
+    static final int BORDER_WIDTH = 5;
+    static final int HEIGHT_EXTRA = 20;
+    static final int WIDTH_EXTRA = 70;
     private int startX, startY, endX, endY;
     public DrawnLine(Context context, int startX, int startY, int endX, int endY) {
         super(context);
@@ -77,9 +76,9 @@ class DrawnLine extends AppCompatImageView{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
-        line.setStrokeWidth(ScheduleService.toDp(getContext(), 5));
+        line.setStrokeWidth(ScheduleService.toDp(getContext(), BORDER_WIDTH));
         line.setColor(Color.WHITE);
-        canvas.drawLine(startX - 5,startY - 5, endX , endY, line);
+        canvas.drawLine(startX,startY, endX , endY, line);
     }
 }
 
@@ -134,7 +133,7 @@ public class ScheduleService {
         //this.longClickedCircle = this.longClickedListener;
         this.dragListener = this.scheduleDragListener;
         BORDER_WIDTH = (int)toDp(appContext, 5);
-        IMAGE_SIZE = 100;
+        IMAGE_SIZE = 110;
         FIRST_CIRCLE_BIGGER = 40;
         EMPTY_CIRCLE_BIGGER = 24;
         coordinateInformation.layout_height = 0; //initalized to zero
@@ -147,27 +146,31 @@ public class ScheduleService {
         DrawnLine rtrLine[] = new DrawnLine[2];
         for (int i = 0; i < 2; i++){
             if (i == 0) {
-                rtrLine[0] =  new DrawnLine(appContext, 0, 0, coordinateInformation.circleX[1] - coordinateInformation.circleX[0],
-                        coordinateInformation.first_margin * 2);
-                rtrLine[0].setX(coordinateInformation.circleX[0] +  dipToPixels(appContext,this.IMAGE_SIZE/2 - 10));
+                rtrLine[0] =  new DrawnLine(appContext, 0, 0, coordinateInformation.circleX[1] - coordinateInformation.circleX[0] + DrawnLine.WIDTH_EXTRA,
+                        coordinateInformation.first_margin + coordinateInformation.end_margin + DrawnLine.HEIGHT_EXTRA);
+                rtrLine[0].setX(coordinateInformation.circleX[0] +  dipToPixels(appContext,this.IMAGE_SIZE/2) - DrawnLine.WIDTH_EXTRA/2);
             }
             else{
-                rtrLine[1] = new DrawnLine(appContext, coordinateInformation.circleX[1] - coordinateInformation.circleX[0] - DrawnLine.startPaddingX, 0, 0,
-                        coordinateInformation.first_margin * 2);
-                rtrLine[1].setX(coordinateInformation.circleX[0] +  dipToPixels(appContext,this.IMAGE_SIZE/2 + 10));
+                rtrLine[1] = new DrawnLine(appContext, coordinateInformation.circleX[1] - coordinateInformation.circleX[0] + DrawnLine.WIDTH_EXTRA, 0, 0,
+                        coordinateInformation.first_margin + coordinateInformation.end_margin + DrawnLine.HEIGHT_EXTRA);
+                rtrLine[1].setX(coordinateInformation.circleX[0] +  dipToPixels(appContext,this.IMAGE_SIZE/2) - DrawnLine.WIDTH_EXTRA/2);
             }
 
             if (idx > 0) {
-                if (idx == 1) rtrLine[i].setY((coordinateInformation.first_margin + dipToPixels(appContext, this.IMAGE_SIZE)) * idx - DrawnLine.startPaddingY);
+                if (idx == 1) rtrLine[i].setY((coordinateInformation.first_margin + dipToPixels(appContext, this.IMAGE_SIZE)) * idx);
                     //else imageView.setY(((coordinateInformation.first_margin + coordinateInformation.end_margin) + dipToPixels(appContext, this.IMAGE_SIZE)) * idx - coordinateInformation.first_margin);
-                else rtrLine[i].setY(listSchedule.get(idx).view.getY() - coordinateInformation.end_margin - DrawnLine.startPaddingY);
+                else rtrLine[i].setY(listSchedule.get(idx).view.getY() - coordinateInformation.end_margin);
             }
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(coordinateInformation.circleX[1] - coordinateInformation.circleX[0],
-                    coordinateInformation.first_margin * 2 + 10);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(coordinateInformation.circleX[1] - coordinateInformation.circleX[0] + DrawnLine.WIDTH_EXTRA,
+                    coordinateInformation.first_margin + coordinateInformation.end_margin + DrawnLine.HEIGHT_EXTRA);
+            //rtrLine[i].setBackgroundColor(Color.BLACK);
             rtrLine[i].setLayoutParams(layoutParams);
         }
 
         return rtrLine;
+    }
+    public void update_spots(List<Spot> spotList){
+        this.spotList = spotList;
     }
     public void load_Spots(){
         int spot_total = spotList.size();
@@ -179,6 +182,7 @@ public class ScheduleService {
             for (int idx = 1; idx < spot_total; idx++){
                 addSchedule(spotList.get(idx));
             }
+
         }
     }
 
@@ -234,12 +238,12 @@ public class ScheduleService {
         View editView = listSchedule.get(idx).view;
         Spot editedSpot = spotList.get(toListIdx(view_id));
 
+        ((TextView)editView.findViewById(R.id.title_left)).setText("Spot ID: " + editedSpot.get_id());
+        ((TextView)editView.findViewById(R.id.title_right)).setText("Spot ID: " + editedSpot.get_id());
         ((TextView)editView.findViewById(R.id.contents_left)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.contents_right)).setText(editedSpot.getMission());
-        ((TextView)editView.findViewById(R.id.title_left)).setText(editedSpot.getMission());
-        ((TextView)editView.findViewById(R.id.title_right)).setText(editedSpot.getMission());
 
-        if(editedSpot.getPicture_path() == null) Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
+        if(editedSpot.getPicture_path() == "nopath") Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         else Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         //change image
 
@@ -335,7 +339,7 @@ public class ScheduleService {
         if (spot.getPicture_path() == null)
             Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
         else {
-            try {
+            try { //if failed to load the pic, load the no_image.
                 Glide.with(appContext).load(spot.getPicture_id()).dontAnimate().into(circleCopy);
             }catch(Exception e){
                 Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
@@ -363,7 +367,7 @@ public class ScheduleService {
 
         layoutBase.addView(createdView);
         layoutBase.addView(circleImageView);
-        circleImageView.setTag(createdView.getId());
+        //circleImageView.setTag(createdView.getId());
         DrawnLine[] lineView = draw_lines(listSchedule.size() - 1);
         layoutBase.addView(lineView[0]);
         layoutBase.addView(lineView[1]);
@@ -474,7 +478,7 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).spot_ID);
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
-
+        
 
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
@@ -531,7 +535,7 @@ public class ScheduleService {
         lineView[1].setVisibility(View.VISIBLE);
         layoutBase.addView(circleImageView);
         layoutBase.addView(createdView);
-        circleImageView.setTag(createdView.getId());
+        //circleImageView.setTag(createdView.getId());
         //heightUpdate();
 
         createdView = addEmptySchedule(); //not necessary to create a new circle image.
@@ -551,8 +555,8 @@ public class ScheduleService {
         for (int idx = startIdx; idx < total; idx++){
             listSchedule.get(idx).view.setY(allocateViewCoordinateY(idx));
             if (listSchedule.get(idx).lines != null) {
-                listSchedule.get(idx).lines[0].setY(allocateViewCoordinateY(idx) + coordinateInformation.layout_height - coordinateInformation.end_margin - DrawnLine.startPaddingY);
-                listSchedule.get(idx).lines[1].setY(allocateViewCoordinateY(idx) + coordinateInformation.layout_height - coordinateInformation.end_margin - DrawnLine.startPaddingY);
+                listSchedule.get(idx).lines[0].setY(allocateViewCoordinateY(idx) + coordinateInformation.layout_height - coordinateInformation.end_margin - DrawnLine.HEIGHT_EXTRA/2);
+                listSchedule.get(idx).lines[1].setY(allocateViewCoordinateY(idx) + coordinateInformation.layout_height - coordinateInformation.end_margin - DrawnLine.HEIGHT_EXTRA/2);
             }
         }
     }
@@ -586,7 +590,7 @@ public class ScheduleService {
         layoutParams.topMargin = (int)toDp(appContext, 20);
         textView.setLayoutParams(layoutParams);
         layoutBase.addView(textView, layoutParams);
-
+        layoutBase.setBackgroundColor(Color.WHITE);
         //draw an invisible schedule to calculate layout height and xy coordinates.
 
     }
@@ -698,7 +702,7 @@ public class ScheduleService {
     }
     private int findScheduleIDFromSpotID(int spotID){
         int list_total = listSchedule.size();
-        for (int idx = 0; idx < list_total; idx++){
+        for (int idx = 0; idx < list_total - 1; idx++){
             if (listSchedule.get(idx).spot_ID == spotID){
                 return listSchedule.get(idx).view.getId();
             }

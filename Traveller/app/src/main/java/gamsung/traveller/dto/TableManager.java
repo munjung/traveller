@@ -58,8 +58,8 @@ public class TableManager {
 
         public static final String column_id =              "spot_id";
         public static final String column_route_id =        "route_id";    //route table id
-        public static final String column_next_spot_id =    "next_spot_id";
-        public static final String column_picture_id =      "picture_id";   //대표 사진 id
+        public static final String column_index_id =        "index_id";
+        public static final String column_picture_path =    "picture_path";  //대표 사진 id
         public static final String column_mission =         "mission";
         public static final String column_search_id =       "search_id";    //search table id
         public static final String column_category_id =     "category_id";
@@ -68,8 +68,8 @@ public class TableManager {
         public static final String[] columns = {
                 column_id,
                 column_route_id,
-                column_next_spot_id,
-                column_picture_id,
+                column_index_id,
+                column_picture_path,
                 column_mission,
                 column_search_id,
                 column_category_id
@@ -81,14 +81,13 @@ public class TableManager {
             sb.append("CREATE TABLE " + name + " ( ");
             sb.append(column_id             + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
             sb.append(column_route_id       + " INTEGER NOT NULL, ");
-            sb.append(column_next_spot_id   + " INTEGER, ");
-            sb.append(column_picture_id     + " INTEGER, ");
+            sb.append(column_index_id       + " INTEGER, ");
+            sb.append(column_picture_path   + " TEXT, ");
             sb.append(column_mission        + " TEXT NOT NULL, ");
             sb.append(column_search_id      + " INTEGER, ");
-            sb.append(column_category_id    + " INTEGER, ");
-            sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+")" + " ON DELETE CASCADE ON UPDATE CASCADE, ");
-            sb.append("FOREIGN KEY ("+ column_picture_id +") REFERENCES "+ TableManager.PictureTable.name +"("+ PictureTable.column_id+") ON UPDATE CASCADE, ");
-            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");
+            sb.append(column_category_id    + " INTEGER ");
+            //sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+")" + " ON DELETE CASCADE ON UPDATE CASCADE ");
+//            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");
 
             sb.append(")");
 
@@ -188,10 +187,10 @@ public class TableManager {
             sb.append(column_search_id      + " INTEGER, ");
             sb.append(column_path           + " TEXT, ");
             sb.append(column_date           + " TEXT, ");
-            sb.append(column_memo           + " TEXT, ");
-            sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+") ON UPDATE CASCADE, ");
-            sb.append("FOREIGN KEY ("+ column_spot_id +") REFERENCES "+ TableManager.SpotTable.name +"("+ SpotTable.column_id+") ON UPDATE CASCADE, ");
-            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");
+            sb.append(column_memo           + " TEXT ");
+//            sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+") ON UPDATE CASCADE, ");
+//            sb.append("FOREIGN KEY ("+ column_spot_id +") REFERENCES "+ TableManager.SpotTable.name +"("+ SpotTable.column_id+") ON UPDATE CASCADE, ");
+//            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");
 
             sb.append(")");
 

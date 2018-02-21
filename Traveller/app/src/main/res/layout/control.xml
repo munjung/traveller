@@ -76,7 +76,7 @@
 
         <ImageView
             android:layout_width="330dp"
-            android:layout_height="185dp"
+            android:layout_height="230dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/bg_pop"
             android:layout_centerInParent="true"/>
@@ -100,7 +100,7 @@
             android:gravity="center">
 
             <Spinner
-                android:id="@+id/dropDownSpot"
+                android:id="@+id/dropDownRoute"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 style="@style/SpinnerStyle"
@@ -108,10 +108,16 @@
                 android:layout_centerHorizontal="true"/>
 
 
+            <Spinner
+                android:id="@+id/dropDownSpot"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                style="@style/SpinnerStyle"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"/>
+
         </LinearLayout>
 
-
     </RelativeLayout>
-
 
 </RelativeLayout>

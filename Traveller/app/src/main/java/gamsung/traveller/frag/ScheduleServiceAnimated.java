@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.Circle;
@@ -37,7 +39,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
     private Queue<View> queueCircleAnimated= new LinkedList<>();
     private int startID, endID;
     private boolean isScheduleMoved;
-
+    private int temp_int = 0;
     public ScheduleServiceAnimated(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
                                    RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop) {
         super(rootView, layoutSingle, scrollView, layoutBase, appContext, spotList, isDragDrop);
@@ -46,7 +48,22 @@ public class ScheduleServiceAnimated extends ScheduleService {
         DRAGDROP_ANIMATION_DURATION = 1500;
         DRAGDROP_WAITING_TIME = 1000;
         isScheduleMoved = false;
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(scrollListener);
     }
+    ViewTreeObserver.OnScrollChangedListener scrollListener = new ViewTreeObserver.OnScrollChangedListener() {
+        @Override
+        public void onScrollChanged() {
+
+            int y_coordinate = 0;
+            View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+            int diff = (int)(view.getBottom() - (scrollView.getHeight() + scrollView.getY()));
+            if (scrollView.getY() == 0) y_coordinate = scrollView.getScrollY();
+            Log.d("Test", y_coordinate + ".");
+            //if (temp_int++ % 2 == 0) listSchedule.get(0).circleImage.animate().x(300);
+            //else listSchedule.get(0).circleImage.animate().x(0);
+
+        }
+    };
 
     View.OnDragListener scheduleDragListener = new View.OnDragListener(){
         @Override

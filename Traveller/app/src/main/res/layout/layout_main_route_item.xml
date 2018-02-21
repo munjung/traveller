@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:visibility="invisible"
-                android:background="@drawable/img_b_g_photo_tag"/>
+                android:background="@drawable/img_inner_shadow_2"/>
 
             <RelativeLayout
                 android:id="@+id/btn_goto_picture"

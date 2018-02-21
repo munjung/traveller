@@ -48,22 +48,19 @@ public class ViewByScheduleFragment extends Fragment {
     private View referenceView;
     private List<Spot> spotList;
     private List<Integer> deletedSpotID, editedSpotID;
-    private DataManager dataManager;
     private boolean isOrderChanged;
     private TravelViewActivity activity;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         activity = (TravelViewActivity)getActivity();
-
         deletedSpotID = activity.getDeletedSpotID();
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();
         route_id = activity.getRoute_id();
 
-        dataManager = DataManager.getInstance(getActivity());
 
-        if (activity.getChangeMade() || spotList == null) spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        if (activity.getChangeMade() || spotList == null) spotList = activity.refreshSpotList();
         activity.setChangeMade(false);
 
         if (rootView == null) { //if rootview is not loaded, load.
@@ -73,6 +70,7 @@ public class ViewByScheduleFragment extends Fragment {
             scrollView = rootView.findViewById(R.id.scroll_schedule);
 
             scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true);
+
             scheduleService.clickEditSchedule = editSchedule;
             scheduleService.clickRemoveSelectedSchedule = clickRemoveSchedule;
             scheduleService.startScheduling = startScheduling;
@@ -105,6 +103,7 @@ public class ViewByScheduleFragment extends Fragment {
         }
 
         if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
+            scheduleService.update_spots(spotList);
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
             activity.setOrderChanged(false);
         }
@@ -120,6 +119,8 @@ public class ViewByScheduleFragment extends Fragment {
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
             bundle.putInt("route id", route_id);
             startActivityForResult(i, REQUEST_INIT, bundle);
+
+            activity.setChangeMade(true);
         }
     };
 
@@ -172,7 +173,8 @@ public class ViewByScheduleFragment extends Fragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     //assumed that the indexes for spotlist and listschedule are synchronized
                     int idx_view = scheduleService.toListIdx(view_id);
-                    dataManager.deleteSpot(scheduleService.listSchedule.get(idx_view).spot_ID);
+                    activity.deleteSpotFromDB(scheduleService.listSchedule.get(idx_view).spot_ID);
+                    spotList.remove(scheduleService.toListIdx(scheduleService.listSchedule.get(idx_view).spot_ID)); //temporarily manual deletion of list.
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }
@@ -197,9 +199,10 @@ public class ViewByScheduleFragment extends Fragment {
         }
     };
 
-    @Override
+        @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        spotList = activity.refreshSpotList();
+        scheduleService.update_spots(spotList);
         if (requestCode == REQUEST_ADD){
             //temporary creating spots
 
@@ -228,7 +231,7 @@ public class ViewByScheduleFragment extends Fragment {
             int spot_total = spotList.size();
             for (int idx = 0; idx < spot_total; idx++){
                 if (spotList.get(idx).get_id() == spot_id){
-                    dataManager.updateSpot(spotList.get(idx));
+                    activity.updateSpotFromDB(spotList.get(idx));
                     break;
                 }
             }
@@ -245,6 +248,18 @@ public class ViewByScheduleFragment extends Fragment {
         }
     }
 
-
+    public void force_update(){
+        spotList = activity.refreshSpotList();
+        scheduleService.update_spots(spotList);
+        if (scheduleService.listSchedule.size() == 0){
+            scheduleService.load_Spots();
+        }
+        else{
+            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
+            int num_added = spotList.size() - list_total;
+            scheduleService.isEditing = false;
+            processAdditionalSchedules(num_added, list_total);
+        }
+    }
 }
 
