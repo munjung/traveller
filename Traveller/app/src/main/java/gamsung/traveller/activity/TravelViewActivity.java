@@ -25,7 +25,9 @@ import android.widget.ViewSwitcher;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -80,6 +82,7 @@ public class TravelViewActivity extends AppCompatActivity {
         //            viewByScheduleFragment
         //            viewByPhotosFragment
                 }
+                else
                 break;
         }
     }
@@ -274,11 +277,7 @@ public class TravelViewActivity extends AppCompatActivity {
     public List<Spot> refreshSpotList(){
         Toast.makeText(getApplicationContext(), "Spotlist updated.", Toast.LENGTH_SHORT).show();
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
-        for (Spot spot : spotList){
-            Log.d("SPOT VALUES: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
-
-        }
-
+        Collections.sort(spotList, new CustomComparator());
         //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         return spotList; //temporarily
     }
@@ -289,4 +288,11 @@ public class TravelViewActivity extends AppCompatActivity {
         dataManager.deleteSpot(spot_id);
     }
 
+
+}
+class CustomComparator implements Comparator<Spot>{
+    @Override
+    public int compare(Spot spot, Spot t1) {
+        return spot.getIndex_id() - t1.getIndex_id();
+    }
 }

@@ -126,8 +126,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
-        isEdit = true;
-
         this.registerListener();
         this.registerRecyclerView();
         this.visibleOperationForEditMode();
@@ -238,7 +236,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
-
 
      /*   btnRepresent = (Button)findViewById(R.id.btn_represent_edit_location);
         btnRepresent.setOnClickListener(new View.OnClickListener() {
@@ -393,16 +390,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             _dataManager.insertPhoto(photoforSet);
         }
 
-      /*  if(picpath!="nopath")
-        editSpot.setPicture_path(picpath);*/
-
-
         //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
         int a = _dataManager.updateSpot(editSpot);
 
 
         //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
-
         if(_dataManager.updateSpot(editSpot) > 0){
 
             Intent intent = new Intent();
@@ -418,7 +410,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void createSpot(){
+    private void createSpot() {
 
 //                        Bundle bundle = savedInstanceState;
 //                        int route_id = bundle.getInt("route id");
@@ -430,15 +422,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setCategory_id(CATEGORY_ID);
         newSpot.setPicture_path(picturePath);
 
-        int spot_id = (int)_dataManager.insertSpot(newSpot);
-        if(spot_id > 0){
+        int spot_id = (int) _dataManager.insertSpot(newSpot);
+        if (spot_id > 0) {
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
             //finish();//+
             Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
-        }
-        else{
+        } else {
 
             Log.e("insert spot", "error : not inserted");
             Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);

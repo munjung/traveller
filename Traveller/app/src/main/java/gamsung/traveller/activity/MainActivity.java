@@ -15,7 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -226,6 +230,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(i);
             }
         });
+
+        EditText editTextSearch = (EditText) findViewById(R.id.txt_search_main);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String filterText = editable.toString();
+                _recyclerAdapter.getFilter().filter(filterText);
+            }
+        });
     }
 
 
@@ -314,10 +337,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 //View Holder Adaper
-class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RouteViewHolder> {
+class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RouteViewHolder> implements Filterable {
 
     private Context _context;
     private List<Route> _items;
+    private List<Route> _originRouteList;
 
     private View _deleteView;
     private Button _addBtnForVisible;
@@ -333,6 +357,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         this._context = context;
         this._items = routeList;
+        this._originRouteList = routeList;
 
         this._clickListener = clickListener;
         this._clickListenerArgs = new RouteItemClickListenerArguments();
@@ -530,6 +555,42 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
     public RouteItemClickListenerArguments get_clickListenerArgs() {
         return _clickListenerArgs;
+    }
+
+    @Override
+    public Filter getFilter() {
+
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String searchText = charSequence.toString();
+                if (searchText.isEmpty()) {
+                    _items = _originRouteList;
+                } else {
+                    List<Route> filteredList = new ArrayList<>();
+                    for (Route route : _originRouteList) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (route.getTitle().toLowerCase().contains(searchText.toLowerCase())) {
+                            filteredList.add(route);
+                        }
+                    }
+
+//                    _items = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filterResults;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                _items = (ArrayList<Route>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
 

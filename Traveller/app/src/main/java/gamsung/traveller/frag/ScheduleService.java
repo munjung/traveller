@@ -221,7 +221,7 @@ public class ScheduleService {
         circleImageView.setOnClickListener(createNewSchedule);
 
         int viewID = ViewIdGenerator.generateViewId();
-        layoutSchedule.setTag(viewID);
+        //layoutSchedule.setTag(viewID);
         layoutSchedule.setId(viewID);
         layoutSchedule.setY(allocateViewCoordinateY(1));
         layoutSchedule.setX(0);
@@ -368,6 +368,7 @@ public class ScheduleService {
         layoutBase.addView(createdView);
         layoutBase.addView(circleImageView);
         //circleImageView.setTag(createdView.getId());
+        circleImageView.setId(createdView.getId());
         DrawnLine[] lineView = draw_lines(listSchedule.size() - 1);
         layoutBase.addView(lineView[0]);
         layoutBase.addView(lineView[1]);
@@ -478,7 +479,7 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).spot_ID);
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
-        
+
 
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
@@ -590,7 +591,7 @@ public class ScheduleService {
         layoutParams.topMargin = (int)toDp(appContext, 20);
         textView.setLayoutParams(layoutParams);
         layoutBase.addView(textView, layoutParams);
-        layoutBase.setBackgroundColor(Color.WHITE);
+        layoutBase.setBackgroundColor(Color.TRANSPARENT);
         //draw an invisible schedule to calculate layout height and xy coordinates.
 
     }
