@@ -117,8 +117,9 @@ public class ViewByScheduleFragment extends Fragment {
             Bundle bundle = new Bundle();
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
-            bundle.putInt("route id", route_id);
-            startActivityForResult(i, REQUEST_INIT, bundle);
+            i.putExtra("TAG_ACTIVITY", "create");
+            i.putExtra("route id", route_id);
+            startActivityForResult(i, REQUEST_INIT);
 
             activity.setChangeMade(true);
         }
@@ -146,10 +147,10 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener editSchedule = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            int idx = scheduleService.toListIdx((int)view.getTag());
+            int idx = scheduleService.toListIdx((int)view.getId());
             Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
 
-            int view_idx = scheduleService.toListIdx((int)view.getTag());
+            int view_idx = scheduleService.toListIdx((int)view.getId());
 //            Bundle bundle = new Bundle();
 //            bundle.putInt("spot list", scheduleService.listSchedule.get(view_idx).spot_ID);
 

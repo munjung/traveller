@@ -98,21 +98,21 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     view.setBackgroundColor(Color.TRANSPARENT);
                     //if schedule is already moved, animation is not necessary.
                     if (!isScheduleMoved) {
-                        moveSchedule(toListIdx(Integer.parseInt(dragData)), toListIdx((int) view.getTag()));
+                        moveSchedule(toListIdx(Integer.parseInt(dragData)), toListIdx((int) view.getId()));
                     }
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if (startID == -1) {
-                        startID = toListIdx((int)view.getTag());
+                        startID = toListIdx((int)view.getId());
                     }
-                    endID = toListIdx((int)view.getTag());
+                    endID = toListIdx((int)view.getId());
                     view.setBackgroundColor(Color.YELLOW);
                     //tHandler.postDelayed(runnableTimeCounter, DRAGDROP_WAITING_TIME); //animation takes a place after the waiting time.
                     return true;
 
                 case DragEvent.ACTION_DRAG_ENDED:
                     //cancel animaton if necessary
-                    endID = toListIdx((int)view.getTag());
+                    endID = toListIdx((int)view.getId());
                     //tHandler.removeCallbacksAndMessages(null);
                     isScheduleMoved = false;
                     isEditing = false;
@@ -136,12 +136,14 @@ public class ScheduleServiceAnimated extends ScheduleService {
         Higher than the selected index
         -Move STRAIGHT UP and replace the selected index.*/
         int delete_idx = toListIdx(view_id);
-        int listSize = listSchedule.size();
+        int listSize = listSchedule.size() - 1;
         for (int idx = 0; idx < listSize; idx++){
             boolean isLeft = getLeftVisbility(idx);
+            listSchedule.get(idx).lines[isLeft ? 0 : 1].setVisibility(View.INVISIBLE);
             if (idx < delete_idx){ //circle to side way
                 listSchedule.get(idx).circleImage.animate().x(coordinateInformation.circleX[isLeft ? 1 : 0]).setDuration(DRAGDROP_ANIMATION_DURATION);
                 listSchedule.get(idx).view.animate().alpha(0).setDuration(DRAGDROP_ANIMATION_DURATION/2);
+
             }
             else if (idx == delete_idx){
                 RemoveAnimation removeAnimation = new RemoveAnimation(view_id);
@@ -163,11 +165,11 @@ public class ScheduleServiceAnimated extends ScheduleService {
             //optiotnal
             if (idx < listSchedule.size() - 1){
                 listSchedule.get(idx).circleImage.bringToFront();
+
             }
         }
         isEditing = false;
     }
-
 
     @Override
     public void moveSchedule(int idxA, int idxB) {
@@ -241,6 +243,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
 
         for (int idx = 0; idx < listSchedule.size() - 1; idx++){
             View referenceView = listSchedule.get(idx).view;
+            isLeft = getLeftVisbility(idx);
+            //listSchedule.get(idx).lines[isLeft ? 1 : 0].setVisibility(View.INVISIBLE);
             if (getLeftVisbility(idx))
                 referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.GONE);
             else
@@ -274,7 +278,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
 
             if (!queueCircleAnimated.isEmpty()){ //if not empty, greater than four circles are being moved.
                 View circleImage = queueCircleAnimated.remove();
-                idx = toListIdx((int)circleImage.getTag());
+                idx = toListIdx((int)circleImage.getId());
                 circleImage.setX(coordinateInformation.circleX[getLeftVisbility(idx) ? 0 : 1]);
                 circleImage.setY(coordinateInformation.layout_height * idx + coordinateInformation.first_margin);
                 circleImage.animate().alpha(1).setDuration(DRAGDROP_ANIMATION_DURATION/2);
@@ -318,8 +322,10 @@ public class ScheduleServiceAnimated extends ScheduleService {
         @Override
         public void onAnimationEnd(Animator animator) { //this is the end of animation
             //remove animations from layout
+            boolean isLeft;
             for (int idx = 0; idx < listSchedule.size() - 1; idx++) {
-                if (getLeftVisbility(idx)) {
+                isLeft = getLeftVisbility(idx);
+                if (isLeft) {
                     //listSchedule.get(idx).view.findViewById(R.id.circleimageview_left).setVisibility(View.VISIBLE);
                     listSchedule.get(idx).view.animate().setListener(null);
                 }
@@ -329,6 +335,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
                 }
                 listSchedule.get(idx).view.setOnDragListener(scheduleDragListener); //reactivate drag drop listener
                 listSchedule.get(idx).circleImage.setOnClickListener(clickEditSchedule);
+                //listSchedule.get(idx).lines[isLeft ? 1 : 0].setVisibility(View.VISIBLE);
             }
             isEditing = false;
         }
@@ -388,7 +395,12 @@ public class ScheduleServiceAnimated extends ScheduleService {
             }
             else {
                 listSchedule.get(0).view.animate().setListener(null);
+                int total = listSchedule.size() - 2; //assumed one is deleted
                 ScheduleServiceAnimated.super.removeSchedule(view_id);
+                for (int idx = 0; idx < total; idx++){
+                    boolean isLeft = getLeftVisbility(idx);
+                    listSchedule.get(idx).lines[isLeft ? 0 : 1].setVisibility(View.VISIBLE);
+                }
             }
         }
 
