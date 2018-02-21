@@ -75,11 +75,14 @@ public class DataManager {
     }
 
     public boolean deleteRoute(Integer id){
+        m_spotManager.deleteSpotWithRouteID(m_sqlHelper, id);
        return m_routeManager.deleteRoute(m_sqlHelper, id);
 
         //delete place table > DELETE FROM PLACE WHERE ROUTE_ID = id;
         //delete photo table > 삭제하지 않는 것이 좋음, 사진에 연결된 장소 정보를 잃어버림
     }
+
+
 
     public long insertRoute(Route route){
         return m_routeManager.insertRoute(m_sqlHelper, route);
@@ -98,6 +101,11 @@ public class DataManager {
 
     public boolean deleteSpot(Integer id){
        return m_spotManager.deleteSpot(m_sqlHelper, id);
+    }
+
+
+    public boolean deleteSpotWithRouteId(Integer route_id){
+        return m_spotManager.deleteSpotWithRouteID(m_sqlHelper, route_id);
     }
 
     public long insertSpot(Spot spot){
