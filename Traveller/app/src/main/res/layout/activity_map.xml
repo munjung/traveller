@@ -74,6 +74,33 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_centerInParent="true"
+                >
+
+                <ImageView
+                    android:id="@+id/ivpremap"
+                    android:layout_width="16dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/icn_marker_map" />
+
+                <TextView
+                    android:id="@+id/tvpremap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="지도를 길게눌러 위치를 지정해주세요!"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -117,6 +144,8 @@
                 android:layout_marginTop="55dp"
                 android:singleLine="true"
                 android:textSize="12sp" />
+
+        </RelativeLayout>
 
         </RelativeLayout>
 

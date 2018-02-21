@@ -105,6 +105,7 @@ public class ViewByPhotosFragment extends Fragment {
                     timeViewAdapter.notifyItemRemoved(pos);
                     timeViewAdapter.notifyItemRangeRemoved(0, spotList.size());
                     activity.setChangeMade(true);
+                    Toast.makeText(getContext(), "Deleted spot ID: " + targetSpot.get_id()+ " route id: " + targetSpot.getRoute_id(), Toast.LENGTH_SHORT).show();
                     //timeViewAdapter.notifyDataSetChanged();
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {

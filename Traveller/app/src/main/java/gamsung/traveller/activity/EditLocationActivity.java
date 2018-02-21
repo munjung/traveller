@@ -239,26 +239,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-<<<<<<< HEAD
-=======
-        btnRepresent = (Button)findViewById(R.id.btn_represent_edit_location);
-        btnRepresent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = getIntent();
-                int spotId = intent.getExtras().getInt("spot id"); //나중에 준규오빠한테 전달해달래(intent data)
-                int rootId = intent.getExtras().getInt("root id");
-                spotList = new ArrayList<>(_dataManager.getSpotListWithRouteId(rootId).values());
-
-                Log.d("머야ㅓㅑㅑ",_adapter.getImgPath());
-                picpath = _adapter.getImgPath();
-    //            spotList.get(spotId).setPicture_path(_adapter.getImgPath());
-                // 이거하기전에 spotid는 준규오빠가 넘겨줄거야 ㅠㅠ 그걸 통해서 스팟을 불러내-> 스팟의 픽쳐아이디를 바꿔(대표사진) -> 업데이트
-
-            }
-        });
-
->>>>>>> 7efaeba9c0b038c31e010371907dc5b805aa3eb4
         btnAddPhoto = (Button)findViewById(R.id.btn_add_photo_edit_location);
         btnAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,9 +360,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
-<<<<<<< HEAD
         editSpot.setPicture_path(picturePath);
-=======
+
+
         ArrayList<String> photolist = _adapter.getImgPathList();
         ArrayList<String> memolist = _adapter.getMemoList();
         for(int i=0;i<photolist.size();i++){
@@ -396,16 +376,12 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             _dataManager.insertPhoto(photoforSet);
         }
 
-        if(picpath!="nopath")
-        editSpot.setPicture_path(picpath);
-
 
         //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
         int a = _dataManager.updateSpot(editSpot);
 
 
         //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
->>>>>>> 7efaeba9c0b038c31e010371907dc5b805aa3eb4
         if(_dataManager.updateSpot(editSpot) > 0){
 
             Intent intent = new Intent();
@@ -421,7 +397,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void createSpot(){
+    private void createSpot() {
 
 //                        Bundle bundle = savedInstanceState;
 //                        int route_id = bundle.getInt("route id");
@@ -433,15 +409,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setCategory_id(CATEGORY_ID);
         newSpot.setPicture_path(picturePath);
 
-        int spot_id = (int)_dataManager.insertSpot(newSpot);
-        if(spot_id > 0){
+        int spot_id = (int) _dataManager.insertSpot(newSpot);
+        if (spot_id > 0) {
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
             //finish();//+
             Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
-        }
-        else{
+        } else {
 
             Log.e("insert spot", "error : not inserted");
             Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);
