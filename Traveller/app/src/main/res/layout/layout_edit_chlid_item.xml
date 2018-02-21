@@ -36,13 +36,11 @@
             android:background="@null"
             android:hint="여기에 이 사진에 대한 메모를 남겨보세요."/>
 
-<<<<<<< HEAD
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/img_b_g_photo_tag">
-=======
->>>>>>> 7efaeba9c0b038c31e010371907dc5b805aa3eb4
+
     </RelativeLayout>
 
     <Button android:id="@+id/btn_represent_edit_child_item"
@@ -50,4 +48,5 @@
         android:layout_height="24dp"
         android:layout_margin="10dp"
         android:background="@drawable/btn_represent_photo_off"/>
+
 </RelativeLayout>
