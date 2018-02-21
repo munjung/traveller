@@ -96,7 +96,7 @@ public class SpotManager {
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
-        sb.append(" ORDER BY " + TableManager.SpotTable.column_id + " ASC");
+        sb.append(" ORDER BY " + TableManager.SpotTable.column_index_id + " ASC");
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
@@ -128,7 +128,7 @@ public class SpotManager {
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + routeId);
-        sb.append(" ORDER BY " + TableManager.SpotTable.column_id + " ASC");
+        sb.append(" ORDER BY " + TableManager.SpotTable.column_index_id + " ASC");
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);

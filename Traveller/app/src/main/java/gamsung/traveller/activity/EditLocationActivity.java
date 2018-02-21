@@ -57,7 +57,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private EditText memoEdit,tvMission;
     private TextView editLocation, txtTitle;
     private View layoutAddPhoto;
-    private Button btnAddPhoto,btnRepresent;
+    private Button btnAddPhoto;
     private ImageView eat,buy,take,visit,anything;
     
     private LinearLayout llGotoMap;
@@ -72,11 +72,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private int editSpotId = -1;
     public int searchID=-1;
     private int CATEGORY_ID;
+    private String picturePath;
 
     private List<Spot> spotList;
     private HashMap<Integer, Photograph> photoList;
     private DataManager _dataManager;
-    public String picpath="nopath";
 
     public Bundle mbundle;
 
@@ -118,8 +118,15 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     Log.e("edit spot id", "need edit spot id, not -1");
                     Toast.makeText(this, "error: need edit spot id, not -1", Toast.LENGTH_LONG).show();
                 }
+                else{
+                    Spot spot = _dataManager.getSpotList().get(this.editSpotId);
+                    this.searchID = spot.getSearch_id();
+                    this.picturePath = spot.getPicture_path();
+                }
             }
         }
+
+        isEdit = true;
 
         this.registerListener();
         this.registerRecyclerView();
@@ -229,23 +236,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
                 startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
-            }
-        });
-
-        btnRepresent = (Button)findViewById(R.id.btn_represent_edit_location);
-        btnRepresent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = getIntent();
-                int spotId = intent.getExtras().getInt("spot id"); //나중에 준규오빠한테 전달해달래(intent data)
-                int rootId = intent.getExtras().getInt("root id");
-                spotList = new ArrayList<>(_dataManager.getSpotListWithRouteId(rootId).values());
-
-                Log.d("머야ㅓㅑㅑ",_adapter.getImgPath());
-                picpath = _adapter.getImgPath();
-    //            spotList.get(spotId).setPicture_path(_adapter.getImgPath());
-                // 이거하기전에 spotid는 준규오빠가 넘겨줄거야 ㅠㅠ 그걸 통해서 스팟을 불러내-> 스팟의 픽쳐아이디를 바꿔(대표사진) -> 업데이트
-
             }
         });
 
@@ -370,6 +360,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
+        editSpot.setPicture_path(picturePath);
+
+
         ArrayList<String> photolist = _adapter.getImgPathList();
         ArrayList<String> memolist = _adapter.getMemoList();
         for(int i=0;i<photolist.size();i++){
@@ -382,9 +375,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             photoforSet.setDate(new Date(System.currentTimeMillis()));
             _dataManager.insertPhoto(photoforSet);
         }
-
-        if(picpath!="nopath")
-        editSpot.setPicture_path(picpath);
 
 
         //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
@@ -407,7 +397,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void createSpot(){
+    private void createSpot() {
 
 //                        Bundle bundle = savedInstanceState;
 //                        int route_id = bundle.getInt("route id");
@@ -417,17 +407,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setMission(memoEdit.getText().toString());
         newSpot.setSearch_id(searchID);
         newSpot.setCategory_id(CATEGORY_ID);
-        if(picpath!="nopath")
-            newSpot.setPicture_path(picpath);
-        int spot_id = (int)_dataManager.insertSpot(newSpot);
-        if(spot_id > 0){
+        newSpot.setPicture_path(picturePath);
+
+        int spot_id = (int) _dataManager.insertSpot(newSpot);
+        if (spot_id > 0) {
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
             //finish();//+
             Toast.makeText(EditLocationActivity.this, "추가되었습니다", Toast.LENGTH_LONG);
-        }
-        else{
+        } else {
 
             Log.e("insert spot", "error : not inserted");
             Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG);
@@ -451,10 +440,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
              if(_adapter.addImagePath(imgPath) > 0){
 
-                 Button btnRepresent = findViewById(R.id.btn_represent_edit_location);
-                 if(btnRepresent.getVisibility() == View.INVISIBLE)
-                    btnRepresent.setVisibility(View.VISIBLE);
-
                  Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
                  if(btnAdd.getVisibility() == View.INVISIBLE)
                     btnAdd.setVisibility(View.VISIBLE);
@@ -474,10 +459,23 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View view) {
 
-        Intent intent = new Intent(EditLocationActivity.this, ImageSliderActivity.class);
-        intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_IMAGE_LIST, _adapter.getImgPathList());
-        intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_MEMO_LIST, _adapter.getMemoList());
+        CustomRecyclerAdapter.ViewHolderClickListenerArguments arguments = _adapter.getViewHolderClickListenerArgs();
+        switch (arguments.getReturnType()){
+            case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_IMAGE:
 
-        EditLocationActivity.this.startActivity(intent);
+                Intent intent = new Intent(EditLocationActivity.this, ImageSliderActivity.class);
+                intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_IMAGE_LIST, _adapter.getImgPathList());
+                intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_MEMO_LIST, _adapter.getMemoList());
+
+                EditLocationActivity.this.startActivity(intent);
+                break;
+
+            case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
+                picturePath = arguments.getItem().getPath();
+                Log.d("test", picturePath);
+
+               // _recyclerView.getview
+                break;
+        }
     }
 }
