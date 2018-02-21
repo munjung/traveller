@@ -14,7 +14,7 @@ public class Spot {
 
     private int _id;
     private int route_id;
-    private int next_spot_id;
+    private int index_id;
     private int picture_id;
     private String picture_path;
     private String mission;
@@ -37,12 +37,12 @@ public class Spot {
         this.route_id = route_id;
     }
 
-    public int getNext_spot_id() {
-        return next_spot_id;
+    public int getIndex_id() {
+        return index_id;
     }
 
-    public void setNext_spot_id(int next_spot_id) {
-        this.next_spot_id = next_spot_id;
+    public void setIndex_id(int index_id) {
+        this.index_id = index_id;
     }
 
     public int getPicture_id() {

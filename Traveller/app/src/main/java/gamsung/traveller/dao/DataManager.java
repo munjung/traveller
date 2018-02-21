@@ -26,6 +26,7 @@ import gamsung.traveller.model.SearchPlace;
 public class DataManager {
 
     private static DataManager m_instance;
+    private int index;
 
     public static DataManager getInstance(Context context){
 
@@ -68,9 +69,17 @@ public class DataManager {
         return m_routeManager.getRouteHasToday(m_sqlHelper);
     }
 
+    //검색 글자 포함한 route반환
+    public HashMap<Integer, Route> getRouteWithSearch(String search_word){
+        return m_routeManager.getRouteWithSearch(m_sqlHelper, search_word);
+    }
+
     public boolean deleteRoute(Integer id){
+//        m_spotManager.deleteSpotWithRouteID(m_sqlHelper, id);
        return m_routeManager.deleteRoute(m_sqlHelper, id);
     }
+
+
 
     public long insertRoute(Route route){
         return m_routeManager.insertRoute(m_sqlHelper, route);
@@ -90,9 +99,18 @@ public class DataManager {
     public boolean deleteSpot(Integer id){
        return m_spotManager.deleteSpot(m_sqlHelper, id);
     }
+    
 
     public long insertSpot(Spot spot){
-       return  m_spotManager.insertSpot(m_sqlHelper, spot);
+
+        Spot lastspot = getLastIndexSpot();
+        if(lastspot == null){
+            index = 1;
+        }else{
+            index = lastspot.get_id()+1;
+        }
+
+       return  m_spotManager.insertSpot(m_sqlHelper, spot, index);
     }
 
     public int updateSpot(Spot spot){
@@ -102,6 +120,11 @@ public class DataManager {
     public HashMap<Integer, Spot> getSpotListWithRouteId(int routeId){
         return m_spotManager.getSpotListWithRouteId(m_sqlHelper, routeId);
     }
+
+    public Spot getLastIndexSpot(){
+        return m_spotManager.getLastIndexSpot(m_sqlHelper);
+    }
+
 
 
     //photograph data interface

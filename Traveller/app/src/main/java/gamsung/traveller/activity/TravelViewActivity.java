@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
@@ -69,8 +70,11 @@ public class TravelViewActivity extends AppCompatActivity {
 
         switch (requestCode){
             case REQUEST_CODE_TO_EMPTY_ITEM:
+                //isChangeMade = true;
+                //viewByScheduleFragment.force_update();
+                implementEvents();
+                getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
                 if(resultCode == RESULT_OK){
-                    isChangeMade = true;
                     //준규가 마법을 부릴 edit Location 리턴 결과
         //            add item (refresh)
         //            viewByScheduleFragment
@@ -92,7 +96,7 @@ public class TravelViewActivity extends AppCompatActivity {
         route_id = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
         route_title = intent.getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
         spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
-
+/*
         spotList = new ArrayList<>();
         for (int i = 0; i < 15; i++){
             Spot spot = new Spot();
@@ -100,7 +104,9 @@ public class TravelViewActivity extends AppCompatActivity {
             spot.setMission("Number: " + i);
             spot.setRoute_id(route_id);
             spotList.add(spot);
-        }
+        }*/
+        findViews();
+
         if(spotList.size() == 0){
             //등록된 일정이 없는 경우, edit location으로 직행
             Intent editLocationIntent = new Intent(this, EditLocationActivity.class);
@@ -109,14 +115,18 @@ public class TravelViewActivity extends AppCompatActivity {
             editLocationIntent.putExtra("TAG_ACTIVITY", "empty");
             startActivityForResult(editLocationIntent, REQUEST_CODE_TO_EMPTY_ITEM);
         }
+        else{
+            implementEvents();
+            getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
+        }
 
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
 
-        findViews();
-        implementEvents();
+        //findViews();
+//        implementEvents();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit(); //set the schedule_fragment as the default
+//        getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit(); //set the schedule_fragment as the default
     }
 
     private void findViews(){ //find friends
@@ -262,8 +272,14 @@ public class TravelViewActivity extends AppCompatActivity {
         return dataManager.getPhotoListWithSpot(spot_id);
     }
     public List<Spot> refreshSpotList(){
-        //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Toast.makeText(getApplicationContext(), "Spotlist updated.", Toast.LENGTH_SHORT).show();
+        spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        for (Spot spot : spotList){
+            Log.d("SPOT VALUES: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
+
+        }
+
+        //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         return spotList; //temporarily
     }
     public void updateSpotFromDB(Spot spot){

@@ -23,6 +23,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            db.execSQL("PRAGMA foreign_keys= 1;");
+        }
 
         db.execSQL(TableManager.RouteTable.getCreateQuery());
         db.execSQL(TableManager.SpotTable.getCreateQuery());

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ImageView
         android:id="@+id/img_viewpager_childimage"
         android:layout_width="match_parent"
@@ -10,6 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:background="#000000"
         android:scaleType="centerInside"
         android:adjustViewBounds="true"/>
 
@@ -26,17 +28,26 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:textSize="11sp"
-            android:text="내가 인스타그램에서 처음으로 접했던 도시"
             android:textColor="#ffffff"
-            android:layout_marginLeft="10dp"
-            android:hint="태그(=메모)"/>
-    </RelativeLayout>
+            android:layout_marginLeft="25dp"
+            android:layout_marginBottom="20dp"
+            android:textColorHint="@android:color/white"
+            android:maxLines="2"
+            android:background="@null"
+            android:hint="여기에 이 사진에 대한 메모를 남겨보세요."/>
 
-
+<<<<<<< HEAD
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/img_b_g_photo_tag">
-        <!--백그라운드 이미지 쉐도우 요청=> represent 버튼이 안보임 -->
+=======
+>>>>>>> 7efaeba9c0b038c31e010371907dc5b805aa3eb4
     </RelativeLayout>
+
+    <Button android:id="@+id/btn_represent_edit_child_item"
+        android:layout_width="16dp"
+        android:layout_height="24dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/btn_represent_photo_off"/>
 </RelativeLayout>

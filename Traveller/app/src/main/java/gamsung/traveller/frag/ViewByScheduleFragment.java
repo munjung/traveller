@@ -70,6 +70,7 @@ public class ViewByScheduleFragment extends Fragment {
             scrollView = rootView.findViewById(R.id.scroll_schedule);
 
             scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true);
+
             scheduleService.clickEditSchedule = editSchedule;
             scheduleService.clickRemoveSelectedSchedule = clickRemoveSchedule;
             scheduleService.startScheduling = startScheduling;
@@ -102,6 +103,7 @@ public class ViewByScheduleFragment extends Fragment {
         }
 
         if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
+            scheduleService.update_spots(spotList);
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
             activity.setOrderChanged(false);
         }
@@ -197,9 +199,10 @@ public class ViewByScheduleFragment extends Fragment {
         }
     };
 
-    @Override
+        @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         spotList = activity.refreshSpotList();
+        scheduleService.update_spots(spotList);
         if (requestCode == REQUEST_ADD){
             //temporary creating spots
 
@@ -245,6 +248,18 @@ public class ViewByScheduleFragment extends Fragment {
         }
     }
 
-
+    public void force_update(){
+        spotList = activity.refreshSpotList();
+        scheduleService.update_spots(spotList);
+        if (scheduleService.listSchedule.size() == 0){
+            scheduleService.load_Spots();
+        }
+        else{
+            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
+            int num_added = spotList.size() - list_total;
+            scheduleService.isEditing = false;
+            processAdditionalSchedules(num_added, list_total);
+        }
+    }
 }
 
