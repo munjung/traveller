@@ -92,6 +92,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/ivmapmarker"
                 android:layout_width="16dp"
                 android:layout_height="22dp"
                 android:layout_marginLeft="18dp"
@@ -123,51 +124,50 @@
 
     <RelativeLayout
         android:id="@+id/mSelectll"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         android:orientation="vertical"
         android:visibility="gone">
+
         <ImageView
             android:layout_width="16dp"
             android:layout_height="22dp"
-            android:layout_marginTop="15dp"
             android:layout_marginLeft="30dp"
-            android:src="@drawable/icn_marker_map"/>
+            android:layout_marginTop="15dp"
+            android:src="@drawable/icn_marker_map" />
 
         <TextView
             android:id="@+id/tvselname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#5d5d5d"
             android:layout_marginLeft="56dp"
             android:layout_marginTop="17dp"
-            android:text="장소 정보 없음"
             android:singleLine="true"
+            android:text="장소 정보 없음"
+            android:textColor="#5d5d5d"
             android:textSize="16sp" />
 
 
+        <TextView
+            android:id="@+id/tvSelectAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
 
-            <TextView
-                android:id="@+id/tvSelectAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#5d5d5d"
-
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="45dp"
-                android:layout_marginRight="27dp"
-                android:textSize="12sp"
-                android:text="ADDRESS" />
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="45dp"
+            android:text="ADDRESS"
+            android:textColor="#5d5d5d"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/btchooseplace"
             android:layout_width="wrap_content"
             android:layout_height="43dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="6dp"
             android:background="@drawable/btn_selection_position" />
 
