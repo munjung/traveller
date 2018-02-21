@@ -75,7 +75,7 @@ public class DataManager {
     }
 
     public boolean deleteRoute(Integer id){
-        m_spotManager.deleteSpotWithRouteID(m_sqlHelper, id);
+//        m_spotManager.deleteSpotWithRouteID(m_sqlHelper, id);
        return m_routeManager.deleteRoute(m_sqlHelper, id);
 
         //delete place table > DELETE FROM PLACE WHERE ROUTE_ID = id;
@@ -102,11 +102,7 @@ public class DataManager {
     public boolean deleteSpot(Integer id){
        return m_spotManager.deleteSpot(m_sqlHelper, id);
     }
-
-
-    public boolean deleteSpotWithRouteId(Integer route_id){
-        return m_spotManager.deleteSpotWithRouteID(m_sqlHelper, route_id);
-    }
+    
 
     public long insertSpot(Spot spot){
 
