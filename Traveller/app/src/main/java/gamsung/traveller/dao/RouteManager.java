@@ -64,6 +64,13 @@ public class RouteManager {
         return m_routeMap;
     }
 
+    public HashMap<Integer, Route> getRouteWithSearch(SQLiteHelper dbHelper, String search_word){
+
+        m_routeMap.clear();
+        m_routeMap.putAll(_getRouteWithSearch(dbHelper, search_word));
+        return m_routeMap;
+    }
+
     public boolean deleteRoute(SQLiteHelper dbHelper, Integer id){
 
         if(!_deleteRoute(dbHelper, id))
@@ -179,6 +186,34 @@ public class RouteManager {
 
         return routeMap;
     }
+
+    private HashMap<Integer, Route> _getRouteWithSearch(SQLiteHelper dbHelper, String search_word){
+
+        HashMap<Integer, Route> routeMap = new HashMap<>();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.RouteTable.column_title + " LIKE '%" + search_word + "%'");
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+                Route route = new Route();
+                route.set_id(c.getInt(0));                                                  //id
+                route.setTitle(c.getString(1));                                             //title
+                route.setFromDate(Converter.convertStringToDate(c.getString(2)));          //from date
+                route.setToDate(Converter.convertStringToDate(c.getString(3)));            //to date
+                route.setPicturPath(c.getString(4));                                        //picture path
+            }
+            c.close();
+        }
+        db.close();
+
+        return routeMap;
+    }
+
+
 
     private boolean _deleteRoute(SQLiteHelper dbHelper, Integer id){
 

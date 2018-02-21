@@ -69,6 +69,11 @@ public class DataManager {
         return m_routeManager.getRouteHasToday(m_sqlHelper);
     }
 
+    //검색 글자 포함한 route반환
+    public HashMap<Integer, Route> getRouteWithSearch(String search_word){
+        return m_routeManager.getRouteWithSearch(m_sqlHelper, search_word);
+    }
+
     public boolean deleteRoute(Integer id){
        return m_routeManager.deleteRoute(m_sqlHelper, id);
 
