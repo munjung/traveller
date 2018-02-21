@@ -200,7 +200,8 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         DataManager dataManager = DataManager.getInstance(this);
         HashMap<Integer, Photograph> photoList = dataManager.getPhotoList();
         HashMap<Integer, SearchPlace> locallist = dataManager.getSearchPlaceList();
-/*        for(Entry<Integer,Photograph> e:photoList.entrySet()){
+        if(photoList.size()>0) {
+        for(Entry<Integer,Photograph> e:photoList.entrySet()){
             Photograph photo = e.getValue();
             int localkey = photo.getSearch_id();
             double lat = locallist.get(localkey).getLat();
@@ -208,8 +209,10 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             LatLng point = new LatLng(lat,lon);
             mClusterManager.addItem(new PhotoCluster(point,photo.getPath(),photo.getPath()));
         }
-        데이터연동용 코드. 아직 다른쪽이 완성안돼서 테스트코드만 활성화했음
-        */
+
+        }
+
+        /*
         mClusterManager.addItem(new PhotoCluster(position(), "1","test_1.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "2","test_2.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "3","test_3.jpg"));
@@ -222,7 +225,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         mClusterManager.addItem(new PhotoCluster(position(), "10","test_10.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "11","test_11.jpg"));
         mClusterManager.addItem(new PhotoCluster(position(), "12","test_12.jpg"));
-
+*/
     }
 
     private LatLng position() {
