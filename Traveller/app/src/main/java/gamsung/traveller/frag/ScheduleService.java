@@ -244,8 +244,9 @@ public class ScheduleService {
         ((TextView)editView.findViewById(R.id.contents_right)).setText(editedSpot.getMission());
 
         if(editedSpot.getPicture_path() == "nopath") Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
-        else Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
+        else Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         //change image
+
 
     }
 
@@ -336,7 +337,7 @@ public class ScheduleService {
         }
 
 //        int photo_id = spot.getPicture_id();
-        if (spot.getPicture_path() == null)
+        if (spot.getPicture_path() == "nopath")
             Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into(circleCopy);
         else {
             try { //if failed to load the pic, load the no_image.
@@ -471,7 +472,7 @@ public class ScheduleService {
     }
 
     public void moveSchedule(int idxA, int idxB){
-        //A 레이아웃을 B로 이동. A + 1 ~ B는 위로 한칸 이동
+        //B 레이아웃을 A로 이동. A + 1 ~ B는 위로 한칸 이동
 
         if (idxA == idxB) return; //같을경우 리턴
 
@@ -480,17 +481,19 @@ public class ScheduleService {
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
 
-
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
                 Collections.swap(spotList,i, i - 1);
+
             int temp = idxA;
             idxA = idxB;
             idxB = temp;
+
         }
         else{
             for (int i = idxA; i < idxB; i++)
                 Collections.swap(spotList, i, i + 1);
+
 
         }
 

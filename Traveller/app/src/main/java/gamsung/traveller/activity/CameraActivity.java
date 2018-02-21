@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,7 @@ import com.bumptech.glide.Glide;
 
 import gamsung.traveller.R;
 import gamsung.traveller.dao.DataManager;
+import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Route;
 import gamsung.traveller.model.Spot;
 
@@ -78,9 +80,17 @@ public class CameraActivity extends AppCompatActivity {
     private static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
     ArrayList<String> routeTitleList, spotTitleList;
     HashMap <Integer, Route> routeList;
+    HashMap<Integer, Spot> tempSpotHashMap;
     DataManager _datamanager;
     String spotName;
     Spinner routeSpinner, spotSpinner;
+    private boolean isEdit = false;
+    private int editRouteId = -1;
+    private String editSpotTitle ="";
+    private int editSpotId = -1;
+    public int searchID=-1;
+    private int CATEGORY_ID;
+    private String picturePath;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -150,7 +160,8 @@ public class CameraActivity extends AppCompatActivity {
                         for (Route e : tempRouteList) {
                             if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
                                 routeId = e.get_id();
-                                HashMap<Integer, Spot> tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
+                                editRouteId = routeId;
+                                tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
                                 ArrayList<Spot> tempSpotList = new ArrayList<>();
                                 tempSpotList.addAll(tempSpotHashMap.values());
                                 spotTitleList.clear();
@@ -179,8 +190,23 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                        spotName = spotSpinner.getSelectedItem().toString();
+                        if(spotSpinner.getSelectedItem().equals(R.string.selectspot)) {
 
+                        }
+
+                        else {
+                            editSpotTitle = spotSpinner.getSelectedItem().toString();
+                            ArrayList<Spot> tempSpotList = new ArrayList<>();
+                            tempSpotList.addAll(tempSpotHashMap.values());
+                            for(Spot s : tempSpotList) {
+                                if(s.getMission().equals(spotSpinner.getSelectedItem().toString())) {
+                                    editSpotId = s.get_id();
+                                    searchID = s.getSearch_id();
+                                    CATEGORY_ID = s.getCategory_id();
+                                }
+
+                            }
+                        }
                     }
 
                     @Override
@@ -517,5 +543,33 @@ public class CameraActivity extends AppCompatActivity {
         shadowBackground.setVisibility(View.VISIBLE);
         popupRelative.setVisibility(View.VISIBLE);
         btnBack.setVisibility(View.VISIBLE);
+    }
+
+    private void updateSpot(String filepath){
+
+//                        Bundle bundle = savedInstanceState;
+//                        int route_id = bundle.getInt("route id");
+//                        int spot_id = bundle.getInt("spot list");
+
+        Spot editSpot = new Spot();
+        editSpot.set_id(editSpotId);
+        editSpot.setRoute_id(editRouteId);
+        editSpot.setMission(editSpotTitle);
+        editSpot.setSearch_id(searchID);
+        editSpot.setCategory_id(CATEGORY_ID);
+        editSpot.setPicture_path(filepath);
+
+        //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
+        // int a = _datamanager.updateSpot(editSpot);
+
+        if(_datamanager.updateSpot(editSpot) > 0){
+            //finish();
+            Toast.makeText(CameraActivity.this, "저장되었습니다.", Toast.LENGTH_LONG).show();
+        }
+        else{
+
+            Log.e("update spot", "error : not updated");
+            Toast.makeText(CameraActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
+        }
     }
 }
