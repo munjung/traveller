@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ImageView
         android:id="@+id/img_viewpager_childimage"
         android:layout_width="match_parent"
@@ -37,6 +38,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/img_b_g_photo_tag">
-        <!--백그라운드 이미지 쉐도우 요청=> represent 버튼이 안보임 -->
     </RelativeLayout>
+
+    <Button android:id="@+id/btn_represent_edit_child_item"
+        android:layout_width="16dp"
+        android:layout_height="24dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/btn_represent_photo_off"/>
 </RelativeLayout>

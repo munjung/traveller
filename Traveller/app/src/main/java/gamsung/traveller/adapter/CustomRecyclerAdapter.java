@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,7 +41,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     private Context _context;
     private ArrayList<Photograph> _items;
     private View.OnClickListener _clickListener;
-    private String imgPath;
+    private ViewHolderClickListenerArguments _args;
 
     public CustomRecyclerAdapter(Context context, ArrayList<Photograph> photoList, View.OnClickListener clickListener) {
 
@@ -51,6 +52,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         this._context = context;
         this._items = photoList;
         this._clickListener = clickListener;
+        this._args = new ViewHolderClickListenerArguments();
     }
 
     @Override
@@ -62,7 +64,25 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             @Override
             public void onClick(View view) {
 
+                int position = customViewHolder.getAdapterPosition();
+                _args.setPosition(position);
+                _args.setItem(_items.get(position));
+                _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_IMAGE);
                 _clickListener.onClick(view);
+            }
+        });
+
+        customViewHolder.getBtnRepresent().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int position = customViewHolder.getAdapterPosition();
+                _args.setPosition(position);
+                _args.setItem(_items.get(position));
+                _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT);
+                _clickListener.onClick(view);
+
+                view.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
             }
         });
 
@@ -73,7 +93,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     @Override
     public void onBindViewHolder(CustomRecyclerAdapter.CustomViewHolder viewHolder, int position) {
 
-        imgPath = _items.get(position).getPath();
+        String imgPath = _items.get(position).getPath();
         if (!TextUtils.isEmpty(imgPath)) {
             Glide.with(_context).load(imgPath).into(viewHolder.imageView);
         }
@@ -84,15 +104,15 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
     }
 
-    public String getImgPath(){
-        return imgPath;
-    }
-
 
     @Override
     public int getItemCount() {
 
         return _items == null ? 0 : _items.size();
+    }
+
+    public ViewHolderClickListenerArguments getViewHolderClickListenerArgs(){
+        return _args;
     }
 
     public int addImagePath(String path){
@@ -114,9 +134,11 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         return _items.size();
     }
 
-    public ArrayList<Photograph> getPhotoList(){
+    public ArrayList<Photograph> getItems(){
         return _items;
     }
+
+    public Photograph getItem(int position) {return _items.get(position);}
 
 
     public ArrayList<String> getImgPathList(){
@@ -150,6 +172,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         private ImageView imageView;
         private EditText txtMemo;
+        private Button btnRepresent;
         private CustomTextChangeListener watcher;
 
         public CustomViewHolder(final Context context, View itemView, CustomTextChangeListener watcher) {
@@ -158,6 +181,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             this.watcher = watcher;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
+            btnRepresent = (Button) itemView.findViewById(R.id.btn_represent_edit_child_item);
             txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
             txtMemo.addTextChangedListener(watcher);
         }
@@ -169,6 +193,8 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         public EditText getTxtMemo(){
             return txtMemo;
         }
+
+        public Button getBtnRepresent() {return btnRepresent;}
 
         public CustomTextChangeListener getTextChangedListener(){
             return watcher;
@@ -207,6 +233,43 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             Log.d("watcher", position +  " : " + memo);
         }
     }
+
+
+    public class ViewHolderClickListenerArguments{
+
+        public static final int RETURN_TYPE_CLICK_IMAGE = 1;
+        public static final int RETURN_TYPE_CLICK_REPRESENT = 2;
+
+        private Photograph item;
+        private int position;
+        private int returnType;
+
+
+        public Photograph getItem() {
+            return item;
+        }
+
+        public void setItem(Photograph item) {
+            this.item = item;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public int getReturnType() {
+            return returnType;
+        }
+
+        public void setReturnType(int returnType) {
+            this.returnType = returnType;
+        }
+    }
 }
+
 
 
