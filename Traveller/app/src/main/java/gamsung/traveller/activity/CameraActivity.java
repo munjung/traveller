@@ -113,7 +113,7 @@ public class CameraActivity extends AppCompatActivity {
         spotTitleList.add(0, getString(R.string.selectspot));
 
         _datamanager = DataManager.getInstance(this);
-        routeList = new HashMap<>();
+//        routeList = new HashMap<>();
         routeList = _datamanager.getRouteList();
 
         ArrayList<Route> tempList = new ArrayList<>();

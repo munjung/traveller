@@ -236,23 +236,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-     /*   btnRepresent = (Button)findViewById(R.id.btn_represent_edit_location);
-        btnRepresent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-        *//*        Intent intent = getIntent();
-                int spotId = intent.getExtras().getInt("spot id"); //나중에 준규오빠한테 전달해달래(intent data)
-                int rootId = intent.getExtras().getInt("root id");
-                spotList = new ArrayList<>(_dataManager.getSpotListWithRouteId(rootId).values());
-
-               *//**//* Log.d("머야ㅓㅑㅑ",_adapter.getImgPath());
-                picpath = _adapter.getImgPath();*//**//*
-    //            spotList.get(spotId).setPicture_path(_adapter.getImgPath());
-                // 이거하기전에 spotid는 준규오빠가 넘겨줄거야 ㅠㅠ 그걸 통해서 스팟을 불러내-> 스팟의 픽쳐아이디를 바꿔(대표사진) -> 업데이트*//*
-
-            }
-        });*/
-
         btnAddPhoto = (Button)findViewById(R.id.btn_add_photo_edit_location);
         btnAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -485,22 +468,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
+
                 picturePath = arguments.getItem().getPath();
-
-                for(int i=0; i<_recyclerView.getAdapter().getItemCount(); i++){
-
-                //    View v = _recyclerView.getChildAt(i);
-                  //  _recyclerView.findViewHolderForAdapterPosition(i);
-                   RecyclerView.ViewHolder viewHolder = _recyclerView.findViewHolderForItemId(_adapter.getItemId(i));
-                   viewHolder.itemView.findViewById(R.id.btn_represent_edit_child_item).setBackgroundResource(R.drawable.btn_represent_photo_off);
-
-                   // Button btn = viewHolder.findViewById(R.id.btn_represent_edit_child_item);
-                  //  btn.setBackgroundResource(R.drawable.btn_represent_photo_off);
-                }
-
-                Log.d("test", picturePath);
-
-               // _recyclerView.getview
+                _adapter.notifyDataSetChanged();
                 break;
         }
     }

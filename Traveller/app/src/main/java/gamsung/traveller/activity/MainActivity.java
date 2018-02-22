@@ -578,17 +578,17 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
                         }
                     }
 
-//                    _items = filteredList;
+                    _items = filteredList;
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = filterResults;
+                filterResults.values = _items;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                _items = (ArrayList<Route>) filterResults.values;
+                _items = (List<Route>) filterResults.values;
                 notifyDataSetChanged();
             }
         };

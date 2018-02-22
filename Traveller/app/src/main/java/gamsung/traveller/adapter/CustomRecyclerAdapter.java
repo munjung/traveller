@@ -42,6 +42,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     private ArrayList<Photograph> _items;
     private View.OnClickListener _clickListener;
     private ViewHolderClickListenerArguments _args;
+    private int _representedImagePosition = -1; // EditLocation Activity Edit Mode에서 사진에 spot에 picturePath != null 인 경우 해당 represent image position 찾아서 set 해주어야함
 
     public CustomRecyclerAdapter(Context context, ArrayList<Photograph> photoList, View.OnClickListener clickListener) {
 
@@ -77,11 +78,15 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             public void onClick(View view) {
 
                 int position = customViewHolder.getAdapterPosition();
+                _representedImagePosition = position;
                 _args.setPosition(position);
                 _args.setItem(_items.get(position));
                 _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT);
                 _clickListener.onClick(view);
-                view.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
+
+                //represent button set
+                Button innerItem = (Button) view.findViewById(R.id.btn_inner_represent_edit_child_item);
+                innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
             }
         });
 
@@ -95,6 +100,14 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         String imgPath = _items.get(position).getPath();
         if (!TextUtils.isEmpty(imgPath)) {
             Glide.with(_context).load(imgPath).into(viewHolder.imageView);
+        }
+
+        Button innerItem = (Button) viewHolder.getBtnRepresent().findViewById(R.id.btn_inner_represent_edit_child_item);
+        if(_representedImagePosition == position){
+            innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
+        }
+        else{
+            innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_off));
         }
 
         String memo = _items.get(position).getMemo();
@@ -127,8 +140,9 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             _items.add(photograph);
 
-            notifyItemChanged(_items.size()-1);
+            notifyItemInserted(_items.size()-1);
         }
+
 
         return _items.size();
     }
@@ -171,7 +185,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         private ImageView imageView;
         private EditText txtMemo;
-        private Button btnRepresent;
+        private View btnRepresent;
         private CustomTextChangeListener watcher;
 
         public CustomViewHolder(final Context context, View itemView, CustomTextChangeListener watcher) {
@@ -180,7 +194,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             this.watcher = watcher;
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
-            btnRepresent = (Button) itemView.findViewById(R.id.btn_represent_edit_child_item);
+            btnRepresent = itemView.findViewById(R.id.btn_represent_edit_child_item);
             txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
             txtMemo.addTextChangedListener(watcher);
         }
@@ -193,7 +207,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             return txtMemo;
         }
 
-        public Button getBtnRepresent() {return btnRepresent;}
+        public View getBtnRepresent() {return btnRepresent;}
 
         public CustomTextChangeListener getTextChangedListener(){
             return watcher;
