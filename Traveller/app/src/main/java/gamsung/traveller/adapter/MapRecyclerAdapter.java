@@ -35,8 +35,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ListitemViewHolder item = (ListitemViewHolder) holder;
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String mydata = path+"/yeogi/"+data.get(position);
+        String mydata = data.get(position);
         Bitmap bm = BitmapFactory.decodeFile(mydata);
         item.imageView.setImageBitmap(bm);
 
