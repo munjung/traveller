@@ -60,15 +60,12 @@ public class RouteManager {
         }
 
         Date today = new Date();
-        m_routeMap.putAll(_getRouteHasToday(dbHelper, today));
-        return m_routeMap;
+        return _getRouteHasToday(dbHelper, today);
     }
 
     public HashMap<Integer, Route> getRouteWithSearch(SQLiteHelper dbHelper, String search_word){
 
-        m_routeMap.clear();
-        m_routeMap.putAll(_getRouteWithSearch(dbHelper, search_word));
-        return m_routeMap;
+        return _getRouteWithSearch(dbHelper, search_word);
     }
 
     public boolean deleteRoute(SQLiteHelper dbHelper, Integer id){

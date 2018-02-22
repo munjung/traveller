@@ -35,11 +35,7 @@ public class SpotManager {
     }
 
     public HashMap<Integer, Spot> getSpotListWithRouteId(SQLiteHelper dbHelper, int routeId){
-
-        m_spotMap.clear();
-        m_spotMap.putAll(_getSpotListWithRouteId(dbHelper, routeId));
-
-        return m_spotMap;
+        return _getSpotListWithRouteId(dbHelper, routeId);
     }
 
     public Spot getLastIndexSpot(SQLiteHelper dbHelper){
@@ -93,6 +89,13 @@ public class SpotManager {
 
         return count;
     }
+
+    public int updateSpotIndex(SQLiteHelper dbHelper, Integer before_index, Integer after_index){
+
+        int count = _updateSpotIndex(dbHelper, before_index, after_index);
+        return count;
+    }
+
 
 
     private HashMap<Integer, Spot> _getSpotList(SQLiteHelper dbHelper){
@@ -268,6 +271,20 @@ public class SpotManager {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.SpotTable.column_id + " = " + spot.get_id();
+        int count = db.update(TABLE_NAME, values, selection, null);
+        db.close();
+
+        return count;
+    }
+
+    private int _updateSpotIndex(SQLiteHelper dbHelper, Integer before_index, Integer after_index){
+
+        ContentValues values = new ContentValues();
+        values.put(TableManager.SpotTable.column_index_id, after_index);
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = TableManager.SpotTable.column_index_id + " = " + before_index;
+
         int count = db.update(TABLE_NAME, values, selection, null);
         db.close();
 

@@ -97,6 +97,19 @@ public class DataManager {
         return m_spotManager.getSpotList(m_sqlHelper);
     }
 
+
+    public HashMap<Integer, Spot> getSpotListWithRouteId(int routeId){
+        return m_spotManager.getSpotListWithRouteId(m_sqlHelper, routeId);
+    }
+
+    public Spot getLastIndexSpot(){
+        return m_spotManager.getLastIndexSpot(m_sqlHelper);
+    }
+
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
+        return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
+    }
+
     public boolean deleteSpot(Integer id){
        return m_spotManager.deleteSpot(m_sqlHelper, id);
     }
@@ -118,17 +131,11 @@ public class DataManager {
         return m_spotManager.updateSpot(m_sqlHelper, spot);
     }
 
-    public HashMap<Integer, Spot> getSpotListWithRouteId(int routeId){
-        return m_spotManager.getSpotListWithRouteId(m_sqlHelper, routeId);
+    public int updateSpotIndex(Integer before_index, Integer after_index){
+        return m_spotManager.updateSpotIndex(m_sqlHelper, before_index, after_index);
     }
 
-    public Spot getLastIndexSpot(){
-        return m_spotManager.getLastIndexSpot(m_sqlHelper);
-    }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
-        return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
-    }
 
     //photograph data interface
     public HashMap<Integer, Photograph> getPhotoList(){
