@@ -77,10 +77,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         }
         @Override
         protected void onBeforeClusterItemRendered(PhotoCluster photoCluster, MarkerOptions markerOptions) {
-            // Draw a single person.
-            // Set the info window to show their name.
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            String imgpath = path+"/yeogi/"+photoCluster.source;
+            String imgpath = photoCluster.source;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize=4;
             Bitmap bm = BitmapFactory.decodeFile(imgpath,options);
@@ -97,8 +94,7 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
             int width = mDimension;
             int height = mDimension;
             PhotoCluster pc = (PhotoCluster) cluster.getItems().toArray()[0];
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            String imgpath = path+"/yeogi/"+pc.source;
+            String imgpath = pc.source;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize=4;
             Bitmap prebm = BitmapFactory.decodeFile(imgpath,options);

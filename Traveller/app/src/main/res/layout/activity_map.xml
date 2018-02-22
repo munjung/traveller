@@ -133,8 +133,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="44dp"
-                android:layout_marginTop="27dp"
-                android:singleLine="true"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="15dp"
                 android:textSize="16sp" />
 
             <TextView
@@ -143,8 +143,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="55dp"
-                android:singleLine="true"
+                android:layout_below="@id/tvPlaceName"
+                android:paddingTop="10dp"
                 android:textSize="12sp" />
 
         </RelativeLayout>
