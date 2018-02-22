@@ -8,11 +8,12 @@
         android:layout_height="63dp">
 
         <ImageView
+            android:id="@+id/ivGridBack"
             android:layout_width="8dp"
             android:layout_height="15dp"
-            android:layout_marginLeft="22dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/btn_back"/>
+            android:layout_marginLeft="22dp"
+            android:src="@drawable/btn_back" />
 
         <TextView
 

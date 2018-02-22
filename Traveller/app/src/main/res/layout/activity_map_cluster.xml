@@ -16,13 +16,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Button
+        <ImageView
             android:id="@+id/btnworldback"
             android:layout_width="9dp"
             android:layout_height="15dp"
             android:layout_marginLeft="18dp"
             android:layout_marginTop="33dp"
-            android:background="@drawable/btn_back"
-            android:visibility="gone" />
+            android:src="@drawable/btn_back"
+            />
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>

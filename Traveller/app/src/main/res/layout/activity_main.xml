@@ -63,7 +63,7 @@
                     android:background="@android:color/transparent"/>
             </RelativeLayout>
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_map_main"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -71,7 +71,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="15dp"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/a_btn"/>
+                android:src="@drawable/a_btn"/>
         </RelativeLayout>
 
         <RelativeLayout

@@ -168,10 +168,8 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 
     @Override
     protected void startmap() {
-
-
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
-
+        LatLng seoul = new LatLng(37, 126);
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(seoul,1));
         findViewById(R.id.btnworldback).setVisibility(View.VISIBLE);
         UiSettings uiSettings = getMap().getUiSettings();
         uiSettings.setRotateGesturesEnabled(false);
@@ -179,6 +177,13 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
         uiSettings.setMapToolbarEnabled(false);
         uiSettings.setIndoorLevelPickerEnabled(false);
         uiSettings.setCompassEnabled(false);
+        ImageView back = findViewById(R.id.btnworldback);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         mClusterManager = new ClusterManager<PhotoCluster>(this, getMap());
         mClusterManager.setRenderer(new PhotoRenderer());
         getMap().setOnCameraIdleListener(mClusterManager);
@@ -224,13 +229,13 @@ public class MapClusterActivity extends BaseMapActivity implements OnMapReadyCal
 */
     }
 
-    private LatLng position() {
-        return new LatLng(random(51.6723432, 51.38494009999999), random(0.148271, -0.3514683));
-    }
-
-    private double random(double min, double max) {
-        return mRandom.nextDouble() * (max - min) + min;
-    }
+//    private LatLng position() {
+//        return new LatLng(random(51.6723432, 51.38494009999999), random(0.148271, -0.3514683));
+//    }
+//
+//    private double random(double min, double max) {
+//        return mRandom.nextDouble() * (max - min) + min;
+//    }
 }
 class PhotoCluster implements ClusterItem {
     public  final String name;
