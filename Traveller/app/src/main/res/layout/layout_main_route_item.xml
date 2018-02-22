@@ -72,23 +72,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@id/btn_edit_route_item"
+            android:layout_toLeftOf="@id/edit_route_itme"
             android:textColor="#212121"
             android:textSize="13sp"
             android:text="gamsung"
             android:gravity="left|center"/>
 
-        <RelativeLayout android:id="@+id/btn_edit_route_item"
+        <RelativeLayout
+
+            android:id="@+id/edit_route_itme"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true">
 
-            <Button
+            <ImageView
+                android:id="@+id/btn_edit_route_item"
                 android:layout_width="18dp"
                 android:layout_height="13dp"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/btn_edit"/>
+                android:layout_centerVertical="true"
+                android:src="@drawable/btn_edit" />
         </RelativeLayout>
 
     </RelativeLayout>

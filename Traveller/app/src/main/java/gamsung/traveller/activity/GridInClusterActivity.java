@@ -60,6 +60,13 @@ public class GridInClusterActivity extends AppCompatActivity {
            PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(), R.layout.gridrow, photolist);
             GridView gv = (GridView) findViewById(R.id.gvphoto);
             gv.setAdapter(adapter);
+            ImageView back = findViewById(R.id.ivGridBack);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
 
     }
 }

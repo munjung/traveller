@@ -222,11 +222,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        Button btnPictureMap = (Button) findViewById(R.id.btn_map_main);
+        ImageView btnPictureMap = (ImageView) findViewById(R.id.btn_map_main);
         btnPictureMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TravelViewActivity.class);
+                Intent i = new Intent(MainActivity.this, MapClusterActivity.class);
                 startActivity(i);
             }
         });
@@ -616,7 +616,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
             imageView = (ImageView) itemView.findViewById(R.id.image_route_item);
             textView = (TextView) itemView.findViewById(R.id.txt_route_item);
-            btnEdit = (View) itemView.findViewById(R.id.btn_edit_route_item);
+            btnEdit = (ImageView) itemView.findViewById(R.id.btn_edit_route_item);
             btnGoToPicture = (View) itemView.findViewById(R.id.btn_goto_picture);
             btnDelete = (View) itemView.findViewById(R.id.btn_delete_route_item);
             btnDeleteImage = (View)itemView.findViewById(R.id.btn_delete_image_route_item);

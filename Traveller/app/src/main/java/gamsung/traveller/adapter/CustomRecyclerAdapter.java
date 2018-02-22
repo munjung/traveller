@@ -41,6 +41,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
     private Context _context;
     private ArrayList<Photograph> _items;
     private View.OnClickListener _clickListener;
+    public Button innerItem;
     private ViewHolderClickListenerArguments _args;
     private int _representedImagePosition = -1; // EditLocation Activity Edit Mode에서 사진에 spot에 picturePath != null 인 경우 해당 represent image position 찾아서 set 해주어야함
 
@@ -61,17 +62,32 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_edit_chlid_item, viewGroup, false);
         final CustomViewHolder customViewHolder = new CustomViewHolder(_context, itemView, new CustomTextChangeListener());
-        customViewHolder.getImageView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
+//        customViewHolder.getImageView().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                int position = customViewHolder.getAdapterPosition();
+//                _args.setPosition(position);
+//                _args.setItem(_items.get(position));
+//                _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_IMAGE);
+//                _clickListener.onClick(view);
+//            }
+//        });
+
+        customViewHolder.getClickable().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 int position = customViewHolder.getAdapterPosition();
                 _args.setPosition(position);
                 _args.setItem(_items.get(position));
                 _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_IMAGE);
-                _clickListener.onClick(view);
+                _clickListener.onClick(v);
             }
         });
+
+
+
 
         customViewHolder.getBtnRepresent().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +99,8 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 _args.setItem(_items.get(position));
                 _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT);
                 _clickListener.onClick(view);
-
                 //represent button set
-                Button innerItem = (Button) view.findViewById(R.id.btn_inner_represent_edit_child_item);
+                innerItem = (Button) view.findViewById(R.id.btn_inner_represent_edit_child_item);
                 innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
             }
         });
@@ -183,7 +198,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         Context context;
 
-        private ImageView imageView;
+        private ImageView imageView,clickable;
         private EditText txtMemo;
         private View btnRepresent;
         private CustomTextChangeListener watcher;
@@ -197,10 +212,15 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             btnRepresent = itemView.findViewById(R.id.btn_represent_edit_child_item);
             txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
             txtMemo.addTextChangedListener(watcher);
+            clickable = (ImageView) itemView.findViewById(R.id.clickableIV);
         }
 
         public ImageView getImageView(){
             return imageView;
+        }
+
+        public ImageView getClickable() {
+            return clickable;
         }
 
         public EditText getTxtMemo(){
