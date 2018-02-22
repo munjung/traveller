@@ -135,7 +135,6 @@ public class SpotManager {
         sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + routeId);
         sb.append(" ORDER BY " + TableManager.SpotTable.column_index_id + " ASC");
 
-//        Log.d("==>", routeId + "");
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
@@ -150,7 +149,6 @@ public class SpotManager {
                 spot.setSearch_id(c.getInt(5));                 //search
                 spot.setCategory_id(c.getInt(6));               //category(eat, buy,,,)
 
-//                Log.d("         index", c.getInt(2) + "");
                 placeMap.put(spot.get_id(), spot);
             }
             c.close();
