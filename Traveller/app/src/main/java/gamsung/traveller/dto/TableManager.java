@@ -187,7 +187,8 @@ public class TableManager {
             sb.append(column_search_id      + " INTEGER, ");
             sb.append(column_path           + " TEXT, ");
             sb.append(column_date           + " TEXT, ");
-            sb.append(column_memo           + " TEXT ");
+            sb.append(column_memo           + " TEXT,");
+            sb.append("UNIQUE(" + column_path + ")");
 //            sb.append("FOREIGN KEY ("+ column_route_id +") REFERENCES "+ TableManager.RouteTable.name +"("+ RouteTable.column_id+") ON UPDATE CASCADE, ");
 //            sb.append("FOREIGN KEY ("+ column_spot_id +") REFERENCES "+ TableManager.SpotTable.name +"("+ SpotTable.column_id+") ON UPDATE CASCADE, ");
 //            sb.append("FOREIGN KEY ("+ column_search_id +") REFERENCES "+ TableManager.SearchTable.name +"("+ SearchTable.column_id+")");

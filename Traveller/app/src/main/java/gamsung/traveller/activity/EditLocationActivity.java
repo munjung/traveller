@@ -43,7 +43,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     public static final String KEY_SEND_ACTIVITY_IMAGE_LIST = "img_list";
     public static final String KEY_SEND_ACTIVITY_MEMO_LIST = "memo_list";
     public static final String KEY_SEND_ACTIVITY_IMAGE_COUNT = "img_count";
-    
+
     private final static int REQUEST_CODE_GO_ADD_PHOTO = 1;
     private final static int REQUEST_CODE_GO_MAP = 2;
     private final static int REQUEST_CODE_EMPTY = 3;
@@ -51,17 +51,18 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private final static int CREATE_SPOT = 502;
     private final static int EDIT_SPOT = 503;
     private final static int MAP_SELECTED=10;
-    
+
     private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
     private Button btnNextPlan;
-    private EditText memoEdit,tvMission;
+    private EditText memoEdit;
     private TextView editLocation, txtTitle;
     private View layoutAddPhoto;
     private Button btnAddPhoto;
+    private ImageView btnEditMission;
     private ImageView eat,buy,take,visit,anything;
-    
+
     private LinearLayout llGotoMap;
-    
+
     private RecyclerView _recyclerView;
     private CustomRecyclerAdapter _adapter;
     private RelativeLayout photoRelative;
@@ -72,6 +73,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private int editSpotId = -1;
     public int searchID=-1;
     private int CATEGORY_ID;
+    public int photographId;
     private String picturePath;
 
     private List<Spot> spotList;
@@ -88,6 +90,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
         _dataManager = DataManager.getInstance(this);
         mbundle = savedInstanceState;
+
+        this.registerListener();
 
         Intent intent = getIntent();
         this.editRouteId = intent.getIntExtra("route id", -1);
@@ -108,7 +112,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(i, REQUEST_CODE_EMPTY);
             }
             else {
-
                 //edit spot
                 this.isEdit = true;
                 this.editSpotId = intent.getIntExtra("spot id", -1);
@@ -120,14 +123,20 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 else{
                     Spot spot = _dataManager.getSpotList().get(this.editSpotId);
                     this.searchID = spot.getSearch_id();
+                    HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
+                    SearchPlace searchPlace =placelist.get(searchID);
+                    editLocation.setText(searchPlace.getPlace_address());
+                    memoEdit.setText(spot.getMission());
+                    setCategory(spot.getCategory_id());
                     this.picturePath = spot.getPicture_path();
+                    this.photographId = spot.getPicture_id();
                 }
             }
         }
 
-        this.registerListener();
         this.registerRecyclerView();
         this.visibleOperationForEditMode();
+
     }
 
     private void registerListener(){
@@ -168,60 +177,48 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         eatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eat.setVisibility(View.VISIBLE);
-                buy.setVisibility(View.INVISIBLE);
-                take.setVisibility(View.INVISIBLE);
-                visit.setVisibility(View.INVISIBLE);
-                anything.setVisibility(View.INVISIBLE);
                 CATEGORY_ID = 0;
+                setCategory(CATEGORY_ID);
             }
         });
 
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eat.setVisibility(View.INVISIBLE);
-                buy.setVisibility(View.VISIBLE);
-                take.setVisibility(View.INVISIBLE);
-                visit.setVisibility(View.INVISIBLE);
-                anything.setVisibility(View.INVISIBLE);
                 CATEGORY_ID = 1;
+                setCategory(CATEGORY_ID);
             }
         });
 
         takeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eat.setVisibility(View.INVISIBLE);
-                buy.setVisibility(View.INVISIBLE);
-                take.setVisibility(View.VISIBLE);
-                visit.setVisibility(View.INVISIBLE);
-                anything.setVisibility(View.INVISIBLE);
                 CATEGORY_ID = 2;
+                setCategory(CATEGORY_ID);
             }
         });
 
         visitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eat.setVisibility(View.INVISIBLE);
-                buy.setVisibility(View.INVISIBLE);
-                take.setVisibility(View.INVISIBLE);
-                visit.setVisibility(View.VISIBLE);
-                anything.setVisibility(View.INVISIBLE);
                 CATEGORY_ID = 3;
+                setCategory(CATEGORY_ID);
             }
         });
 
         anythingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eat.setVisibility(View.INVISIBLE);
-                buy.setVisibility(View.INVISIBLE);
-                take.setVisibility(View.INVISIBLE);
-                visit.setVisibility(View.INVISIBLE);
-                anything.setVisibility(View.VISIBLE);
                 CATEGORY_ID = 4;
+                setCategory(CATEGORY_ID);
+            }
+        });
+
+        btnEditMission = (ImageView) findViewById(R.id.btn_edit_to_do);
+        btnEditMission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                memoEdit.requestFocus();
             }
         });
 
@@ -242,7 +239,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
-                
+
                 i.putExtra(KEY_SEND_ACTIVITY_IMAGE_COUNT, _adapter.getItemCount());
                 startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
@@ -332,18 +329,22 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             memoEdit.requestFocus();
         }
         else{
-            photoRelative.setVisibility(View.VISIBLE);
-            _recyclerView.setVisibility(View.VISIBLE);
+            if(_adapter.getImgPathList().size() > 0){
+
+                Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
+                if(btnAdd.getVisibility() == View.INVISIBLE)
+                    btnAdd.setVisibility(View.VISIBLE);
+
+                View layoutFrame = findViewById(R.id.layout_frame_edit_location);
+                if(layoutFrame.getVisibility() == View.VISIBLE)
+                    layoutFrame.setVisibility(View.INVISIBLE);
+            }
+
             btnNextPlan.setVisibility(View.GONE);
         }
 
         if(memoEdit !=null)
             memoEdit.clearFocus();
-
-        if(tvMission != null){
-            tvMission.clearFocus();
-            tvMission.requestFocus();
-        }
     }
 
     private void updateSpot(){
@@ -362,6 +363,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
         ArrayList<String> photolist = _adapter.getImgPathList();
         ArrayList<String> memolist = _adapter.getMemoList();
+
         for(int i=0;i<photolist.size();i++){
             Photograph photoforSet = new Photograph();
             photoforSet.setPath(photolist.get(i));
@@ -419,6 +421,48 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    private void setCategory(int CATEGORY_ID) {
+
+        switch (CATEGORY_ID) {
+            case 0 :
+                eat.setVisibility(View.VISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
+                break;
+            case 1 :
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.VISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
+                break;
+            case 2 :
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.VISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.INVISIBLE);
+                break;
+            case 3 :
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.VISIBLE);
+                anything.setVisibility(View.INVISIBLE);
+                break;
+            case 4 :
+                eat.setVisibility(View.INVISIBLE);
+                buy.setVisibility(View.INVISIBLE);
+                take.setVisibility(View.INVISIBLE);
+                visit.setVisibility(View.INVISIBLE);
+                anything.setVisibility(View.VISIBLE);
+                break;
+        }
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -434,16 +478,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
             String imgPath = data.getExtras().getString("img");
 
-             if(_adapter.addImagePath(imgPath) > 0){
+            if(_adapter.addImagePath(imgPath) > 0){
 
-                 Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
-                 if(btnAdd.getVisibility() == View.INVISIBLE)
+                Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
+                if(btnAdd.getVisibility() == View.INVISIBLE)
                     btnAdd.setVisibility(View.VISIBLE);
 
-                 View layoutFrame = findViewById(R.id.layout_frame_edit_location);
-                 if(layoutFrame.getVisibility() == View.VISIBLE)
-                     layoutFrame.setVisibility(View.INVISIBLE);
-             }
+                View layoutFrame = findViewById(R.id.layout_frame_edit_location);
+                if(layoutFrame.getVisibility() == View.VISIBLE)
+                    layoutFrame.setVisibility(View.INVISIBLE);
+            }
         }
 
         if(requestCode == REQUEST_CODE_EMPTY && resultCode == RESULT_CANCELED){
@@ -456,22 +500,25 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
 
         CustomRecyclerAdapter.ViewHolderClickListenerArguments arguments = _adapter.getViewHolderClickListenerArgs();
-        switch (arguments.getReturnType()){
+        switch (arguments.getReturnType()) {
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_IMAGE:
 
                 Intent intent = new Intent(EditLocationActivity.this, ImageSliderActivity.class);
-                intent.putExtra("title",txtTitle.getText().toString());
+                intent.putExtra("title", txtTitle.getText().toString());
                 intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_IMAGE_LIST, _adapter.getImgPathList());
                 intent.putStringArrayListExtra(KEY_SEND_ACTIVITY_MEMO_LIST, _adapter.getMemoList());
 
                 EditLocationActivity.this.startActivity(intent);
                 break;
 
-            case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
-
+            case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
                 picturePath = arguments.getItem().getPath();
-                _adapter.notifyDataSetChanged();
-                break;
+
+                for (int i = 0; i < _recyclerView.getAdapter().getItemCount(); i++) {
+                    picturePath = arguments.getItem().getPath();
+                    _adapter.notifyDataSetChanged();
+                    break;
+                }
         }
     }
 }
