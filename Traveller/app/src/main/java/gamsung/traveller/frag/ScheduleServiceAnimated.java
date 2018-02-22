@@ -48,7 +48,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
         DRAGDROP_ANIMATION_DURATION = 1500;
         DRAGDROP_WAITING_TIME = 1000;
         isScheduleMoved = false;
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(scrollListener);
+        //scrollView.getViewTreeObserver().addOnScrollChangedListener(scrollListener);
     }
     ViewTreeObserver.OnScrollChangedListener scrollListener = new ViewTreeObserver.OnScrollChangedListener() {
         @Override
@@ -82,7 +82,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
                 case DragEvent.ACTION_DRAG_EXITED:
                     //tHandler.removeCallbacksAndMessages(null); //cancel animation + messages when moved to the next
 
-                    view.setBackgroundColor(Color.TRANSPARENT);
+                    //view.setBackgroundColor(Color.TRANSPARENT);
                     //view.setVisibility(View.VISIBLE);
                     Log.d("DragDrop", "Exited entered");
                     return true;
@@ -95,10 +95,11 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     String dragData =item.getText().toString();
 
                     Log.d("DragDrop", "Ended entered");
-                    view.setBackgroundColor(Color.TRANSPARENT);
+                    //view.setBackgroundColor(Color.TRANSPARENT);
                     //if schedule is already moved, animation is not necessary.
                     if (!isScheduleMoved) {
                         moveSchedule(toListIdx(Integer.parseInt(dragData)), toListIdx((int) view.getId()));
+
                     }
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
@@ -106,7 +107,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
                         startID = toListIdx((int)view.getId());
                     }
                     endID = toListIdx((int)view.getId());
-                    view.setBackgroundColor(Color.YELLOW);
+                    //view.setBackgroundColor(Color.YELLOW);
                     //tHandler.postDelayed(runnableTimeCounter, DRAGDROP_WAITING_TIME); //animation takes a place after the waiting time.
                     return true;
 

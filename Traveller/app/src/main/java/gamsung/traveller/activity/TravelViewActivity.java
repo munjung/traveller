@@ -148,6 +148,8 @@ public class TravelViewActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        textTitle.setText(route_title);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,7 +187,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         //draw and implement events for the tab
         TabLayout tabsTravel = findViewById(R.id.tabsTravelView);
-        //tabsTravel.setSelectedTabIndicatorColor(R.drawable.common_google_signin_btn_icon_dark_normal_background);
+
         tabsTravel.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -261,6 +263,9 @@ public class TravelViewActivity extends AppCompatActivity {
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
         //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        for (Spot spot : spotList){
+            Log.d("SPOTLIST: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
+        }
         return spotList; //temporarily
     }
     public void updateSpotFromDB(Spot spot){
@@ -268,6 +273,14 @@ public class TravelViewActivity extends AppCompatActivity {
     }
     public void deleteSpotFromDB(int spot_id){
         dataManager.deleteSpot(spot_id);
+    }
+    public void updateSpotIdx(int oldPos, int newPos){
+        spotList = refreshSpotList();
+        Log.d("Positions: ", "old: " + oldPos + " new: " + newPos);
+        for (Spot spot : spotList) Log.d("Before: ", "ID: " + spot.get_id() + ", indexPos: " + spot.getIndex_id() + "\n");
+        dataManager.updateSpotIndex(oldPos, newPos);
+        spotList = refreshSpotList();
+        for (Spot spot : spotList) Log.d("After: ", "ID: " + spot.get_id() + ", indexPos: " + spot.getIndex_id() + "\n");
     }
 
 

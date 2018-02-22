@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Collections;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -40,6 +42,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     final static private int START_TIMELINE_COLOR_B = 0x80;
     final static private int END_TIMELINE_COLOR_B = 0xff;
     final static private int BOOKMARK_LEFT_MARGIN = 12;
+    final static private int TEMPORARILY_INDEX_VALUE_AVOID_OVERLAP = -1;
     private int GAB_COLOR_R;
     private int GAB_COLOR_G;
     private int GAB_COLOR_B;
@@ -54,6 +57,9 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         this.callback = callback;
         updateColorGab();
     }
+    public void refreshSpotlist(List<Spot> spotList){
+        this.spotList = spotList;
+    }
 
     public void updateColorGab(){
         if (getItemCount() > 0) {
@@ -65,17 +71,47 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
 
     @Override
     public void onViewMoved(int oldPosition, int newPosition) {
-        Spot targetSpot = spotList.get(oldPosition);
-        Spot spot = new Spot();
+        int prev, cur, end;
 
-        //create a copy of a spot
-        spot.setMission(targetSpot.getMission());
-        spot.set_id(targetSpot.get_id());
-        spot.setRoute_id(targetSpot.getRoute_id());
-        //end of creating a copy
+        if (oldPosition < newPosition){
+            prev = spotList.get(oldPosition).getIndex_id();
+            callback.changeOrder(prev, TEMPORARILY_INDEX_VALUE_AVOID_OVERLAP); //temporarily set as -1, so no idx can be same during the swap
+            end = spotList.get(newPosition).getIndex_id();
+            for (int idx = oldPosition; idx < newPosition; idx++){
+                cur = spotList.get(idx + 1).getIndex_id();
+                callback.changeOrder(spotList.get(idx + 1).getIndex_id(), prev);
+                prev = cur;
+                Collections.swap(spotList, idx, idx + 1);
+            }
+            callback.changeOrder(TEMPORARILY_INDEX_VALUE_AVOID_OVERLAP, end);
+        }
 
-        spotList.remove(oldPosition);
-        spotList.add(newPosition, spot);
+        else{
+            prev = spotList.get(newPosition).getIndex_id();
+            callback.changeOrder(prev, TEMPORARILY_INDEX_VALUE_AVOID_OVERLAP);
+            end = spotList.get(oldPosition).getIndex_id();
+            for (int idx  = newPosition; idx > oldPosition; idx--){
+                cur = spotList.get(idx - 1).getIndex_id();
+                callback.changeOrder(spotList.get(idx - 1).getIndex_id(), prev);
+                prev = cur;
+                Collections.swap(spotList, idx, idx - 1);
+            }
+            callback.changeOrder(TEMPORARILY_INDEX_VALUE_AVOID_OVERLAP, end);
+        }
+        //callback.changeOrder(spotList.get(newPosition).getIndex_id(), spotList.get(oldPosition).getIndex_id());
+//
+//        Spot spot = new Spot();
+//
+//        //create a copy of a spot
+//        spot.setMission(targetSpot.getMission());
+//        spot.set_id(targetSpot.get_id());
+//        spot.setRoute_id(targetSpot.getRoute_id());
+//
+//        //end of creating a copy
+//        spotList.add(newPosition, spotList.get(oldPosition));
+//
+//        spotList.remove(oldPosition);
+//        spotList.add(newPosition, spot);
         notifyItemMoved(oldPosition, newPosition);
         //notifyDataSetChanged();
         callback.notifyOrderChanged(oldPosition, newPosition);
@@ -95,6 +131,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         void onClickDelete(int position);
         void onClickEdit(int position);
         void notifyOrderChanged(int oldPos, int newPos);
+        void changeOrder(int oldPos, int newPos);
     }
 
     public void setCallback(ClickListener callback){
