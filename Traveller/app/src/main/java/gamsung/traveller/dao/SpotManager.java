@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.model.Spot;
+import gamsung.traveller.model.SpotWithCoordinate;
 
 /**
  * Created by shin on 2018. 1. 11..
@@ -43,6 +44,10 @@ public class SpotManager {
 
     public Spot getLastIndexSpot(SQLiteHelper dbHelper){
         return _getLastIndexSpot(dbHelper);
+    }
+
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper, Integer route_id){
+        return _getSpotWithCoordinateListOnRouteID(dbHelper, route_id);
     }
 
     public boolean deleteSpot(SQLiteHelper dbHelper, Integer id){
@@ -130,7 +135,7 @@ public class SpotManager {
         sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + routeId);
         sb.append(" ORDER BY " + TableManager.SpotTable.column_index_id + " ASC");
 
-        Log.d("==>", routeId + "");
+//        Log.d("==>", routeId + "");
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
@@ -145,7 +150,7 @@ public class SpotManager {
                 spot.setSearch_id(c.getInt(5));                 //search
                 spot.setCategory_id(c.getInt(6));               //category(eat, buy,,,)
 
-                Log.d("         index", c.getInt(2) + "");
+//                Log.d("         index", c.getInt(2) + "");
                 placeMap.put(spot.get_id(), spot);
             }
             c.close();
@@ -179,6 +184,41 @@ public class SpotManager {
         db.close();
 
         return spot;
+    }
+
+    private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper, Integer route_id) {
+        HashMap<Integer, SpotWithCoordinate> spotList = new HashMap<>();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT * ");
+        //sb.append("SELECT " + TableManager.SearchTable.column_lat + " , " + TableManager.SearchTable.column_lon );
+        sb.append(" FROM " + TABLE_NAME);
+        sb.append(" JOIN " + TableManager.SearchTable.name);
+        sb.append(" ON " + TableManager.SpotTable.name + "." +TableManager.SpotTable.column_search_id + " = " + TableManager.SearchTable.name + "." + TableManager.SearchTable.column_id );
+        sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + route_id);
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+
+                SpotWithCoordinate spot = new SpotWithCoordinate();
+                spot.set_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_id)));
+                spot.setRoute_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_route_id)));
+                spot.setIndex_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_index_id)));
+                spot.setPicture_path(c.getString(c.getColumnIndex(TableManager.SpotTable.column_picture_path)));
+                spot.setMission(c.getString(c.getColumnIndex(TableManager.SpotTable.column_mission)));
+                spot.setSearch_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_search_id)));
+                spot.setLat(c.getDouble(c.getColumnIndex(TableManager.SearchTable.column_lat)));
+                spot.setLon(c.getDouble(c.getColumnIndex(TableManager.SearchTable.column_lon)));
+
+                spotList.put(spot.get_id(), spot);
+            }
+            c.close();
+        }
+        db.close();
+
+        return spotList;
     }
 
     private boolean _deleteSpot(SQLiteHelper dbHelper, Integer id){

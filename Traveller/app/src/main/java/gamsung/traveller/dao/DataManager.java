@@ -10,6 +10,7 @@ import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
 import gamsung.traveller.model.Route;
 import gamsung.traveller.model.SearchPlace;
+import gamsung.traveller.model.SpotWithCoordinate;
 
 /**
  * Created by shin on 2018. 1. 8..
@@ -125,7 +126,9 @@ public class DataManager {
         return m_spotManager.getLastIndexSpot(m_sqlHelper);
     }
 
-
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
+        return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
+    }
 
     //photograph data interface
     public HashMap<Integer, Photograph> getPhotoList(){
