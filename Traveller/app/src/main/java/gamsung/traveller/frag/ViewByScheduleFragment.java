@@ -41,6 +41,8 @@ public class ViewByScheduleFragment extends Fragment {
     private static final int RESULT_EDIT = 3;
     private static final int RESULT_ADD = 4;
     private int route_id;
+    private List<Integer> originalPos = new ArrayList<>();
+    private List<Integer> updatedPos = new ArrayList<>();
     ViewGroup rootView;
     NestedScrollView scrollView;
     RelativeLayout layoutBase; //layout where lists are being drawn on
@@ -50,6 +52,17 @@ public class ViewByScheduleFragment extends Fragment {
     private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged;
     private TravelViewActivity activity;
+
+
+    private void updateLists(){
+        spotList = activity.refreshSpotList();
+        originalPos.clear();
+        updatedPos.clear();
+        for (Spot spot : spotList){
+            originalPos.add(spot.get_id());
+            updatedPos.add(spot.getIndex_id());
+        }
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,7 +73,7 @@ public class ViewByScheduleFragment extends Fragment {
         route_id = activity.getRoute_id();
 
 
-        if (activity.getChangeMade() || spotList == null) spotList = activity.refreshSpotList();
+        if (activity.getChangeMade() || spotList == null) updateLists();
         activity.setChangeMade(false);
 
         if (rootView == null) { //if rootview is not loaded, load.
@@ -69,7 +82,7 @@ public class ViewByScheduleFragment extends Fragment {
             layoutBase = rootView.findViewById(R.id.base_layout_schedule);
             scrollView = rootView.findViewById(R.id.scroll_schedule);
 
-            scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true);
+            scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true, this);
 
             scheduleService.clickEditSchedule = editSchedule;
             scheduleService.clickRemoveSelectedSchedule = clickRemoveSchedule;
@@ -96,6 +109,7 @@ public class ViewByScheduleFragment extends Fragment {
                             scheduleService.load_Spots();
                         }
                         referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
                     }
                 }
             });
@@ -107,10 +121,21 @@ public class ViewByScheduleFragment extends Fragment {
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
             activity.setOrderChanged(false);
         }
+
         return rootView;
     }
+    public void notifyOrderChanged(int oldPos, int newPos){
+        int temp = updatedPos.remove(oldPos);
+        updatedPos.add(temp, newPos);
+    }
 
+    public List<Integer> getOriginalPos(){
+        return originalPos;
+    }
 
+    public List<Integer> getUpdatedPos(){
+        return updatedPos;
+    }
     View.OnClickListener startScheduling = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -129,7 +154,7 @@ public class ViewByScheduleFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
 
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","create");
@@ -137,7 +162,7 @@ public class ViewByScheduleFragment extends Fragment {
             startActivityForResult(i, REQUEST_ADD);
 
             activity.setChangeMade(true);
-
+            Toast.makeText(getContext(), activity.getFrameHeight() +".", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -221,7 +246,7 @@ public class ViewByScheduleFragment extends Fragment {
         else if (requestCode == REQUEST_EDIT){
             int spot_id;
             try {
-                spot_id = data.getExtras().getInt("spot id", -1);
+                spot_id = data.getExtras().getInt("spot_id", -1);
             } catch(NullPointerException e) {return;}
             if (spot_id == -1) return;
 

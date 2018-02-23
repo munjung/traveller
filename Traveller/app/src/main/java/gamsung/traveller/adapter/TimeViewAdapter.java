@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Collections;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -40,6 +42,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     final static private int START_TIMELINE_COLOR_B = 0x80;
     final static private int END_TIMELINE_COLOR_B = 0xff;
     final static private int BOOKMARK_LEFT_MARGIN = 12;
+
     private int GAB_COLOR_R;
     private int GAB_COLOR_G;
     private int GAB_COLOR_B;
@@ -54,6 +57,9 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         this.callback = callback;
         updateColorGab();
     }
+    public void refreshSpotlist(List<Spot> spotList){
+        this.spotList = spotList;
+    }
 
     public void updateColorGab(){
         if (getItemCount() > 0) {
@@ -65,17 +71,8 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
 
     @Override
     public void onViewMoved(int oldPosition, int newPosition) {
-        Spot targetSpot = spotList.get(oldPosition);
-        Spot spot = new Spot();
 
-        //create a copy of a spot
-        spot.setMission(targetSpot.getMission());
-        spot.set_id(targetSpot.get_id());
-        spot.setRoute_id(targetSpot.getRoute_id());
-        //end of creating a copy
-
-        spotList.remove(oldPosition);
-        spotList.add(newPosition, spot);
+        Collections.swap(spotList, oldPosition, newPosition);
         notifyItemMoved(oldPosition, newPosition);
         //notifyDataSetChanged();
         callback.notifyOrderChanged(oldPosition, newPosition);
@@ -95,6 +92,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         void onClickDelete(int position);
         void onClickEdit(int position);
         void notifyOrderChanged(int oldPos, int newPos);
+        void changeOrder(int oldPos, int newPos);
     }
 
     public void setCallback(ClickListener callback){

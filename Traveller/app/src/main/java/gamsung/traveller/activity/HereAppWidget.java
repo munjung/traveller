@@ -24,16 +24,16 @@ public class HereAppWidget extends AppWidgetProvider {
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.here_app_widget);
-/*
-        HashMap<Integer,Spot> spotlist = dataManager.getSpotListWithRouteId(0);
+
+        HashMap<Integer,Spot> spotlist = dataManager.getSpotListWithRouteId(1);
         HashMap<Integer,SearchPlace> placelist = dataManager.getSearchPlaceList();
-        views.setTextViewText(R.id.tvTodowidget,spotlist.get(0).getMission());
+        views.setTextViewText(R.id.tvTodowidget,spotlist.get(1).getMission());
 
-        int searchid = spotlist.get(0).getSearch_id();
+        int searchid = spotlist.get(1).getSearch_id();
         views.setTextViewText(R.id.tvTodolocal,placelist.get(searchid).getPlace_address());
-        views.setTextViewText(R.id.tvTodonext,spotlist.get(0).getMission());
+        views.setTextViewText(R.id.tvTodonext,spotlist.get(1).getMission());
 
-*/
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

@@ -37,6 +37,7 @@ import gamsung.traveller.dto.TableManager;
 import gamsung.traveller.frag.ViewByPhotosFragment;
 import gamsung.traveller.frag.ViewByScheduleFragment;
 import gamsung.traveller.model.Photograph;
+import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 
 import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID;
@@ -98,15 +99,7 @@ public class TravelViewActivity extends AppCompatActivity {
         route_id = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
         route_title = intent.getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
         spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
-/*
-        spotList = new ArrayList<>();
-        for (int i = 0; i < 15; i++){
-            Spot spot = new Spot();
-            spot.set_id(i);
-            spot.setMission("Number: " + i);
-            spot.setRoute_id(route_id);
-            spotList.add(spot);
-        }*/
+
         findViews();
 
         if(spotList.size() == 0){
@@ -148,6 +141,8 @@ public class TravelViewActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        textTitle.setText(route_title);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,7 +180,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         //draw and implement events for the tab
         TabLayout tabsTravel = findViewById(R.id.tabsTravelView);
-        //tabsTravel.setSelectedTabIndicatorColor(R.drawable.common_google_signin_btn_icon_dark_normal_background);
+
         tabsTravel.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -196,6 +191,7 @@ public class TravelViewActivity extends AppCompatActivity {
                 else if (pos == 1)
                     selectedFrag = viewByPhotosFragment;
 
+                if (isOrderChanged) updateOrdersToDB(pos);
                 getSupportFragmentManager().beginTransaction().replace(R.id.containerTravelView, selectedFrag).commit();
                 getSupportFragmentManager().beginTransaction().addToBackStack(null);
 
@@ -223,6 +219,34 @@ public class TravelViewActivity extends AppCompatActivity {
 
     }
 
+    public int getFrameHeight(){
+        View view = findViewById(R.id.containerTravelView);
+        return view.getLayoutParams().height;
+    }
+    private void updateOrdersToDB(int tabSelected){
+        int idx = 0;
+        List<Integer> originalPos, updatedPos;
+        if (tabSelected == 0) {
+            originalPos = viewByPhotosFragment.getOriginalPos();
+            updatedPos = viewByPhotosFragment.getUpdatedPos();
+        }
+        else{
+            originalPos = viewByScheduleFragment.getOriginalPos();
+            updatedPos = viewByScheduleFragment.getUpdatedPos();
+        }
+        for (int i : originalPos) {
+            int spot_id = dataManager.getSpotIDWithIndexID(originalPos.get(idx)).get_id();
+            Log.d("At TRAVEL VIEW: ",  "SPOT ID: " + spot_id + " original position id: " + originalPos.get(idx) + " updated position id: " + updatedPos.get(idx) +"\n");
+            dataManager.updateSpotIndex(spot_id, updatedPos.get(idx++));
+        }
+
+
+
+//
+        for (Spot spot : spotList){
+            Log.d("spot idx: ", spot.get_id() + ": " + spot.getIndex_id() + "\n");
+        }
+    }
 
     /*
      * Activity <-> Fragment
@@ -256,11 +280,14 @@ public class TravelViewActivity extends AppCompatActivity {
     public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){
         return dataManager.getPhotoListWithSpot(spot_id);
     }
-    public List<Spot> refreshSpotList(){
-        Toast.makeText(getApplicationContext(), "Spotlist updated.", Toast.LENGTH_SHORT).show();
+        public List<Spot> refreshSpotList(){
+            Toast.makeText(getApplicationContext(), "Spotlist updated.", Toast.LENGTH_SHORT).show();
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
         //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
+        for (Spot spot : spotList){
+            Log.d("SPOTLIST: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
+        }
         return spotList; //temporarily
     }
     public void updateSpotFromDB(Spot spot){
@@ -269,7 +296,19 @@ public class TravelViewActivity extends AppCompatActivity {
     public void deleteSpotFromDB(int spot_id){
         dataManager.deleteSpot(spot_id);
     }
-
+    public void updateSpotIdx(int oldPos, int newPos){
+        spotList = refreshSpotList();
+        Log.d("Positions: ", "old: " + oldPos + " new: " + newPos);
+        for (Spot spot : spotList) Log.d("Before: ", "ID: " + spot.get_id() + ", indexPos: " + spot.getIndex_id() + "\n");
+        dataManager.updateSpotIndex(oldPos, newPos);
+        spotList = refreshSpotList();
+        for (Spot spot : spotList) Log.d("After: ", "ID: " + spot.get_id() + ", indexPos: " + spot.getIndex_id() + "\n");
+    }
+    public String getSearchPlaceFromDB(int placeID){
+        HashMap<Integer, SearchPlace> placeHashMap = dataManager.getSearchPlaceList();
+        SearchPlace searchPlace = placeHashMap.get(placeID);
+        return searchPlace.getPlace_address();
+    }
 
 }
 class CustomComparator implements Comparator<Spot>{

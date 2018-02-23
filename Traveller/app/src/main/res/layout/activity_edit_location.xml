@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/barLayout"
         android:focusable="true"
+        android:background="#FFFFFF"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
@@ -24,7 +25,6 @@
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            android:elevation="1dp"
             android:id="@+id/toolTitle"
             app:contentInsetStart="0dp">
 
@@ -362,8 +362,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:background="@drawable/border"
                     android:gravity="center">
 
@@ -372,6 +370,8 @@
                         android:layout_width="35dp"
                         android:layout_height="30dp"
                         android:src="@drawable/icn_eat_on_list"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
 
                     <EditText
@@ -384,14 +384,15 @@
                         android:hint="할일 입력"
                         android:textSize="14sp"
                         android:background="@null"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerInParent="true"/>
 
                     <ImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:src="@drawable/btn_edit_to_do_list"
                         android:id="@+id/btn_edit_to_do"
-                        android:layout_toRightOf="@id/memoEdit"/>
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"/>
 
                     <ImageView
                         android:visibility="gone"
@@ -399,6 +400,8 @@
                         android:layout_width="35dp"
                         android:layout_height="30dp"
                         android:src="@drawable/icn_buy_on_list"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
 
                     <ImageView
@@ -406,7 +409,8 @@
                         android:visibility="gone"
                         android:layout_width="35dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/icn_take_photos_on_list"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
 
                     <ImageView
@@ -414,7 +418,8 @@
                         android:visibility="gone"
                         android:layout_width="35dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/icn_visit_on_list"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
 
                     <ImageView
@@ -422,7 +427,8 @@
                         android:visibility="gone"
                         android:layout_width="35dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/icn_anything_on_list"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
 
                 </RelativeLayout>

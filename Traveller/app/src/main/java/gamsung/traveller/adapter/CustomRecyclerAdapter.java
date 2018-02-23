@@ -87,6 +87,24 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         });
 
 
+        //사진 삭제 버튼을 눌렀을 때
+        customViewHolder.getBtnRemoveChild().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = customViewHolder.getAdapterPosition();
+                _args.setPosition(position);
+                _args.setItem(_items.get(position));
+                _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE);
+                _items.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, _items.size());
+                notifyDataSetChanged();
+                _clickListener.onClick(view);
+
+            }
+        });
+
+
 
 
         customViewHolder.getBtnRepresent().setOnClickListener(new View.OnClickListener() {
@@ -102,6 +120,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 //represent button set
                 innerItem = (Button) view.findViewById(R.id.btn_inner_represent_edit_child_item);
                 innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
+
             }
         });
 
@@ -110,7 +129,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
 
     @Override
-    public void onBindViewHolder(CustomRecyclerAdapter.CustomViewHolder viewHolder, int position) {
+    public void onBindViewHolder(CustomRecyclerAdapter.CustomViewHolder viewHolder, final int position) {
 
         String imgPath = _items.get(position).getPath();
         if (!TextUtils.isEmpty(imgPath)) {
@@ -129,6 +148,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         memo = memo == null ? "" : memo;
         viewHolder.getTxtMemo().setText(memo);
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
+
     }
 
 
@@ -202,6 +222,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         private EditText txtMemo;
         private View btnRepresent;
         private CustomTextChangeListener watcher;
+        private Button btnRemoveChild;
 
         public CustomViewHolder(final Context context, View itemView, CustomTextChangeListener watcher) {
             super(itemView);
@@ -210,10 +231,20 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
             btnRepresent = itemView.findViewById(R.id.btn_represent_edit_child_item);
+            btnRemoveChild = (Button)itemView.findViewById(R.id.btn_inner_remove_photo_item);
             txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
             txtMemo.addTextChangedListener(watcher);
             clickable = (ImageView) itemView.findViewById(R.id.clickableIV);
         }
+
+        public Button getBtnRemoveChild() {
+            return btnRemoveChild;
+        }
+
+        public void setBtnRemoveChild(Button btnRemoveChild) {
+            this.btnRemoveChild = btnRemoveChild;
+        }
+        
 
         public ImageView getImageView(){
             return imageView;
@@ -272,6 +303,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         public static final int RETURN_TYPE_CLICK_IMAGE = 1;
         public static final int RETURN_TYPE_CLICK_REPRESENT = 2;
+        public static final int RETURN_TYPE_CLICK_REMOVE = 3;
 
         private Photograph item;
         private int position;

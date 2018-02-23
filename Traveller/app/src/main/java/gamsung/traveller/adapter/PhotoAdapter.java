@@ -55,7 +55,9 @@ public class PhotoAdapter extends BaseAdapter {
             view = inf.inflate(layout,null);
         ImageView iv =(ImageView)view.findViewById(R.id.ivphotoplace);
         String imgpath = photoset.get(i);
-        Bitmap bm = BitmapFactory.decodeFile(imgpath);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        Bitmap bm = BitmapFactory.decodeFile(imgpath,options);
         iv.setImageBitmap(bm);
         final int prepositon = i;
         int width = context.getResources().getDisplayMetrics().widthPixels;

@@ -3,6 +3,7 @@ package gamsung.traveller.frag;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +27,11 @@ import com.bumptech.glide.Glide;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import gamsung.traveller.R;
+import gamsung.traveller.activity.EditLocationActivity;
 import gamsung.traveller.activity.TravelViewActivity;
 import gamsung.traveller.adapter.TimeViewAdapter;
 import gamsung.traveller.dao.DataManager;
@@ -40,17 +44,45 @@ import gamsung.traveller.util.DebugToast;
  */
 
 public class ViewByPhotosFragment extends Fragment {
+    private static final int REQUEST_EDIT= 0;
     private RecyclerView timeRecyclerView;
     private TimeViewAdapter timeViewAdapter;
+    private List<Integer> originalPos = new ArrayList<>();
+    private List<Integer> updatedPos = new ArrayList<>();
     private List<Spot> spotList;
-    private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged;
+    private List<Integer> deletedSpotID, editedSpotID;
     private LinearLayoutManager linearLayoutManager;
     TravelViewActivity activity;
-    public ViewByPhotosFragment(){
 
+
+    public List<Integer> getOriginalPos(){
+        return originalPos;
+    }
+    public List<Integer> getUpdatedPos(){
+        updatedPos.clear();
+        for (int orgPos : originalPos){
+            int idx = 0;
+            for (Spot curSpot : spotList){
+                if (curSpot.getIndex_id() == orgPos) break;
+                idx++;
+            }
+            updatedPos.add(originalPos.get(idx));
+        }
+//        for (int temp : updatedPos) Log.d("AT getUPDATEDPOS: ", "UPDATED POS: " + te);\
+        for (int idx = 0; idx < originalPos.size(); idx++){
+            Log.d("AT getUPDATEDPOS: ", "ORIGINAL POS: " + originalPos.get(idx) + ", UPDATED POS: " + updatedPos.get(idx));
+        }
+        return updatedPos;
     }
 
+
+
+
+    private void updateLists(){
+        spotList = activity.refreshSpotList();
+
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +98,11 @@ public class ViewByPhotosFragment extends Fragment {
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
 
-        if (activity.getChangeMade() || spotList == null) spotList = activity.refreshSpotList();
+        if (activity.getChangeMade() || spotList == null) updateLists();
+        originalPos.clear();
+        for (Spot spot : spotList){
+            originalPos.add(spot.getIndex_id());
+        }
         activity.setChangeMade(false);
 
         deletedSpotID = activity.getDeletedSpotID();
@@ -121,21 +157,28 @@ public class ViewByPhotosFragment extends Fragment {
 
         @Override
         public void onClickEdit(int position) {
-            spotList.get(position).setMission("Mission edited: " + position);
-            int spotID = spotList.get(position).get_id();
-            boolean isExist = false;
-            activity.updateSpotFromDB(spotList.get(position));
-            //avoid overlaps
-            for (int idx : editedSpotID){
-                if (idx == spotID){
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) editedSpotID.add(spotID);
-            timeViewAdapter.notifyDataSetChanged();
-
-            activity.setChangeMade(true);
+            Intent i = new Intent(getContext(), EditLocationActivity.class);
+            Spot targetSpot = spotList.get(position);
+            i.putExtra("TAG_ACTIVITY", "edit");
+            i.putExtra("route id", targetSpot.getRoute_id());
+            i.putExtra("spot id", targetSpot.get_id());
+            startActivityForResult(i, REQUEST_EDIT);
+//            activity.setChangeMade(true);
+//            spotList.get(position).setMission("Mission edited: " + position);
+//            int spotID = spotList.get(position).get_id();
+//            boolean isExist = false;
+//            activity.updateSpotFromDB(spotList.get(position));
+//            //avoid overlaps
+//            for (int idx : editedSpotID){
+//                if (idx == spotID){
+//                    isExist = true;
+//                    break;
+//                }
+//            }
+//            if (!isExist) editedSpotID.add(spotID);
+//            timeViewAdapter.notifyDataSetChanged();
+//
+//            activity.setChangeMade(true);
         }
 
         @Override
@@ -143,6 +186,47 @@ public class ViewByPhotosFragment extends Fragment {
             activity.setOrderChanged(true);
             activity.setChangeMade(true);
         }
+
+        @Override
+        public void changeOrder(int oldPos, int newPos) {
+            activity.updateSpotIdx(oldPos, newPos);
+        }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_EDIT){
+            spotList = activity.refreshSpotList();
+            int spot_id, pos;
+            try{
+                spot_id = data.getExtras().getInt("spot_id", -1);
+            }catch(NullPointerException e){return;}
+            if (spot_id == -1) return; //no spot_id returns => edit fails
+
+            pos = 0;
+            for (Spot spot : spotList){ //update DB
+                if (spot.get_id() == spot_id){
+                    activity.updateSpotFromDB(spot);
+                    break;
+                }
+                pos++;
+            }
+            boolean isExist = false;
+            for (int idx : editedSpotID){ //update editedSpotID, but avoid overlaps
+                if (idx == spot_id){
+                isExist = true;
+                break;
+                }
+            }
+            if (!isExist)editedSpotID.add(spot_id);
+
+//            timeViewAdapter.notifyDataSetChanged();
+            timeViewAdapter.refreshSpotlist(spotList);
+            timeViewAdapter.notifyItemChanged(pos);
+            activity.setChangeMade(true);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
 
