@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.bumptech.glide.Glide;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import gamsung.traveller.R;
@@ -45,15 +47,42 @@ public class ViewByPhotosFragment extends Fragment {
     private static final int REQUEST_EDIT= 0;
     private RecyclerView timeRecyclerView;
     private TimeViewAdapter timeViewAdapter;
+    private List<Integer> originalPos = new ArrayList<>();
+    private List<Integer> updatedPos = new ArrayList<>();
     private List<Spot> spotList;
-    private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged;
+    private List<Integer> deletedSpotID, editedSpotID;
     private LinearLayoutManager linearLayoutManager;
     TravelViewActivity activity;
-    public ViewByPhotosFragment(){
 
+
+    public List<Integer> getOriginalPos(){
+        return originalPos;
+    }
+    public List<Integer> getUpdatedPos(){
+        updatedPos.clear();
+        for (int orgPos : originalPos){
+            int idx = 0;
+            for (Spot curSpot : spotList){
+                if (curSpot.getIndex_id() == orgPos) break;
+                idx++;
+            }
+            updatedPos.add(originalPos.get(idx));
+        }
+//        for (int temp : updatedPos) Log.d("AT getUPDATEDPOS: ", "UPDATED POS: " + te);\
+        for (int idx = 0; idx < originalPos.size(); idx++){
+            Log.d("AT getUPDATEDPOS: ", "ORIGINAL POS: " + originalPos.get(idx) + ", UPDATED POS: " + updatedPos.get(idx));
+        }
+        return updatedPos;
     }
 
+
+
+
+    private void updateLists(){
+        spotList = activity.refreshSpotList();
+
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +98,11 @@ public class ViewByPhotosFragment extends Fragment {
         timeRecyclerView = view.findViewById(R.id.time_view_RecyclerView);
         activity = (TravelViewActivity)getActivity();
 
-        if (activity.getChangeMade() || spotList == null) spotList = activity.refreshSpotList();
+        if (activity.getChangeMade() || spotList == null) updateLists();
+        originalPos.clear();
+        for (Spot spot : spotList){
+            originalPos.add(spot.getIndex_id());
+        }
         activity.setChangeMade(false);
 
         deletedSpotID = activity.getDeletedSpotID();

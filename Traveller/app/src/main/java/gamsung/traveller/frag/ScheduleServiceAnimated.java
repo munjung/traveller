@@ -41,8 +41,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
     private boolean isScheduleMoved;
     private int temp_int = 0;
     public ScheduleServiceAnimated(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
-                                   RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop) {
-        super(rootView, layoutSingle, scrollView, layoutBase, appContext, spotList, isDragDrop);
+                                   RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop, ViewByScheduleFragment fragment) {
+        super(rootView, layoutSingle, scrollView, layoutBase, appContext, spotList, isDragDrop, fragment);
         super.dragListener = this.scheduleDragListener;
         clickEditSchedule = null;
         DRAGDROP_ANIMATION_DURATION = 1500;

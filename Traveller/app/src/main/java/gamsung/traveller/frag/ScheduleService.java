@@ -110,8 +110,9 @@ public class ScheduleService {
     boolean isEditing;
     private int EMPTY_CIRCLE_BIGGER;
     private List<Spot> spotList;
-    ArrayList<ListSchedule> listSchedule = new ArrayList<>();
+    private ViewByScheduleFragment fragment;
 
+    ArrayList<ListSchedule> listSchedule = new ArrayList<>();
     ViewGroup rootView;
     NestedScrollView scrollView;
     Context appContext;
@@ -122,7 +123,7 @@ public class ScheduleService {
 
 
     public ScheduleService(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
-                           RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop) {
+                           RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop, ViewByScheduleFragment fragment) {
         this.rootView = rootView;
         this.scrollView = scrollView;
         this.layoutSingle = layoutSingle;
@@ -138,7 +139,7 @@ public class ScheduleService {
         EMPTY_CIRCLE_BIGGER = 24;
         coordinateInformation.layout_height = 0; //initalized to zero
         isEditing = false;
-
+        this.fragment = fragment;
     }
 
     public DrawnLine[] draw_lines(int idx){
@@ -184,6 +185,7 @@ public class ScheduleService {
             }
 
         }
+
     }
 
     public boolean initCoordInformation(View referenceView){
@@ -245,6 +247,7 @@ public class ScheduleService {
 
         if(editedSpot.getPicture_path() == "nopath" || editedSpot.getPicture_path() == null) Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         else Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().error(R.drawable.grap_noimage).into((CircleImageView)listSchedule.get(idx).circleImage);
+
         //change image
 
 
@@ -475,6 +478,7 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).spot_ID);
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
+        this.fragment.notifyOrderChanged(idxA, idxB);
 
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
