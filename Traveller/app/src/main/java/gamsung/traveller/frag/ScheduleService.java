@@ -471,6 +471,7 @@ public class ScheduleService {
         }
 
         updateYCoordinateViews(idxA);
+        fragment.setOrderChanged();
         for (ListSchedule list : listSchedule){
             Log.d("ID pos: ", list.spot_ID + "\n");
         }
