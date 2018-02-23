@@ -181,6 +181,13 @@ public class DataManager {
     }
 
 
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(){
+        return m_spotManager.getSpotWithCoordinateList(m_sqlHelper);
+    }
+
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
+        return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
+    }
 
     //photograph data interface
     public HashMap<Integer, Photograph> getPhotoList(){

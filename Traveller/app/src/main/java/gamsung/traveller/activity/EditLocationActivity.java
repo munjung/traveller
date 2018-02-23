@@ -239,7 +239,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
-
                 i.putExtra(KEY_SEND_ACTIVITY_IMAGE_COUNT, _adapter.getItemCount());
                 startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
             }
@@ -349,10 +348,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     private void updateSpot(){
 
-//                        Bundle bundle = savedInstanceState;
-//                        int route_id = bundle.getInt("route id");
-//                        int spot_id = bundle.getInt("spot list");
-
         Spot editSpot = new Spot();
         editSpot.set_id(editSpotId);
         editSpot.setRoute_id(editRouteId);
@@ -397,9 +392,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     private void createSpot() {
 
-//                        Bundle bundle = savedInstanceState;
-//                        int route_id = bundle.getInt("route id");
-
         Spot newSpot = new Spot();
         newSpot.setRoute_id(editRouteId);
         newSpot.setMission(memoEdit.getText().toString());
@@ -412,7 +404,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
             setResult(CREATE_SPOT, intent);
-            //finish();//+
             Toast.makeText(EditLocationActivity.this, "추가되었습니다.", Toast.LENGTH_LONG).show();
         } else {
 
@@ -460,7 +451,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 anything.setVisibility(View.VISIBLE);
                 break;
         }
-
     }
 
 
@@ -521,17 +511,18 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
-                    photographId = arguments.getItem().get_id();
-                    _dataManager.deletePhoto(photographId);
+                    Log.d("present position: ",arguments.getPosition()+"");
+                    if(_adapter.get_representedImagePosition() == arguments.getPosition()){
+                            _adapter.set_representedImagePosition(-1);
+                            picturePath="";
+                    }
+
+                    int photoId = arguments.getItem().get_id();
+                    _dataManager.deletePhoto(photoId);
+
+                    _adapter.notifyDataSetChanged();
                     break;
-//                    picturePath = arguments.getItem().getPath();
-//                    for (int i = 0; i < _recyclerView.getAdapter().getItemCount(); i++) {
-//                        picturePath = arguments.getItem().getPath();
-//                        _adapter.notifyDataSetChanged();
-//                        break;
-//                    }
-
-
         }
+
     }
 }

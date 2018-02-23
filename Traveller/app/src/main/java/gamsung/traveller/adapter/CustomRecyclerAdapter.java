@@ -63,17 +63,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_edit_chlid_item, viewGroup, false);
         final CustomViewHolder customViewHolder = new CustomViewHolder(_context, itemView, new CustomTextChangeListener());
 
-//        customViewHolder.getImageView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                int position = customViewHolder.getAdapterPosition();
-//                _args.setPosition(position);
-//                _args.setItem(_items.get(position));
-//                _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_IMAGE);
-//                _clickListener.onClick(view);
-//            }
-//        });
 
         customViewHolder.getClickable().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +126,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         }
 
         Button innerItem = (Button) viewHolder.getBtnRepresent().findViewById(R.id.btn_inner_represent_edit_child_item);
-        if(_representedImagePosition == position){
+        if(_representedImagePosition == position){ //_representedImagePosition
             innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
         }
         else{
@@ -146,9 +135,8 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         String memo = _items.get(position).getMemo();
         memo = memo == null ? "" : memo;
-        viewHolder.getTxtMemo().setText(memo);
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
-
+        viewHolder.getTxtMemo().setText(memo);
     }
 
 
@@ -160,6 +148,14 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
     public ViewHolderClickListenerArguments getViewHolderClickListenerArgs(){
         return _args;
+    }
+
+    public int get_representedImagePosition(){
+        return _representedImagePosition;
+    }
+
+    public void set_representedImagePosition(int position){
+        this._representedImagePosition = position;
     }
 
     public int addImagePath(String path){
