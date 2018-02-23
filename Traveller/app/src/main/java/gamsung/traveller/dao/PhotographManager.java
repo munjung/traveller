@@ -135,12 +135,12 @@ public class PhotographManager {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(sb.toString());
             db.close();
+
         }
         catch (Exception ex){
             Log.e("delete photo", ex.getMessage());
             return false;
         }
-
         return true;
     }
 

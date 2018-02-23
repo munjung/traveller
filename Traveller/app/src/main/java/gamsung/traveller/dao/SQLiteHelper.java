@@ -51,6 +51,24 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("PRAGMA foreign_keys = 1;");
     }
 
+    public SQLiteDatabase beginTrans(){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+
+        return db;
+    }
+
+    public void commit(SQLiteDatabase db){
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    public void rollback(SQLiteDatabase db){
+        db.endTransaction();
+    }
+
 //    public void excuteQuery(String query){
 //
 //        SQLiteDatabase db = this.getWritableDatabase();
