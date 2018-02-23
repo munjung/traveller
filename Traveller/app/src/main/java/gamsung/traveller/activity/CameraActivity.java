@@ -26,6 +26,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
+import android.location.Location;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import android.os.Environment;
 import android.provider.MediaStore.Images.Media;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -59,6 +61,8 @@ import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Route;
 import gamsung.traveller.model.Spot;
+import gamsung.traveller.model.SpotWithCoordinate;
+import gamsung.traveller.util.LocationService;
 
 
 /**
@@ -78,19 +82,21 @@ public class CameraActivity extends AppCompatActivity {
     ImageView shadowBackground;
     final int RESULT_SAVEIMAGE = 0;
     private static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
-    ArrayList<String> routeTitleList, spotTitleList;
-    HashMap <Integer, Route> routeList;
-    HashMap<Integer, Spot> tempSpotHashMap;
-    DataManager _datamanager;
+//    ArrayList<String> routeTitleList, spotTitleList;
+    HashMap <Integer, Route> routeHashMap;
+//    HashMap<Integer, Spot> tempSpotHashMap;
+
     String spotName,routeName;
     Spinner routeSpinner, spotSpinner;
-    private boolean isEdit = false;
+
     private int editRouteId = -1;
     private String editSpotTitle ="";
     private int editSpotId = -1;
     public int searchID=-1;
     private int CATEGORY_ID;
     private String picturePath;
+
+    DataManager _datamanager;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -106,22 +112,23 @@ public class CameraActivity extends AppCompatActivity {
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
-        routeTitleList = new ArrayList<>();
-        routeTitleList.add(0,getString(R.string.selectroute));
-
-        spotTitleList = new ArrayList<>();
-        spotTitleList.add(0, getString(R.string.selectspot));
+//        routeTitleList = new ArrayList<>();
+//        routeTitleList.add(0,getString(R.string.selectroute));
+//
+//        spotTitleList = new ArrayList<>();
+//        spotTitleList.add(0, getString(R.string.selectspot));
 
         _datamanager = DataManager.getInstance(this);
+        routeHashMap = _datamanager.getRouteList();
 //        routeList = new HashMap<>();
-        routeList = _datamanager.getRouteList();
+//        routeList = _datamanager.getRouteList();
 
-        ArrayList<Route> tempList = new ArrayList<>();
-        tempList.addAll(routeList.values());
-
-        for ( Route e : tempList) {
-            routeTitleList.add(e.getTitle());
-        }
+//        ArrayList<Route> tempList = new ArrayList<>();
+//        tempList.addAll(routeList.values());
+//
+//        for ( Route e : tempList) {
+//            routeTitleList.add(e.getTitle());
+//        }
 
         try {
             android.provider.Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
@@ -144,80 +151,15 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 changeToSelectMode();
 
-                ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, routeTitleList);
-                //스피너 속성
-                routeSpinner = (Spinner) findViewById(R.id.dropDownRoute);
-                routeSpinner.setAdapter(mAdapter);
-                routeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //set spinner
+                setRouteDropList();
+                setSpotDropList(-1);
 
-                        spotTitleList.clear();
-                        spotTitleList.add(getString(R.string.selectspot));
-                        spotSpinner.setSelection(0);
-                        routeName = routeSpinner.getSelectedItem().toString();
-
-                        if(!routeSpinner.getSelectedItem().toString().equals(getString(R.string.selectroute))) {
-
-                            ArrayList<Route> tempRouteList = new ArrayList<>();
-                            tempRouteList.addAll(routeList.values());
-
-                            int routeId = 0;
-
-                            for (Route e : tempRouteList) {
-                                if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
-                                    routeId = e.get_id();
-                                    editRouteId = routeId;
-                                    tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
-                                    ArrayList<Spot> tempSpotList = new ArrayList<>();
-                                    tempSpotList.addAll(tempSpotHashMap.values());
-                                    for (int i = 0; i < tempSpotList.size(); i++) {
-                                        spotTitleList.add(tempSpotList.get(i).getMission());
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                ArrayAdapter<String> nAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, spotTitleList);
-                //스피너 속성
-                spotSpinner = (Spinner) findViewById(R.id.dropDownSpot);
-                spotSpinner.setAdapter(nAdapter);
-                spotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        spotName = spotSpinner.getSelectedItem().toString();
-
-                        if(!spotSpinner.getSelectedItem().equals(getString(R.string.selectspot))) {
-                            editSpotTitle = spotSpinner.getSelectedItem().toString();
-                            ArrayList<Spot> tempSpotList = new ArrayList<>();
-                            tempSpotList.addAll(tempSpotHashMap.values());
-                            for(Spot s : tempSpotList) {
-                                if(s.getMission().equals(spotSpinner.getSelectedItem().toString())) {
-                                    editSpotId = s.get_id();
-                                    searchID = s.getSearch_id();
-                                    CATEGORY_ID = s.getCategory_id();
-                                    picturePath = s.getPicture_path();
-                                }
-
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
+                //find nearest spot & set spinner item
+                SpotWithCoordinate spot = findNearestSpot();
+                if(spot != null){
+                    selectNearestSpotItem(spot);
+                }
             }
         });
 
@@ -298,8 +240,170 @@ public class CameraActivity extends AppCompatActivity {
 
         popupRelative = (RelativeLayout) findViewById(R.id.popupRelative);
         shadowBackground = (ImageView) findViewById(R.id.shadow_background);
-
     }
+
+    private SpotWithCoordinate findNearestSpot(){
+
+        HashMap<Integer, SpotWithCoordinate> spotList = _datamanager.getSpotWithCoordinateList();
+        LocationService locationService = LocationService.getInstance(this);
+
+        float minDist = Float.MAX_VALUE;
+        SpotWithCoordinate nearestSpot = null;    //nearest spot
+        Location gpsLocation = locationService.getLocation(); //get current location
+        if(!locationService.isAvailable())  //because (turn off GPS and WI-FI) or (no permission)
+            return nearestSpot;
+
+        for(SpotWithCoordinate spot : spotList.values()){
+
+            Location spotLocation = new Location("");
+            spotLocation.setLatitude(spot.getLat());
+            spotLocation.setLongitude(spot.getLon());
+
+            float distance = gpsLocation.distanceTo(spotLocation);
+            if(minDist > distance){
+                minDist = distance;
+                nearestSpot = spot;
+            }
+        }
+
+        return nearestSpot;
+    }
+
+    private void selectNearestSpotItem(SpotWithCoordinate spot){
+
+        int routeId = spot.getRoute_id();
+        String spotMission = spot.getMission();
+
+        if(routeId > 0){
+            String title = routeHashMap.get(routeId).getTitle();
+            for(int i=0; i<routeSpinner.getAdapter().getCount(); i++){
+                if(routeSpinner.getItemAtPosition(i).toString().equals(title)){
+                    routeSpinner.setSelection(i);
+                    // *set selection 에서 item selected listener 이벤트가 발생하지 않으면 직접 호출해줘야함
+                    break;
+                }
+            }
+        }
+
+        if(spotMission != null && spotMission.length() > 0){
+            for(int i=0; i<spotSpinner.getAdapter().getCount(); i++){
+                if(spotSpinner.getItemAtPosition(i).toString().equals(spotMission)){
+                    spotSpinner.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void setRouteDropList(){
+
+        ArrayList<String> routeTitleList = new ArrayList<>();
+        for (Route route : routeHashMap.values()){
+            routeTitleList.add(route.getTitle());
+        }
+
+        //set adapter
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, routeTitleList);
+        routeSpinner = (Spinner) findViewById(R.id.dropDownRoute);
+        routeSpinner.setAdapter(mAdapter);
+        routeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                for(Route e : routeHashMap.values()){
+                    if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
+                        editRouteId = e.get_id();
+                    }
+                }
+
+                setSpotDropList(editRouteId);
+
+
+//                spotTitleList.clear();
+//                spotTitleList.add(getString(R.string.selectspot));
+//                spotSpinner.setSelection(0);
+//                routeName = routeSpinner.getSelectedItem().toString();
+//
+//                if(!routeSpinner.getSelectedItem().toString().equals(getString(R.string.selectroute))) {
+//
+//                    ArrayList<Route> tempRouteList = new ArrayList<>();
+//                    tempRouteList.addAll(routeList.values());
+//
+//                    int routeId = 0;
+//
+//                    for (Route e : tempRouteList) {
+//                        if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
+//                            routeId = e.get_id();
+//                            editRouteId = routeId;
+//                            tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
+//                            ArrayList<Spot> tempSpotList = new ArrayList<>();
+//                            tempSpotList.addAll(tempSpotHashMap.values());
+//                            for (int i = 0; i < tempSpotList.size(); i++) {
+//                                spotTitleList.add(tempSpotList.get(i).getMission());
+//                            }
+//                        }
+//                    }
+//                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void setSpotDropList(int routeId){
+
+        ArrayList<String> spotTitleList = new ArrayList<>();
+        spotTitleList.add(getString(R.string.selectspot));
+
+        if(routeId > 0){
+            final HashMap<Integer, Spot> spotMap = _datamanager.getSpotListWithRouteId(routeId);
+            for(Spot spot : spotMap.values()){
+                spotTitleList.add(spot.getMission());
+            }
+
+            ArrayAdapter<String> nAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, spotTitleList);
+            //스피너 속성
+            spotSpinner = (Spinner) findViewById(R.id.dropDownSpot);
+            spotSpinner.setAdapter(nAdapter);
+            spotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    spotName = spotSpinner.getSelectedItem().toString();
+
+                    if(!spotSpinner.getSelectedItem().equals(getString(R.string.selectspot))) {
+                        editSpotTitle = spotSpinner.getSelectedItem().toString();
+
+                        for(Spot s : spotMap.values()) {
+                            if(s.getMission().equals(spotSpinner.getSelectedItem().toString())) {
+                                editSpotId = s.get_id();
+                                searchID = s.getSearch_id();
+                                CATEGORY_ID = s.getCategory_id();
+                                picturePath = s.getPicture_path();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+        else{
+            ArrayAdapter<String> nAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, spotTitleList);
+            spotSpinner = (Spinner) findViewById(R.id.dropDownSpot);
+            spotSpinner.setAdapter(nAdapter);
+            spotSpinner.setSelection(0);
+        }
+    }
+
+
+
 
     public void startCamera()  {
 
@@ -481,8 +585,12 @@ public class CameraActivity extends AppCompatActivity {
             }
             return null;
         }
-
     }
+
+
+
+
+
 
     /**
      *
@@ -566,10 +674,6 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void updateSpot(){
-
-//                        Bundle bundle = savedInstanceState;
-//                        int route_id = bundle.getInt("route id");
-//                        int spot_id = bundle.getInt("spot list");
 
         Spot editSpot = new Spot();
         editSpot.set_id(editSpotId);
