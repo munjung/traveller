@@ -124,10 +124,6 @@ public class ViewByScheduleFragment extends Fragment {
 
         return rootView;
     }
-    public void notifyOrderChanged(int oldPos, int newPos){
-        int temp = updatedPos.remove(oldPos);
-        updatedPos.add(temp, newPos);
-    }
 
     public List<Integer> getOriginalPos(){
         return originalPos;
@@ -270,18 +266,11 @@ public class ViewByScheduleFragment extends Fragment {
         }
     }
 
-    public void force_update(){
-        spotList = activity.refreshSpotList();
-        scheduleService.update_spots(spotList);
-        if (scheduleService.listSchedule.size() == 0){
-            scheduleService.load_Spots();
-        }
-        else{
-            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
-            int num_added = spotList.size() - list_total;
-            scheduleService.isEditing = false;
-            processAdditionalSchedules(num_added, list_total);
-        }
+    public List<Spot> getSpotListFromSchedule(){
+        return scheduleService.getSpotList();
+    }
+    public String getPlaceName(int placeID){
+        return activity.getSearchPlaceFromDB(placeID);
     }
 }
 
