@@ -42,6 +42,10 @@ public class SpotManager {
         return _getLastIndexSpot(dbHelper);
     }
 
+    public Spot getSpotIDWithIndexID(SQLiteHelper dbHelper, Integer index_id){
+        return _getSpotIDWithIndexID(dbHelper, index_id);
+    }
+
     public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper, Integer route_id){
         return _getSpotWithCoordinateListOnRouteID(dbHelper, route_id);
     }
@@ -90,9 +94,9 @@ public class SpotManager {
         return count;
     }
 
-    public int updateSpotIndex(SQLiteHelper dbHelper, Integer before_index, Integer after_index){
+    public int updateSpotIndex(SQLiteHelper dbHelper, Integer id, Integer after_index){
 
-        int count = _updateSpotIndex(dbHelper, before_index, after_index);
+        int count = _updateSpotIndex(dbHelper, id, after_index);
         return count;
     }
 
@@ -179,6 +183,39 @@ public class SpotManager {
                 spot.setPicture_id(c.getInt(3));                 //picture
                 spot.setMission(c.getString(4));                 //mission
                 spot.setSearch_id(c.getInt(5));                  //search
+            }
+
+            c.close();
+        }else{
+
+            c.close();
+            db.close();
+
+            return null;
+        }
+        db.close();
+        return spot;
+    }
+
+    private Spot _getSpotIDWithIndexID(SQLiteHelper dbHelper, Integer index_id) {
+        Spot spot = new Spot();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME );
+        sb.append(" WHERE " + TableManager.SpotTable.column_index_id + " = " + index_id);
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null  && c.getCount() > 0){
+            while (c.moveToNext()){
+
+                spot.set_id(c.getInt(0));                          //id
+                spot.setRoute_id(c.getInt(1));                   //route_id
+                spot.setIndex_id(c.getInt(2));                   //index_id
+                spot.setPicture_path(c.getString(3));           //picture
+                spot.setMission(c.getString(4));                 //mission
+                spot.setSearch_id(c.getInt(5));                  //search
+                spot.setCategory_id(c.getInt(6));                //category (Eat,buy..)
             }
             c.close();
         }
@@ -277,13 +314,13 @@ public class SpotManager {
         return count;
     }
 
-    private int _updateSpotIndex(SQLiteHelper dbHelper, Integer before_index, Integer after_index){
+    private int _updateSpotIndex(SQLiteHelper dbHelper, Integer id, Integer after_index){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_index_id, after_index);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String selection = TableManager.SpotTable.column_index_id + " = " + before_index;
+        String selection = TableManager.SpotTable.column_id + " = " + id;
 
         int count = db.update(TABLE_NAME, values, selection, null);
         db.close();

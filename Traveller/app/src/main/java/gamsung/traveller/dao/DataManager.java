@@ -106,6 +106,10 @@ public class DataManager {
         return m_spotManager.getLastIndexSpot(m_sqlHelper);
     }
 
+    public Spot getSpotIDWithIndexID(int index_id){
+        return m_spotManager.getSpotIDWithIndexID(m_sqlHelper, index_id);
+    }
+
     public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
         return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
     }
@@ -131,8 +135,8 @@ public class DataManager {
         return m_spotManager.updateSpot(m_sqlHelper, spot);
     }
 
-    public int updateSpotIndex(Integer before_index, Integer after_index){
-        return m_spotManager.updateSpotIndex(m_sqlHelper, before_index, after_index);
+    public int updateSpotIndex(Integer id, Integer after_index){
+        return m_spotManager.updateSpotIndex(m_sqlHelper, id, after_index);
     }
 
 
