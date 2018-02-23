@@ -230,14 +230,10 @@ public class TravelViewActivity extends AppCompatActivity {
         }else{
             updatedSpotlist = viewByScheduleFragment.getSpotListFromSchedule();
         }
-
+//        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
         for (Spot spot : updatedSpotlist){
             Log.d("Updated spotlist: ", "Spot ID: " + spot.get_id() + ", mission: " + spot.getMission() + "\n");
         }
-
-
-
-
 
 
         /*int idx = 0;

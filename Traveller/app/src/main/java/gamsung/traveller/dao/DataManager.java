@@ -169,7 +169,7 @@ public class DataManager {
     public int updateSpotList(ArrayList<Spot> spotList){
 
         int count = 0;
-        for (int i=1; i <= spotList.size(); i++){
+        for (int i=0; i < spotList.size(); i++){
 
             count += m_spotManager.updateSpot(m_sqlHelper, spotList.get(i), i);
         }
