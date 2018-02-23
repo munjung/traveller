@@ -372,6 +372,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             photoforSet.setSpot_id(editSpotId);
             photoforSet.setSearch_id(searchID);
             photoforSet.setDate(new Date(System.currentTimeMillis()));
+            //if()
             _dataManager.insertPhoto(photoforSet);
         }
 
@@ -530,7 +531,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 //                        _adapter.notifyDataSetChanged();
 //                        break;
 //                    }
-
 
         }
     }

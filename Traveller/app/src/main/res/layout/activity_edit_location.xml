@@ -409,6 +409,7 @@
                         android:visibility="gone"
                         android:layout_width="35dp"
                         android:layout_height="30dp"
+                        android:src="@drawable/icn_take_photos_on_list"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
@@ -418,6 +419,7 @@
                         android:visibility="gone"
                         android:layout_width="35dp"
                         android:layout_height="30dp"
+                        android:src="@drawable/icn_visit_on_list"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
@@ -427,6 +429,7 @@
                         android:visibility="gone"
                         android:layout_width="35dp"
                         android:layout_height="30dp"
+                        android:src="@drawable/icn_anything_on_list"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"/>
