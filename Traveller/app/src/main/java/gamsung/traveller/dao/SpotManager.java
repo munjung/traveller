@@ -43,8 +43,6 @@ public class SpotManager {
         return _getLastIndexSpot(dbHelper);
     }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(SQLiteHelper dbHelper){
-        return _getSpotWithCoordinateListOnRouteID(dbHelper);
         
     public Spot getSpotIDWithIndexID(SQLiteHelper dbHelper, Integer index_id){
         return _getSpotIDWithIndexID(dbHelper, index_id);
@@ -237,38 +235,6 @@ public class SpotManager {
         return spot;
     }
 
-    private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper) {
-        HashMap<Integer, SpotWithCoordinate> spotList = new HashMap<>();
-
-        StringBuffer sb = new StringBuffer();
-        sb.append(" SELECT * ");
-        sb.append(" FROM " + TABLE_NAME);
-        sb.append(" JOIN " + TableManager.SearchTable.name);
-        sb.append(" ON " + TableManager.SpotTable.name + "." +TableManager.SpotTable.column_search_id + " = " + TableManager.SearchTable.name + "." + TableManager.SearchTable.column_id );
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery(sb.toString(), null);
-        if(c != null){
-            while (c.moveToNext()){
-
-                SpotWithCoordinate spot = new SpotWithCoordinate();
-                spot.set_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_id)));
-                spot.setRoute_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_route_id)));
-                spot.setIndex_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_index_id)));
-                spot.setPicture_path(c.getString(c.getColumnIndex(TableManager.SpotTable.column_picture_path)));
-                spot.setMission(c.getString(c.getColumnIndex(TableManager.SpotTable.column_mission)));
-                spot.setSearch_id(c.getInt(c.getColumnIndex(TableManager.SpotTable.column_search_id)));
-                spot.setLat(c.getDouble(c.getColumnIndex(TableManager.SearchTable.column_lat)));
-                spot.setLon(c.getDouble(c.getColumnIndex(TableManager.SearchTable.column_lon)));
-
-                spotList.put(spot.get_id(), spot);
-            }
-            c.close();
-        }
-        db.close();
-
-        return spotList;
-    }
 
     private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper, Integer route_id) {
         HashMap<Integer, SpotWithCoordinate> spotList = new HashMap<>();
