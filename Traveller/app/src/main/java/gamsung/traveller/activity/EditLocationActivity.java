@@ -521,17 +521,18 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
-                    photographId = arguments.getItem().get_id();
-                    _dataManager.deletePhoto(photographId);
+                    Log.d("present position: ",arguments.getPosition()+"");
+                    if(_adapter.get_representedImagePosition() == arguments.getPosition()){
+                            _adapter.set_representedImagePosition(-1);
+                            picturePath="";
+                    }
+
+                    int photoId = arguments.getItem().get_id();
+                    _dataManager.deletePhoto(photoId);
+
+                    _adapter.notifyDataSetChanged();
                     break;
-//                    picturePath = arguments.getItem().getPath();
-//                    for (int i = 0; i < _recyclerView.getAdapter().getItemCount(); i++) {
-//                        picturePath = arguments.getItem().getPath();
-//                        _adapter.notifyDataSetChanged();
-//                        break;
-//                    }
-
-
         }
+
     }
 }
