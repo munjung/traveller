@@ -364,6 +364,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
         for(int i=0;i<itemList.size();i++){
             Photograph photo = itemList.get(i);
+            photo.setRoute_id(editRouteId);
+            photo.setSpot_id(editSpotId);
+            photo.setSearch_id(searchID);
 
             if(photoList != null){
                 if(photoList.containsKey(photo.getPath()))
@@ -375,10 +378,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 _dataManager.insertPhoto(photo);
             }
         }
-
-        //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
-        int a = _dataManager.updateSpot(editSpot);
-
 
         //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
         if(_dataManager.updateSpot(editSpot) > 0){
