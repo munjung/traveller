@@ -43,13 +43,14 @@
                 <!--</SearchView>-->
 
                 search button
-                <Button android:id="@+id/btn_search_main"
+                <ImageButton android:id="@+id/btn_search_main"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/grap_search"/>
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/grap_search"/>
 
                 search text
                 <EditText android:id="@+id/txt_search_main"

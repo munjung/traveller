@@ -27,7 +27,7 @@
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
         android:background="#000000"
-        android:scaleType="centerInside" />
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:layout_width="match_parent"

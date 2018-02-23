@@ -125,6 +125,14 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         ImageView ivmarker = findViewById(R.id.ivmapmarker);
         ivmarker.setImageResource(0);
 
+        ImageView back = findViewById(R.id.mapback);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         final Button bt = findViewById(R.id.btmsearch);
         Button buttongo = findViewById(R.id.btchooseplace);
         buttongo.setOnClickListener(new Button.OnClickListener(){

@@ -221,7 +221,7 @@ public class ViewByScheduleFragment extends Fragment {
         else if (requestCode == REQUEST_EDIT){
             int spot_id;
             try {
-                spot_id = data.getExtras().getInt("spot id", -1);
+                spot_id = data.getExtras().getInt("spot_id", -1);
             } catch(NullPointerException e) {return;}
             if (spot_id == -1) return;
 

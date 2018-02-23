@@ -497,6 +497,9 @@ public class ScheduleService {
         }
 
         updateYCoordinateViews(idxA);
+        for (ListSchedule list : listSchedule){
+            Log.d("ID pos: ", list.spot_ID + "\n");
+        }
     }
 
     public int toListIdx(int unique_ID){
