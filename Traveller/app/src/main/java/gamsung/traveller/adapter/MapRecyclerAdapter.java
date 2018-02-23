@@ -36,7 +36,9 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ListitemViewHolder item = (ListitemViewHolder) holder;
         String mydata = data.get(position);
-        Bitmap bm = BitmapFactory.decodeFile(mydata);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize=4;
+        Bitmap bm = BitmapFactory.decodeFile(mydata,options);
         item.imageView.setImageBitmap(bm);
 
     }
