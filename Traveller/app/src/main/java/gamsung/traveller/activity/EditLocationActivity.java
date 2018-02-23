@@ -519,6 +519,19 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     _adapter.notifyDataSetChanged();
                     break;
                 }
+
+                case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
+                    photographId = arguments.getItem().get_id();
+                    _dataManager.deletePhoto(photographId);
+                    break;
+//                    picturePath = arguments.getItem().getPath();
+//                    for (int i = 0; i < _recyclerView.getAdapter().getItemCount(); i++) {
+//                        picturePath = arguments.getItem().getPath();
+//                        _adapter.notifyDataSetChanged();
+//                        break;
+//                    }
+
+
         }
     }
 }

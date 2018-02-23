@@ -65,4 +65,19 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/btn_remove_photo_item"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_inner_remove_photo_item"
+            android:layout_width="45dp"
+            android:layout_height="30dp"/>
+
+    </RelativeLayout>
+
 </RelativeLayout>
