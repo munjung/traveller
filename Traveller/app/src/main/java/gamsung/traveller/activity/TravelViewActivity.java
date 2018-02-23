@@ -235,7 +235,19 @@ public class TravelViewActivity extends AppCompatActivity {
         return view.getLayoutParams().height;
     }
     private void updateOrdersToDB(int tabSelected){
-        int idx = 0;
+        List<Spot> updatedSpotlist;
+        if (tabSelected == 0) {
+            updatedSpotlist = viewByPhotosFragment.getSpotList();
+        }else{
+            updatedSpotlist = viewByScheduleFragment.getSpotListFromSchedule();
+        }
+//        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
+        for (Spot spot : updatedSpotlist){
+            Log.d("Updated spotlist: ", "Spot ID: " + spot.get_id() + ", mission: " + spot.getMission() + "\n");
+        }
+
+
+        /*int idx = 0;
         List<Integer> originalPos, updatedPos;
         if (tabSelected == 0) {
             originalPos = viewByPhotosFragment.getOriginalPos();
@@ -245,25 +257,27 @@ public class TravelViewActivity extends AppCompatActivity {
             originalPos = viewByScheduleFragment.getOriginalPos();
             updatedPos = viewByScheduleFragment.getUpdatedPos();
         }
+
+        int spot_id = 0;
         for (int i : originalPos) {
-            int spot_id = dataManager.getSpotIDWithIndexID(originalPos.get(idx)).get_id();
-            Log.d("At TRAVEL VIEW: ",  "SPOT ID: " + spot_id + " original position id: " + originalPos.get(idx) + " updated position id: " + updatedPos.get(idx) +"\n");
+            spot_id = dataManager.getSpotIDWithIndexID(originalPos.get(idx)).get_id();
             dataManager.updateSpotIndex(spot_id, updatedPos.get(idx++));
+            Log.d("At TRAVEL VIEW: ",  "SPOT ID: " + spot_id + " original position id: " + originalPos.get(idx) + " updated position id: " + updatedPos.get(idx) +"\n");
         }
-
-
-
+*/
 //
-        for (Spot spot : spotList){
-            Log.d("spot idx: ", spot.get_id() + ": " + spot.getIndex_id() + "\n");
-        }
+//        for (Spot spot : spotList){
+//            Log.d("spot idx: ", spot.get_id() + ": " + spot.getIndex_id() + "\n");
+//        }
     }
 
     /*
      * Activity <-> Fragment
      */
 
-
+    public DataManager getDataManager(){
+        return dataManager;
+    }
     public List<Spot> getSpotList(){
         return spotList;
     }

@@ -21,13 +21,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import gamsung.traveller.R;
 import gamsung.traveller.activity.MainActivity;
+import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.frag.PhotoTouchHelperCallback;
 import gamsung.traveller.frag.ScheduleService;
+import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
 
 /**
@@ -48,13 +51,14 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     private int GAB_COLOR_B;
     static final int MAX_NUM_IMAGES = 10;
 
-
+    private DataManager dataManager;
     private ClickListener callback;
     private List<Spot> spotList;
 
-    public TimeViewAdapter(List<Spot> spotList, ClickListener callback) {
+    public TimeViewAdapter(List<Spot> spotList, ClickListener callback, DataManager dataManager) {
         this.spotList = spotList;
         this.callback = callback;
+        this.dataManager = dataManager;
         updateColorGab();
     }
     public void refreshSpotlist(List<Spot> spotList){
@@ -92,7 +96,8 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         void onClickDelete(int position);
         void onClickEdit(int position);
         void notifyOrderChanged(int oldPos, int newPos);
-        void changeOrder(int oldPos, int newPos);
+        String getPlaceName(int searchID);
+//        void changeOrder(int oldPos, int newPos);
     }
 
     public void setCallback(ClickListener callback){
@@ -107,11 +112,21 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     @Override
     public void onBindViewHolder(TimeViewAdapter.TimeViewHolder holder, int position) {
         RelativeLayout.LayoutParams layoutParams;
-        holder.txtMission.setText(spotList.get(position).getMission());
-        int pos = spotList.get(position).get_id();
-        holder.txtTitle.setText("Spot ID: " + pos);
+        holder.txtTitle.setText(spotList.get(position).getMission());
+//        int pos = spotList.get(position).get_id();
         holder.callback = callback;
+        holder.txtMission.setText(callback.getPlaceName(spotList.get(position).getSearch_id()));
         layoutParams = (RelativeLayout.LayoutParams)holder.imageTimeLine.getLayoutParams();
+
+        //Load image
+        ArrayList<Photograph> photoList = new ArrayList<>(dataManager.getPhotoListWithSpot(spotList.get(position).get_id()).values());
+        int photoTotal = photoList.size();
+        for (int idx = 0; idx < photoTotal; idx++){
+            String pic_path = photoList.get(idx).getPath();
+//            if (photoList.get(idx).get_id() == spotList.get(position).getPicture_id())
+//                adjustBookmark(holder, idx);
+            Glide.with(holder.images[idx].getContext()).load(photoList.get(idx).getPath()).centerCrop().into(holder.images[idx]);
+        }
         if (position == 0){
             layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 35), 0, 0);
             layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 185);
@@ -124,7 +139,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
         }
-        adjustBookmark(holder, spotList.get(position).getPicture_id());
+        adjustBookmark(holder, position);
     }
 
     private void adjustBookmark (TimeViewAdapter.TimeViewHolder holder, int position){
@@ -144,6 +159,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         }
 
         holder.imageBookmark.setLayoutParams(layoutParams);
+        holder.imageBookmark.bringToFront();
     }
 
     private GradientDrawable setGradientTimeLine(int position){
@@ -200,13 +216,13 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
 
                 else layoutParams.addRule(RelativeLayout.RIGHT_OF, i);
                 images[i].setLayoutParams(layoutParams);
-                Glide.with(itemView.getContext()).load(R.drawable.grap_noimage).into(images[i]);
+                Glide.with(itemView.getContext()).load(R.drawable.grap_noimage).centerCrop().into(images[i]);
                 images[i].setBackgroundResource(R.drawable.left_rounded_corners);
                 //images[i].setImageResource(R.drawable.grap_noimage);
                 layout.addView(images[i]);
                 //load pictures
             }
-            imageBookmark.bringToFront();
+//            imageBookmark.bringToFront();
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
