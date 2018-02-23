@@ -1,6 +1,7 @@
 package gamsung.traveller.dao;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,8 @@ public class DataManager {
 
     //db interface
     private SQLiteHelper m_sqlHelper;
+    private SQLiteDatabase m_transactionDB;
+    private boolean m_isTransaction = false;
 
     //db data control interface
     private RouteManager m_routeManager;
@@ -56,6 +59,33 @@ public class DataManager {
         m_searchManager = new SearchPlaceManager();
     }
 
+
+    public boolean getTransactionState(){
+        return m_isTransaction;
+    }
+
+    public void beginTrans(){
+        m_transactionDB= m_sqlHelper.beginTrans();
+        m_isTransaction = true;
+    }
+
+    public void commit(){
+        if(m_transactionDB != null) {
+            m_sqlHelper.commit(m_transactionDB);
+            m_transactionDB.close();
+            m_transactionDB = null;
+        }
+        m_isTransaction = false;
+    }
+
+    public void rollback(){
+        if(m_transactionDB != null) {
+            m_sqlHelper.rollback(m_transactionDB);
+            m_transactionDB.close();
+            m_transactionDB = null;
+        }
+        m_isTransaction = false;
+    }
 
     //route data interface
     public HashMap<Integer, Route> getRouteList(){
@@ -110,9 +140,6 @@ public class DataManager {
         return m_spotManager.getSpotIDWithIndexID(m_sqlHelper, index_id);
     }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
-        return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
-    }
 
     public boolean deleteSpot(Integer id){
        return m_spotManager.deleteSpot(m_sqlHelper, id);
@@ -137,6 +164,17 @@ public class DataManager {
 
     public int updateSpotIndex(Integer id, Integer after_index){
         return m_spotManager.updateSpotIndex(m_sqlHelper, id, after_index);
+    }
+
+    public int updateSpotList(ArrayList<Spot> spotList){
+
+        int count = 0;
+        for (int i=1; i <= spotList.size(); i++){
+
+            count += m_spotManager.updateSpot(m_sqlHelper, spotList.get(i), i);
+        }
+
+        return count;
     }
 
 
