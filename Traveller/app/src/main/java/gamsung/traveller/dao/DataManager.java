@@ -182,10 +182,6 @@ public class DataManager {
         return m_spotManager.getSpotWithCoordinateList(m_sqlHelper);
     }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
-        return m_spotManager.getSpotWithCoordinateListOnRouteID(m_sqlHelper, routeId);
-    }
-
     //photograph data interface
     public HashMap<Integer, Photograph> getPhotoList(){
         return m_photoManager.getPhotoList(m_sqlHelper);
@@ -205,6 +201,10 @@ public class DataManager {
 
     public HashMap<Integer, Photograph> getPhotoListWithSpot(int spot_id){
         return m_photoManager.getPhotoListWithSpot(m_sqlHelper, spot_id);
+    }
+
+    public HashMap<String, Photograph> getPhotoListToStringWithSpot(int spot_id){
+        return m_photoManager.getPhotoListToStringWithSpot(m_sqlHelper, spot_id);
     }
 
     public HashMap<Integer, Photograph> getPhotoListWithRoute(int route_id){

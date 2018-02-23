@@ -77,7 +77,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private String picturePath;
 
     private List<Spot> spotList;
-    private HashMap<Integer, Photograph> photoList;
+    private HashMap<String, Photograph> photoList;
     private DataManager _dataManager;
 
     public Bundle mbundle;
@@ -306,8 +306,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
         if(editSpotId > 0){
 
-            ArrayList<Photograph> photoList = new ArrayList<>(_dataManager.getPhotoListWithSpot(editSpotId).values());
-            _adapter = new CustomRecyclerAdapter(this, photoList, this);
+            photoList =_dataManager.getPhotoListToStringWithSpot(editSpotId);
+            _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(photoList.values()), this);
         }
         else{
             _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(), this);
@@ -356,18 +356,24 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setCategory_id(CATEGORY_ID);
         editSpot.setPicture_path(picturePath);
 
-        ArrayList<String> photolist = _adapter.getImgPathList();
-        ArrayList<String> memolist = _adapter.getMemoList();
+//        ArrayList<String> photolist = _adapter.getImgPathList();
+//        ArrayList<String> memolist = _adapter.getMemoList();
 
-        for(int i=0;i<photolist.size();i++){
-            Photograph photoforSet = new Photograph();
-            photoforSet.setPath(photolist.get(i));
-            photoforSet.setMemo(memolist.get(i));
-            photoforSet.setRoute_id(editRouteId);
-            photoforSet.setSpot_id(editSpotId);
-            photoforSet.setSearch_id(searchID);
-            photoforSet.setDate(new Date(System.currentTimeMillis()));
-            _dataManager.insertPhoto(photoforSet);
+        ArrayList<Photograph> itemList = _adapter.getItems();
+
+
+        for(int i=0;i<itemList.size();i++){
+            Photograph photo = itemList.get(i);
+
+            if(photoList != null){
+                if(photoList.containsKey(photo.getPath()))
+                    _dataManager.updatePhoto(photo);
+                else
+                    _dataManager.insertPhoto(photo);
+            }
+            else{
+                _dataManager.insertPhoto(photo);
+            }
         }
 
         //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
