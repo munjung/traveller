@@ -19,105 +19,98 @@ import gamsung.traveller.model.SpotWithCoordinate;
 public class SpotManager {
 
     private final String TABLE_NAME = TableManager.SpotTable.name;
-    private HashMap<Integer, Spot> m_spotMap;
+
 
     public SpotManager(){
 
-        m_spotMap = new HashMap<>();
     }
 
 
-    public HashMap<Integer, Spot> getSpotList(SQLiteHelper dbHelper){
+    public HashMap<Integer, Spot> getSpotList(SQLiteDatabase db){
 
-        m_spotMap.clear();
-        m_spotMap.putAll(_getSpotList(dbHelper));
-
-        return m_spotMap;
+        return _getSpotList(db);
     }
 
-    public HashMap<Integer, Spot> getSpotListWithRouteId(SQLiteHelper dbHelper, int routeId){
-        return _getSpotListWithRouteId(dbHelper, routeId);
+    public HashMap<Integer, Spot> getSpotListWithRouteId(SQLiteDatabase db, int routeId){
+        return _getSpotListWithRouteId(db, routeId);
     }
 
-    public Spot getLastIndexSpot(SQLiteHelper dbHelper){
-        return _getLastIndexSpot(dbHelper);
+    public Spot getLastIndexSpot(SQLiteDatabase db){
+        return _getLastIndexSpot(db);
     }
 
         
-    public Spot getSpotIDWithIndexID(SQLiteHelper dbHelper, Integer index_id){
-        return _getSpotIDWithIndexID(dbHelper, index_id);
+    public Spot getSpotIDWithIndexID(SQLiteDatabase db, Integer index_id){
+        return _getSpotIDWithIndexID(db, index_id);
     }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(SQLiteHelper dbHelper){
-        return _getSpotWithCoordinateListOnRouteID(dbHelper);
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(SQLiteDatabase db){
+        return _getSpotWithCoordinateListOnRouteID(db);
     }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper, Integer route_id){
-        return _getSpotWithCoordinateListOnRouteID(dbHelper, route_id);
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(SQLiteDatabase db, Integer route_id){
+        return _getSpotWithCoordinateListOnRouteID(db, route_id);
     }
 
-    public boolean deleteSpot(SQLiteHelper dbHelper, Integer id){
+    public boolean deleteSpot(SQLiteDatabase db, Integer id){
 
-        if(!_deleteSpot(dbHelper, id))
+        if(!_deleteSpot(db, id))
             return false;
-
-        if (m_spotMap.containsKey(id)) {
-            m_spotMap.remove(id);
-        }
 
         return true;
     }
 
-    public boolean deleteSpotWithRouteID(SQLiteHelper dbHelper, Integer route_id){
+    public boolean deleteSpotWithRouteID(SQLiteDatabase db, Integer route_id){
 
-        if(!_deleteSpotWithRouteID(dbHelper, route_id))
+        if(!_deleteSpotWithRouteID(db, route_id))
             return false;
-
-//        if (m_spotMap.containsKey(id)) {
-//            m_spotMap.remove(id);
-//        }
 
         return true;
     }
 
 
+    public long insertSpot(SQLiteDatabase db, Spot spot){
 
-    public long insertSpot(SQLiteHelper dbHelper, Spot spot, Integer index){
-
-        long rowId = _insertSpot(dbHelper, spot, index);
+        long rowId = _insertSpot(db, spot);
         if(rowId > 0)
             spot.set_id((int)rowId);
 
         return rowId;
     }
 
-    public int updateSpot(SQLiteHelper dbHelper, Spot spot){
+    public long insertSpot(SQLiteDatabase db, Spot spot, Integer index){
 
-        int count = _updateSpot(dbHelper, spot);
-        if(count > 0)
-            m_spotMap.put(spot.get_id(), spot);
+        long rowId = _insertSpot(db, spot, index);
+        if(rowId > 0)
+            spot.set_id((int)rowId);
+
+        return rowId;
+    }
+
+    public int updateSpot(SQLiteDatabase db, Spot spot){
+
+        int count = _updateSpot(db, spot);
 
         return count;
     }
 
-    public int updateSpot(SQLiteHelper dbHelper, Spot spot, int index){
+    public int updateSpot(SQLiteDatabase db, Spot spot, int index){
 
-        int count = _updateSpot(dbHelper, spot, index);
-        if(count > 0)
-            m_spotMap.put(spot.get_id(), spot);
+        int count = _updateSpot(db, spot, index);
 
         return count;
     }
 
-    public int updateSpotIndex(SQLiteHelper dbHelper, Integer id, Integer after_index){
+    public int updateSpotIndex(SQLiteDatabase db, Integer id, Integer after_index){
 
-        int count = _updateSpotIndex(dbHelper, id, after_index);
+        int count = _updateSpotIndex(db, id, after_index);
+
         return count;
     }
 
 
 
-    private HashMap<Integer, Spot> _getSpotList(SQLiteHelper dbHelper){
+    private HashMap<Integer, Spot> _getSpotList(SQLiteDatabase db){
 
         HashMap<Integer, Spot> placeMap = new HashMap<>();
 
@@ -125,7 +118,6 @@ public class SpotManager {
         sb.append("SELECT * FROM " + TABLE_NAME);
         sb.append(" ORDER BY " + TableManager.SpotTable.column_index_id + " ASC");
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -143,12 +135,11 @@ public class SpotManager {
             }
             c.close();
         }
-        db.close();
 
         return placeMap;
     }
 
-    private HashMap<Integer, Spot> _getSpotListWithRouteId(SQLiteHelper dbHelper, int routeId){
+    private HashMap<Integer, Spot> _getSpotListWithRouteId(SQLiteDatabase db, int routeId){
 
         HashMap<Integer, Spot> placeMap = new HashMap<>();
 
@@ -157,7 +148,6 @@ public class SpotManager {
         sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + routeId);
         sb.append(" ORDER BY " + TableManager.SpotTable.column_index_id + " ASC");
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -175,21 +165,19 @@ public class SpotManager {
             }
             c.close();
         }
-        db.close();
 
         return placeMap;
     }
 
-    private Spot _getLastIndexSpot(SQLiteHelper dbHelper) {
+    private Spot _getLastIndexSpot(SQLiteDatabase db) {
         Spot spot = new Spot();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME );
         sb.append(" ORDER BY " + TableManager.SpotTable.column_id + " DESC LIMIT 1");
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
-        if(c != null  && c.getCount() > 0){
+        if(c != null){
             while (c.moveToNext()){
 
                 spot.set_id(c.getInt(0));                          //id
@@ -201,25 +189,18 @@ public class SpotManager {
             }
 
             c.close();
-        }else{
-
-            c.close();
-            db.close();
-
-            return null;
         }
-        db.close();
+
         return spot;
     }
 
-    private Spot _getSpotIDWithIndexID(SQLiteHelper dbHelper, Integer index_id) {
+    private Spot _getSpotIDWithIndexID(SQLiteDatabase db, Integer index_id) {
         Spot spot = new Spot();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME );
         sb.append(" WHERE " + TableManager.SpotTable.column_index_id + " = " + index_id);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null  && c.getCount() > 0){
             while (c.moveToNext()){
@@ -234,23 +215,20 @@ public class SpotManager {
             }
             c.close();
         }
-        db.close();
 
         return spot;
     }
 
-    private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper) {
+    private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteDatabase db) {
         HashMap<Integer, SpotWithCoordinate> spotList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append(" SELECT * ");
-        //sb.append("SELECT " + TableManager.SearchTable.column_lat + " , " + TableManager.SearchTable.column_lon );
         sb.append(" FROM " + TABLE_NAME);
         sb.append(" JOIN " + TableManager.SearchTable.name);
         sb.append(" ON " + TableManager.SpotTable.name + "." +TableManager.SpotTable.column_search_id + " = " + TableManager.SearchTable.name + "." + TableManager.SearchTable.column_id );
 
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -269,25 +247,22 @@ public class SpotManager {
             }
             c.close();
         }
-        db.close();
 
         return spotList;
     }
 
 
 
-    private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteHelper dbHelper, Integer route_id) {
+    private HashMap<Integer, SpotWithCoordinate> _getSpotWithCoordinateListOnRouteID(SQLiteDatabase db, Integer route_id) {
         HashMap<Integer, SpotWithCoordinate> spotList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append(" SELECT * ");
-        //sb.append("SELECT " + TableManager.SearchTable.column_lat + " , " + TableManager.SearchTable.column_lon );
         sb.append(" FROM " + TABLE_NAME);
         sb.append(" JOIN " + TableManager.SearchTable.name);
         sb.append(" ON " + TableManager.SpotTable.name + "." +TableManager.SpotTable.column_search_id + " = " + TableManager.SearchTable.name + "." + TableManager.SearchTable.column_id );
         sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + route_id);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -306,14 +281,13 @@ public class SpotManager {
             }
             c.close();
         }
-        db.close();
 
         return spotList;
     }
 
 
 
-    private boolean _deleteSpot(SQLiteHelper dbHelper, Integer id){
+    private boolean _deleteSpot(SQLiteDatabase db, Integer id){
 
 
         StringBuffer sb = new StringBuffer();
@@ -321,9 +295,7 @@ public class SpotManager {
         sb.append(" WHERE " + TableManager.SpotTable.column_id + " = " + id);
 
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(sb.toString());
-            db.close();
         }
         catch (Exception ex){
             Log.e("delete place", ex.getMessage());
@@ -333,15 +305,13 @@ public class SpotManager {
         return true;
     }
 
-    public boolean _deleteSpotWithRouteID(SQLiteHelper dbHelper, Integer id) {
+    public boolean _deleteSpotWithRouteID(SQLiteDatabase db, Integer id) {
         StringBuffer sb = new StringBuffer();
         sb.append("DELETE FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.SpotTable.column_route_id + " = " + id);
 
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(sb.toString());
-            db.close();
         }
         catch (Exception ex){
             Log.e("delete place", ex.getMessage());
@@ -351,7 +321,23 @@ public class SpotManager {
         return true;
     }
 
-    private long _insertSpot(SQLiteHelper dbHelper, Spot spot, Integer index){
+
+    private long _insertSpot(SQLiteDatabase db, Spot spot){
+
+        ContentValues values = new ContentValues();
+        values.put(TableManager.SpotTable.column_route_id, spot.getRoute_id());
+        values.put(TableManager.SpotTable.column_index_id, spot.getIndex_id());
+        values.put(TableManager.SpotTable.column_picture_path, spot.getPicture_path());
+        values.put(TableManager.SpotTable.column_mission, spot.getMission());
+        values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());
+        values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
+
+        long rowId = db.insert(TABLE_NAME, null, values);
+
+        return rowId;
+    }
+
+    private long _insertSpot(SQLiteDatabase db, Spot spot, Integer index){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_route_id, spot.getRoute_id());
@@ -361,14 +347,12 @@ public class SpotManager {
         values.put(TableManager.SpotTable.column_search_id, spot.getSearch_id());
         values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
-        db.close();
 
         return rowId;
     }
 
-    private int _updateSpot(SQLiteHelper dbHelper, Spot spot){
+    private int _updateSpot(SQLiteDatabase db, Spot spot){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_route_id, spot.getRoute_id());
@@ -379,23 +363,19 @@ public class SpotManager {
         values.put(TableManager.SpotTable.column_category_id, spot.getCategory_id());
 
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.SpotTable.column_id + " = " + spot.get_id();
         int count = db.update(TABLE_NAME, values, selection, null);
-        db.close();
 
         return count;
     }
 
-    private int _updateSpot(SQLiteHelper dbHelper, Spot spot, int index){
+    private int _updateSpot(SQLiteDatabase db, Spot spot, int index){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_index_id, index);
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.SpotTable.column_id + " = " + spot.get_id();
         int count = db.update(TABLE_NAME, values, selection, null);
-        db.close();
 
         return count;
     }
@@ -403,16 +383,13 @@ public class SpotManager {
 
 
 
-    private int _updateSpotIndex(SQLiteHelper dbHelper, Integer id, Integer after_index){
+    private int _updateSpotIndex(SQLiteDatabase db, Integer id, Integer after_index){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SpotTable.column_index_id, after_index);
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.SpotTable.column_id + " = " + id;
-
         int count = db.update(TABLE_NAME, values, selection, null);
-        db.close();
 
         return count;
     }

@@ -25,88 +25,63 @@ import gamsung.traveller.util.Converter;
 public class RouteManager {
 
     private final String TABLE_NAME = TableManager.RouteTable.name;
-    private HashMap<Integer, Route> m_routeMap;
 
     public RouteManager(){
 
-        m_routeMap = new HashMap<>();
     }
 
-    public void doSync(SQLiteHelper dbHelper){
+    public HashMap<Integer, Route> getRouteList(SQLiteDatabase db){
 
-        m_routeMap.clear();
-        m_routeMap.putAll(_getRouteList(dbHelper));
+        return _getRouteList(db);
     }
 
-    public HashMap<Integer, Route> getRouteList(SQLiteHelper dbHelper){
+    public Route getRouteWithID(SQLiteDatabase db, int id){
 
-        if(m_routeMap.size() > 0) {
-            return m_routeMap;
-        }
-
-        m_routeMap.putAll(_getRouteList(dbHelper));
-        return m_routeMap;
+        return _getRouteWithID(db, id);
     }
 
-    public Route getRouteWithID(SQLiteHelper dbHelper, int id){
+    public HashMap<Integer, Route> getRouteHasToday(SQLiteDatabase db){
 
-        return _getRouteWithID(dbHelper, id);
+        return _getRouteHasToday(db, new Date());
     }
 
-    public HashMap<Integer, Route> getRouteHasToday(SQLiteHelper dbHelper){
+    public HashMap<Integer, Route> getRouteWithSearch(SQLiteDatabase db, String search_word){
 
-        if(m_routeMap.size() > 0) {
-            return m_routeMap;
-        }
-
-        Date today = new Date();
-        return _getRouteHasToday(dbHelper, today);
+        return _getRouteWithSearch(db, search_word);
     }
 
-    public HashMap<Integer, Route> getRouteWithSearch(SQLiteHelper dbHelper, String search_word){
+    public boolean deleteRoute(SQLiteDatabase db, Integer id){
 
-        return _getRouteWithSearch(dbHelper, search_word);
-    }
-
-    public boolean deleteRoute(SQLiteHelper dbHelper, Integer id){
-
-        if(!_deleteRoute(dbHelper, id))
+        if(!_deleteRoute(db, id))
             return false;
-
-        if (m_routeMap.containsKey(id)) {
-            m_routeMap.remove(id);
-        }
 
         return true;
     }
 
-    public long insertRoute(SQLiteHelper dbHelper, Route route){
+    public long insertRoute(SQLiteDatabase db, Route route){
 
-        long rowId = _insertRoute(dbHelper, route);
+        long rowId = _insertRoute(db, route);
         if(rowId > 0)
             route.set_id((int)rowId);
 
         return rowId;
     }
 
-    public int updateRoute(SQLiteHelper dbHelper, Route route){
+    public int updateRoute(SQLiteDatabase db, Route route){
 
-        int count = _updateRoute(dbHelper, route);
-        if(count > 0)
-            m_routeMap.put(route.get_id(), route);
+        int count = _updateRoute(db, route);
 
         return count;
     }
 
 
-    private HashMap<Integer, Route> _getRouteList(SQLiteHelper dbHelper){
+    private HashMap<Integer, Route> _getRouteList(SQLiteDatabase db){
 
         HashMap<Integer, Route> routeMap = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -122,12 +97,11 @@ public class RouteManager {
             }
             c.close();
         }
-        db.close();
 
         return routeMap;
     }
 
-    private Route _getRouteWithID(SQLiteHelper dbHelper, int id){
+    private Route _getRouteWithID(SQLiteDatabase db, int id){
 
         Route route = new Route();
 
@@ -135,7 +109,6 @@ public class RouteManager {
         sb.append("SELECT * FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.RouteTable.column_id + " = " + id);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -148,25 +121,20 @@ public class RouteManager {
             }
             c.close();
         }
-        db.close();
 
         return route;
     }
 
-    private HashMap<Integer, Route> _getRouteHasToday(SQLiteHelper dbHelper, Date today){
+    private HashMap<Integer, Route> _getRouteHasToday(SQLiteDatabase db, Date today){
 
         HashMap<Integer, Route> routeMap = new HashMap<>();
 
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
-
-
         sb.append(" WHERE strftime('%s', '" + today + "') >= strftime('%s', " + TableManager.RouteTable.column_from_date + ")" +
                   " AND " + "strftime('%s', '"+ today + "') <= strftime('%s' , " + TableManager.RouteTable.column_to_date + ")");
 
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -179,12 +147,11 @@ public class RouteManager {
             }
             c.close();
         }
-        db.close();
 
         return routeMap;
     }
 
-    private HashMap<Integer, Route> _getRouteWithSearch(SQLiteHelper dbHelper, String search_word){
+    private HashMap<Integer, Route> _getRouteWithSearch(SQLiteDatabase db, String search_word){
 
         HashMap<Integer, Route> routeMap = new HashMap<>();
 
@@ -192,7 +159,6 @@ public class RouteManager {
         sb.append("SELECT * FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.RouteTable.column_title + " LIKE '%" + search_word + "%'");
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -205,23 +171,20 @@ public class RouteManager {
             }
             c.close();
         }
-        db.close();
 
         return routeMap;
     }
 
 
 
-    private boolean _deleteRoute(SQLiteHelper dbHelper, Integer id){
+    private boolean _deleteRoute(SQLiteDatabase db, Integer id){
 
         StringBuffer sb = new StringBuffer();
         sb.append("DELETE FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.RouteTable.column_id + " = " + id);
 
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(sb.toString());
-            db.close();
         }
         catch (Exception ex){
             Log.e("delete route", ex.getMessage());
@@ -231,7 +194,7 @@ public class RouteManager {
         return true;
     }
 
-    private long _insertRoute(SQLiteHelper dbHelper, Route route){
+    private long _insertRoute(SQLiteDatabase db, Route route){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.RouteTable.column_title, route.getTitle());                                             //title
@@ -239,14 +202,12 @@ public class RouteManager {
         values.put(TableManager.RouteTable.column_to_date, Converter.convertSqlDateFormat(route.getToDate()));          //to
         values.put(TableManager.RouteTable.column_picture_path, route.getPicturePath());
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
-        db.close();
 
         return rowId;
     }
 
-    private int _updateRoute(SQLiteHelper dbHelper, Route route){
+    private int _updateRoute(SQLiteDatabase db, Route route){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.RouteTable.column_title, route.getTitle());                                             //title
@@ -254,10 +215,8 @@ public class RouteManager {
         values.put(TableManager.RouteTable.column_to_date, Converter.convertSqlDateFormat(route.getToDate()));          //to
         values.put(TableManager.RouteTable.column_picture_path, route.getPicturePath());
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.RouteTable.column_id + " = " + route.get_id();
         int count = db.update(TABLE_NAME, values, selection, null);
-        db.close();
 
         return count;
     }

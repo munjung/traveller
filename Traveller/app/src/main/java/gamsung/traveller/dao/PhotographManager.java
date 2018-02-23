@@ -25,85 +25,58 @@ public class PhotographManager {
 
 
     private final String TABLE_NAME = TableManager.PictureTable.name;
-    private HashMap<Integer, Photograph> m_photoList;
 
     public PhotographManager(){
-        m_photoList = new HashMap<>();
     }
 
-    public HashMap<Integer, Photograph> getPhotoList(SQLiteHelper dbHelper){
+    public HashMap<Integer, Photograph> getPhotoList(SQLiteDatabase db){
 
-        m_photoList.clear();
-        m_photoList.putAll(_getphotoList(dbHelper));
-
-        return m_photoList;
+        return _getphotoList(db);
     }
 
-    public boolean deletePhoto(SQLiteHelper dbHelper, Integer id){
+    public boolean deletePhoto(SQLiteDatabase db, Integer id){
 
-        if(!_deletePhoto(dbHelper, id))
+        if(!_deletePhoto(db, id))
             return false;
-
-        if (m_photoList.containsKey(id)) {
-            m_photoList.remove(id);
-        }
 
         return true;
     }
 
-    public long insertPhoto(SQLiteHelper dbHelper, Photograph photo){
+    public long insertPhoto(SQLiteDatabase db, Photograph photo){
 
-        long rowId = _insertPhoto(dbHelper, photo);
+        long rowId = _insertPhoto(db, photo);
         if(rowId > 0)
             photo.set_id((int)rowId);
 
         return rowId;
     }
 
-    public int updatePhoto(SQLiteHelper dbHelper, Photograph photo){
+    public int updatePhoto(SQLiteDatabase db, Photograph photo){
 
-        int count = _updatePhoto(dbHelper, photo);
-        if(count > 0)
-            m_photoList.put(photo.get_id(), photo);
+        int count = _updatePhoto(db, photo);
 
         return count;
     }
 
 
+    public HashMap<Integer, Photograph> getPhotoListWithSpot(SQLiteDatabase db, Integer spot_id){
 
-//    public List<String> getPhotoListWithSpot(int spot_id){
-//        return new ArrayList<>();
-//    }
-//
-//    public List<String> getPhotoListWithRoute(int route_id){
-//        return new ArrayList<>();
-//    }
-
-    public HashMap<Integer, Photograph> getPhotoListWithSpot(SQLiteHelper dbHelper, Integer spot_id){
-
-        m_photoList.clear();
-        m_photoList.putAll(_getPhotoListWithSpot(dbHelper, spot_id));
-
-        return m_photoList;
+        return _getPhotoListWithSpot(db, spot_id);
     }
 
-    public HashMap<Integer, Photograph> getPhotoListWithRoute(SQLiteHelper dbHelper, Integer route_id){
+    public HashMap<Integer, Photograph> getPhotoListWithRoute(SQLiteDatabase db, Integer route_id){
 
-        m_photoList.clear();
-        m_photoList.putAll(_getPhotoListWithRoute(dbHelper, route_id));
-
-        return m_photoList;
+        return _getPhotoListWithRoute(db, route_id);
     }
 
 
-    private HashMap<Integer, Photograph> _getphotoList(SQLiteHelper dbHelper){
+    private HashMap<Integer, Photograph> _getphotoList(SQLiteDatabase db){
 
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -120,22 +93,18 @@ public class PhotographManager {
             }
             c.close();
         }
-        db.close();
 
         return photoList;
     }
 
-    private boolean _deletePhoto(SQLiteHelper dbHelper, Integer id){
+    private boolean _deletePhoto(SQLiteDatabase db, Integer id){
 
         StringBuffer sb = new StringBuffer();
         sb.append("DELETE FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.PictureTable.column_id + " = " + id);
 
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(sb.toString());
-            db.close();
-
         }
         catch (Exception ex){
             Log.e("delete photo", ex.getMessage());
@@ -144,7 +113,7 @@ public class PhotographManager {
         return true;
     }
 
-    private long _insertPhoto(SQLiteHelper dbHelper, Photograph photo){
+    private long _insertPhoto(SQLiteDatabase db, Photograph photo){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
@@ -154,14 +123,12 @@ public class PhotographManager {
         if(photo.getDate() != null) values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
         values.put(TableManager.PictureTable.column_memo, photo.getMemo());
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
-        db.close();
 
         return rowId;
     }
 
-    private int _updatePhoto(SQLiteHelper dbHelper, Photograph photo){
+    private int _updatePhoto(SQLiteDatabase db, Photograph photo){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.PictureTable.column_route_id, photo.getRoute_id());
@@ -171,22 +138,20 @@ public class PhotographManager {
         if(photo.getDate() != null) values.put(TableManager.PictureTable.column_date, Converter.convertSqlDateFormat(photo.getDate()));
         values.put(TableManager.PictureTable.column_memo, photo.getMemo());
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.PictureTable.column_id + " = " + photo.get_id();
         int count = db.update(TABLE_NAME, values, selection, null);
-        db.close();
 
         return count;
     }
 
-    public HashMap<Integer, Photograph> _getPhotoListWithSpot(SQLiteHelper dbHelper, Integer spot_id){
+    public HashMap<Integer, Photograph> _getPhotoListWithSpot(SQLiteDatabase db, Integer spot_id){
 
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.PictureTable.column_spot_id + " = " + spot_id);  //이렇게 사용하는게 좋아요
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -204,20 +169,18 @@ public class PhotographManager {
             }
             c.close();
         }
-        db.close();
 
         return photoList;
     }
 
-    public HashMap<Integer, Photograph> _getPhotoListWithRoute(SQLiteHelper dbHelper, Integer route_id){
-        //List<Photograph> photoList = new ArrayList<Photograph>();
+    public HashMap<Integer, Photograph> _getPhotoListWithRoute(SQLiteDatabase db, Integer route_id){
 
         HashMap<Integer, Photograph> photoList = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.PictureTable.column_route_id + " = " + route_id);    //이렇게 사용하는게 좋아요
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -234,7 +197,6 @@ public class PhotographManager {
             }
             c.close();
         }
-        db.close();
 
         return photoList;
     }

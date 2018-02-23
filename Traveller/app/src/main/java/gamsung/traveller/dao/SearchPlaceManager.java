@@ -20,58 +20,47 @@ import gamsung.traveller.util.Converter;
 public class SearchPlaceManager {
 
     private final String TABLE_NAME = TableManager.SearchTable.name;
-    private HashMap<Integer, SearchPlace> m_searchList;
 
     public SearchPlaceManager(){
-        m_searchList = new HashMap<>();
     }
 
-    public HashMap<Integer, SearchPlace> getSearchPlaceList(SQLiteHelper dbHelper){
+    public HashMap<Integer, SearchPlace> getSearchPlaceList(SQLiteDatabase db){
 
-        m_searchList.clear();
-        m_searchList.putAll(_getSearchPlaceList(dbHelper));
-
-        return m_searchList;
+        return _getSearchPlaceList(db);
     }
 
-    public boolean deleteSearchPlace(SQLiteHelper dbHelper, Integer id){
+    public boolean deleteSearchPlace(SQLiteDatabase db, Integer id){
 
-        if(!_deleteSearchPlace(dbHelper, id))
+        if(!_deleteSearchPlace(db, id))
             return false;
 
-        if (m_searchList.containsKey(id)) {
-            m_searchList.remove(id);
-        }
         return true;
     }
 
-    public long insertSearchPlace(SQLiteHelper dbHelper, SearchPlace searchPlace){
+    public long insertSearchPlace(SQLiteDatabase db, SearchPlace searchPlace){
 
-        long rowId = _insertSearchPlace(dbHelper, searchPlace);
+        long rowId = _insertSearchPlace(db, searchPlace);
         if(rowId > 0)
             searchPlace.set_id((int)rowId);
 
         return rowId;
     }
 
-    public int updateSearchPlace(SQLiteHelper dbHelper, SearchPlace searchPlace){
+    public int updateSearchPlace(SQLiteDatabase db, SearchPlace searchPlace){
 
-        int count = _updateSearchPlace(dbHelper, searchPlace);
-        if(count > 0)
-            m_searchList.put(searchPlace.get_id(), searchPlace);
+        int count = _updateSearchPlace(db, searchPlace);
 
         return count;
     }
 
 
-    private HashMap<Integer, SearchPlace> _getSearchPlaceList(SQLiteHelper dbHelper){
+    private HashMap<Integer, SearchPlace> _getSearchPlaceList(SQLiteDatabase db){
 
         HashMap<Integer, SearchPlace> searchPlaceHashMap = new HashMap<>();
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM " + TABLE_NAME);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sb.toString(), null);
         if(c != null){
             while (c.moveToNext()){
@@ -96,21 +85,18 @@ public class SearchPlaceManager {
             }
             c.close();
         }
-        db.close();
 
         return searchPlaceHashMap;
     }
 
-    private boolean _deleteSearchPlace(SQLiteHelper dbHelper, Integer id){
+    private boolean _deleteSearchPlace(SQLiteDatabase db, Integer id){
 
         StringBuffer sb = new StringBuffer();
         sb.append("DELETE FROM " + TABLE_NAME);
         sb.append(" WHERE " + TableManager.SearchTable.column_id + " = " + id);
 
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL(sb.toString());
-            db.close();
         }
         catch (Exception ex){
             Log.e("delete searchPlace", ex.getMessage());
@@ -120,7 +106,7 @@ public class SearchPlaceManager {
         return true;
     }
 
-    private long _insertSearchPlace(SQLiteHelper dbHelper, SearchPlace searchPlace){
+    private long _insertSearchPlace(SQLiteDatabase db, SearchPlace searchPlace){
 
         ContentValues values = new ContentValues();
 
@@ -138,14 +124,12 @@ public class SearchPlaceManager {
         values.put(TableManager.SearchTable.column_northeast_lat, searchPlace.getNortheast_lat());
         values.put(TableManager.SearchTable.column_northeast_lon, searchPlace.getNortheast_lon());
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId = db.insert(TABLE_NAME, null, values);
-        db.close();
 
         return rowId;
     }
 
-    private int _updateSearchPlace(SQLiteHelper dbHelper, SearchPlace searchPlace){
+    private int _updateSearchPlace(SQLiteDatabase db, SearchPlace searchPlace){
 
         ContentValues values = new ContentValues();
         values.put(TableManager.SearchTable.column_place_unique_id, searchPlace.getPlace_unique_id());
@@ -163,10 +147,8 @@ public class SearchPlaceManager {
         values.put(TableManager.SearchTable.column_northeast_lon, searchPlace.getNortheast_lon());
 
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = TableManager.SearchTable.column_id + " = " + searchPlace.get_id();
         int count = db.update(TABLE_NAME, values, selection, null);
-        db.close();
 
         return count;
     }
