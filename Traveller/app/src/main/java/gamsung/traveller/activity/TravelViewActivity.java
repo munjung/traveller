@@ -3,6 +3,9 @@ package gamsung.traveller.activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -17,10 +20,16 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import org.w3c.dom.Text;
 
@@ -56,6 +65,8 @@ public class TravelViewActivity extends AppCompatActivity {
     private ViewByPhotosFragment viewByPhotosFragment;
     private ViewByScheduleFragment viewByScheduleFragment;
     private android.support.v4.app.Fragment selectedFrag;
+
+    RequestManager mGlideRequestManager;
 
 
     private DataManager dataManager;

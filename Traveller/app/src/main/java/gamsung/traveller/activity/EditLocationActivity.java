@@ -50,16 +50,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     private final static int CREATE_SPOT = 502;
     private final static int EDIT_SPOT = 503;
-    private final static int MAP_SELECTED=10;
+    private final static int MAP_SELECTED = 10;
 
-    private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome,btnSave;
+    private ImageView eatBtn, buyBtn, takeBtn, visitBtn, anythingBtn, btnHome, btnSave;
     private Button btnNextPlan;
     private EditText memoEdit;
     private TextView editLocation, txtTitle;
     private View layoutAddPhoto;
     private Button btnAddPhoto;
     private ImageView btnEditMission;
-    private ImageView eat,buy,take,visit,anything;
+    private ImageView eat, buy, take, visit, anything;
 
     private LinearLayout llGotoMap;
 
@@ -69,9 +69,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     private boolean isEdit = false;
     private int editRouteId = -1;
-    private String editRotueTitle ="";
+    private String editRotueTitle = "";
     private int editSpotId = -1;
-    public int searchID=-1;
+    public int searchID = -1;
     private int CATEGORY_ID;
     public int photographId;
     private String picturePath;
@@ -97,12 +97,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         this.editRouteId = intent.getIntExtra("route id", -1);
         this.editRotueTitle = intent.getStringExtra("route title");
         String whatActivity = intent.getStringExtra("TAG_ACTIVITY");
-        if(whatActivity != null) {
+        if (whatActivity != null) {
             if (whatActivity.equals("create")) {
                 //create spot
                 this.isEdit = false;
-            }
-            else if (whatActivity.equals("empty")){
+            } else if (whatActivity.equals("empty")) {
 
                 //create spot
                 this.isEdit = false;
@@ -110,21 +109,19 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 i.putExtra("route id", this.editRouteId);
                 i.putExtra("route title", this.editRotueTitle);
                 startActivityForResult(i, REQUEST_CODE_EMPTY);
-            }
-            else {
+            } else {
                 //edit spot
                 this.isEdit = true;
                 this.editSpotId = intent.getIntExtra("spot id", -1);
-                if(this.editSpotId < 0){
+                if (this.editSpotId < 0) {
                     //error
                     Log.e("edit spot id", "need edit spot id, not -1");
                     Toast.makeText(this, "error: need edit spot id, not -1", Toast.LENGTH_LONG).show();
-                }
-                else{
+                } else {
                     Spot spot = _dataManager.getSpotList().get(this.editSpotId);
                     this.searchID = spot.getSearch_id();
-                    HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
-                    SearchPlace searchPlace =placelist.get(searchID);
+                    HashMap<Integer, SearchPlace> placelist = _dataManager.getSearchPlaceList();
+                    SearchPlace searchPlace = placelist.get(searchID);
                     editLocation.setText(searchPlace.getPlace_address());
                     memoEdit.setText(spot.getMission());
                     setCategory(spot.getCategory_id());
@@ -139,37 +136,37 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    private void registerListener(){
+    private void registerListener() {
 
-        eatBtn= (ImageView)findViewById(R.id.eatBtn);
-        buyBtn = (ImageView)findViewById(R.id.buyBtn);
-        takeBtn = (ImageView)findViewById(R.id.takeBtn);
-        visitBtn = (ImageView)findViewById(R.id.visitBtn);
-        anythingBtn = (ImageView)findViewById(R.id.anythingBtn);
-        memoEdit = (EditText)findViewById(R.id.memoEdit);
-        editLocation = (TextView)findViewById(R.id.editLocation);
+        eatBtn = (ImageView) findViewById(R.id.eatBtn);
+        buyBtn = (ImageView) findViewById(R.id.buyBtn);
+        takeBtn = (ImageView) findViewById(R.id.takeBtn);
+        visitBtn = (ImageView) findViewById(R.id.visitBtn);
+        anythingBtn = (ImageView) findViewById(R.id.anythingBtn);
+        memoEdit = (EditText) findViewById(R.id.memoEdit);
+        editLocation = (TextView) findViewById(R.id.editLocation);
         photoRelative = (RelativeLayout) findViewById(R.id.photoRelative);
         txtTitle = (TextView) findViewById(R.id.txt_title_edit_location);
-        if(this.editRouteId > 0) {
+        if (this.editRouteId > 0) {
             Route route = _dataManager.getRouteWithID(this.editRouteId);
             txtTitle.setText(route.getTitle());
         }
 
 
         eat = (ImageView) findViewById(R.id.eat);
-        buy = (ImageView)findViewById(R.id.buy);
-        take = (ImageView)findViewById(R.id.photo);
-        visit = (ImageView)findViewById(R.id.visit);
-        anything = (ImageView)findViewById(R.id.anything);
+        buy = (ImageView) findViewById(R.id.buy);
+        take = (ImageView) findViewById(R.id.photo);
+        visit = (ImageView) findViewById(R.id.visit);
+        anything = (ImageView) findViewById(R.id.anything);
 
-        llGotoMap = (LinearLayout)findViewById(R.id.layoutLocation);
+        llGotoMap = (LinearLayout) findViewById(R.id.layoutLocation);
 
-        llGotoMap.setOnClickListener(new View.OnClickListener(){
+        llGotoMap.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditLocationActivity.this,MapActivity.class);
-                startActivityForResult(intent,REQUEST_CODE_GO_MAP);
+                Intent intent = new Intent(EditLocationActivity.this, MapActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_GO_MAP);
             }
         });
 
@@ -223,28 +220,28 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         });
 
 
-        layoutAddPhoto = (View)findViewById(R.id.layout_add_on_empty_edit_location);
+        layoutAddPhoto = (View) findViewById(R.id.layout_add_on_empty_edit_location);
         layoutAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
-                startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
+                startActivityForResult(i, REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
 
-        btnAddPhoto = (Button)findViewById(R.id.btn_add_photo_edit_location);
+        btnAddPhoto = (Button) findViewById(R.id.btn_add_photo_edit_location);
         btnAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent i = new Intent(EditLocationActivity.this, CustomGalleryActivity.class);
                 i.putExtra(KEY_SEND_ACTIVITY_IMAGE_COUNT, _adapter.getItemCount());
-                startActivityForResult(i,REQUEST_CODE_GO_ADD_PHOTO);
+                startActivityForResult(i, REQUEST_CODE_GO_ADD_PHOTO);
             }
         });
 
-        btnHome = (ImageButton)findViewById(R.id.btn_cancel_edit_location);
+        btnHome = (ImageButton) findViewById(R.id.btn_cancel_edit_location);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,21 +249,18 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        btnSave = (ImageButton)findViewById(R.id.btn_save_edit_location);
+        btnSave = (ImageButton) findViewById(R.id.btn_save_edit_location);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (memoEdit.getText().toString().equals("") || memoEdit.getText()==null) {
-                    Toast.makeText(EditLocationActivity.this,"할일을 입력해주세요.",Toast.LENGTH_SHORT).show();
+                if (memoEdit.getText().toString().equals("") || memoEdit.getText() == null) {
+                    Toast.makeText(EditLocationActivity.this, "할일을 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if(editLocation.getText().toString().equals("") || editLocation.getText()==null) {
-                    Toast.makeText(EditLocationActivity.this,"장소를 선택해주세요.",Toast.LENGTH_SHORT).show();
+                } else if (editLocation.getText().toString().equals("") || editLocation.getText() == null) {
+                    Toast.makeText(EditLocationActivity.this, "장소를 선택해주세요.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-
-                else {
+                } else {
 
                     if (isEdit) {
                         updateSpot();
@@ -280,20 +274,17 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        btnNextPlan = (Button)findViewById(R.id.btnNextPlan);
+        btnNextPlan = (Button) findViewById(R.id.btnNextPlan);
         btnNextPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (memoEdit.getText().toString().equals("") || memoEdit.getText()==null) {
-                    Toast.makeText(EditLocationActivity.this,"할일을 입력해주세요.",Toast.LENGTH_SHORT).show();
+                if (memoEdit.getText().toString().equals("") || memoEdit.getText() == null) {
+                    Toast.makeText(EditLocationActivity.this, "할일을 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if(editLocation.getText().toString().equals("") || editLocation.getText()==null) {
-                    Toast.makeText(EditLocationActivity.this,"장소를 선택해주세요.",Toast.LENGTH_SHORT).show();
+                } else if (editLocation.getText().toString().equals("") || editLocation.getText() == null) {
+                    Toast.makeText(EditLocationActivity.this, "장소를 선택해주세요.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-
-                else {
+                } else {
                     createSpot();
                     memoEdit.setText("");
                     editLocation.setText("");
@@ -302,14 +293,13 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
-    private void registerRecyclerView(){
+    private void registerRecyclerView() {
 
-        if(editSpotId > 0){
+        if (editSpotId > 0) {
 
-            photoList =_dataManager.getPhotoListToStringWithSpot(editSpotId);
+            photoList = _dataManager.getPhotoListToStringWithSpot(editSpotId);
             _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(photoList.values()), this);
-        }
-        else{
+        } else {
             _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(), this);
         }
 
@@ -320,33 +310,32 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         snapHelper.attachToRecyclerView(_recyclerView);
     }
 
-    private void visibleOperationForEditMode(){
+    private void visibleOperationForEditMode() {
 
-        if(!isEdit){
+        if (!isEdit) {
             photoRelative.setVisibility(View.GONE);
             btnNextPlan.setVisibility(View.VISIBLE);
             memoEdit.requestFocus();
-        }
-        else{
-            if(_adapter.getImgPathList().size() > 0){
+        } else {
+            if (_adapter.getImgPathList().size() > 0) {
 
                 Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
-                if(btnAdd.getVisibility() == View.INVISIBLE)
+                if (btnAdd.getVisibility() == View.INVISIBLE)
                     btnAdd.setVisibility(View.VISIBLE);
 
                 View layoutFrame = findViewById(R.id.layout_frame_edit_location);
-                if(layoutFrame.getVisibility() == View.VISIBLE)
+                if (layoutFrame.getVisibility() == View.VISIBLE)
                     layoutFrame.setVisibility(View.INVISIBLE);
             }
 
             btnNextPlan.setVisibility(View.GONE);
         }
 
-        if(memoEdit !=null)
+        if (memoEdit != null)
             memoEdit.clearFocus();
     }
 
-    private void updateSpot(){
+    private void updateSpot() {
 
         Spot editSpot = new Spot();
         editSpot.set_id(editSpotId);
@@ -356,44 +345,35 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setCategory_id(CATEGORY_ID);
         editSpot.setPicture_path(picturePath);
 
-//        ArrayList<String> photolist = _adapter.getImgPathList();
-//        ArrayList<String> memolist = _adapter.getMemoList();
+            ArrayList<Photograph> itemList = _adapter.getItems();
 
-        ArrayList<Photograph> itemList = _adapter.getItems();
-
-
-        for(int i=0;i<itemList.size();i++){
-            Photograph photo = itemList.get(i);
+            for (int i = 0; i < itemList.size(); i++) {
+                Photograph photo = itemList.get(i);
+                photo.setRoute_id(editRouteId);
+                photo.setSpot_id(editSpotId);
+                photo.setSearch_id(searchID);
 
             if(photoList != null){
                 if(photoList.containsKey(photo.getPath()))
                     _dataManager.updatePhoto(photo);
                 else
                     _dataManager.insertPhoto(photo);
+                }
             }
-            else{
-                _dataManager.insertPhoto(photo);
-            }
-        }
-
-        //혹시나 싶어서 변수에 저장해보니 a엔 0이 뜬다
-        int a = _dataManager.updateSpot(editSpot);
-
 
         //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
         if(_dataManager.updateSpot(editSpot) > 0){
 
-            Intent intent = new Intent();
-            intent.putExtra("spot_id", editSpotId);
-            setResult(EDIT_SPOT, intent);
-            //finish();
-            Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
-        }
-        else{
+                Intent intent = new Intent();
+                intent.putExtra("spot_id", editSpotId);
+                setResult(EDIT_SPOT, intent);
+                //finish();
+                Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
+            } else {
 
-            Log.e("update spot", "error : not updated");
-            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
-        }
+                Log.e("update spot", "error : not updated");
+                Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
+            }
     }
 
     private void createSpot() {
@@ -421,35 +401,35 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private void setCategory(int CATEGORY_ID) {
 
         switch (CATEGORY_ID) {
-            case 0 :
+            case 0:
                 eat.setVisibility(View.VISIBLE);
                 buy.setVisibility(View.INVISIBLE);
                 take.setVisibility(View.INVISIBLE);
                 visit.setVisibility(View.INVISIBLE);
                 anything.setVisibility(View.INVISIBLE);
                 break;
-            case 1 :
+            case 1:
                 eat.setVisibility(View.INVISIBLE);
                 buy.setVisibility(View.VISIBLE);
                 take.setVisibility(View.INVISIBLE);
                 visit.setVisibility(View.INVISIBLE);
                 anything.setVisibility(View.INVISIBLE);
                 break;
-            case 2 :
+            case 2:
                 eat.setVisibility(View.INVISIBLE);
                 buy.setVisibility(View.INVISIBLE);
                 take.setVisibility(View.VISIBLE);
                 visit.setVisibility(View.INVISIBLE);
                 anything.setVisibility(View.INVISIBLE);
                 break;
-            case 3 :
+            case 3:
                 eat.setVisibility(View.INVISIBLE);
                 buy.setVisibility(View.INVISIBLE);
                 take.setVisibility(View.INVISIBLE);
                 visit.setVisibility(View.VISIBLE);
                 anything.setVisibility(View.INVISIBLE);
                 break;
-            case 4 :
+            case 4:
                 eat.setVisibility(View.INVISIBLE);
                 buy.setVisibility(View.INVISIBLE);
                 take.setVisibility(View.INVISIBLE);
@@ -463,30 +443,30 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_GO_MAP && resultCode == MAP_SELECTED){
-            HashMap<Integer,SearchPlace> placelist = _dataManager.getSearchPlaceList();
-            searchID =data.getIntExtra("placeID",0);
-            SearchPlace searchPlace =placelist.get(searchID);
+        if (requestCode == REQUEST_CODE_GO_MAP && resultCode == MAP_SELECTED) {
+            HashMap<Integer, SearchPlace> placelist = _dataManager.getSearchPlaceList();
+            searchID = data.getIntExtra("placeID", 0);
+            SearchPlace searchPlace = placelist.get(searchID);
             editLocation.setText(searchPlace.getPlace_address());
         }
 
-        if (requestCode == REQUEST_CODE_GO_ADD_PHOTO && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CODE_GO_ADD_PHOTO && resultCode == RESULT_OK) {
 
             String imgPath = data.getExtras().getString("img");
 
-            if(_adapter.addImagePath(imgPath) > 0){
+            if (_adapter.addImagePath(imgPath) > 0) {
 
                 Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
-                if(btnAdd.getVisibility() == View.INVISIBLE)
+                if (btnAdd.getVisibility() == View.INVISIBLE)
                     btnAdd.setVisibility(View.VISIBLE);
 
                 View layoutFrame = findViewById(R.id.layout_frame_edit_location);
-                if(layoutFrame.getVisibility() == View.VISIBLE)
+                if (layoutFrame.getVisibility() == View.VISIBLE)
                     layoutFrame.setVisibility(View.INVISIBLE);
             }
         }
 
-        if(requestCode == REQUEST_CODE_EMPTY && resultCode == RESULT_CANCELED){
+        if (requestCode == REQUEST_CODE_EMPTY && resultCode == RESULT_CANCELED) {
             //empty에서 취소
             finish();
         }
@@ -516,19 +496,17 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     break;
                 }
 
-                case  CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
-                    Log.d("present position: ",arguments.getPosition()+"");
-                    if(_adapter.get_representedImagePosition() == arguments.getPosition()){
-                            _adapter.set_representedImagePosition(-1);
-                            picturePath="";
-                    }
+            case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
+                Log.d("present position: ", arguments.getPosition() + "");
+                if (_adapter.get_representedImagePosition() == arguments.getPosition()) {
+                    _adapter.set_representedImagePosition(-1);
+                    picturePath = "";
+                }
 
-                    int photoId = arguments.getItem().get_id();
-                    _dataManager.deletePhoto(photoId);
-
-                    _adapter.notifyDataSetChanged();
-                    break;
+                int photoId = arguments.getItem().get_id();
+                _dataManager.deletePhoto(photoId);
+                _adapter.notifyDataSetChanged();
+                break;
         }
-
     }
 }
