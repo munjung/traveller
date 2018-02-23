@@ -42,8 +42,9 @@ public class SpotManager {
         return _getLastIndexSpot(dbHelper);
     }
 
-    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(SQLiteHelper dbHelper){
+    public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(SQLiteHelper dbHelper) {
         return _getSpotWithCoordinateListOnRouteID(dbHelper);
+    }
         
     public Spot getSpotIDWithIndexID(SQLiteHelper dbHelper, Integer index_id){
         return _getSpotIDWithIndexID(dbHelper, index_id);

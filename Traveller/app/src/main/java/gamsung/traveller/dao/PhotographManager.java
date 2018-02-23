@@ -87,6 +87,11 @@ public class PhotographManager {
         return m_photoList;
     }
 
+    public HashMap<String, Photograph> getPhotoListToStringWithSpot(SQLiteHelper dbHelper, Integer spot_id){
+
+        return _getPhotoListToStringWithSpot(dbHelper, spot_id);
+    }
+
     public HashMap<Integer, Photograph> getPhotoListWithRoute(SQLiteHelper dbHelper, Integer route_id){
 
         m_photoList.clear();
@@ -200,6 +205,36 @@ public class PhotographManager {
                 photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
+
+            }
+            c.close();
+        }
+        db.close();
+
+        return photoList;
+    }
+
+    public HashMap<String, Photograph> _getPhotoListToStringWithSpot(SQLiteHelper dbHelper, Integer spot_id){
+
+        HashMap<String, Photograph> photoList = new HashMap<>();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.PictureTable.column_spot_id + " = " + spot_id);  //이렇게 사용하는게 좋아요
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+                Photograph photo = new Photograph();
+                photo.set_id(c.getInt(0));
+                photo.setRoute_id(c.getInt(1));
+                photo.setSpot_id(c.getInt(2));
+                photo.setSearch_id(c.getInt(3));
+                photo.setPath(c.getString(4));
+                if(c.getString(5) != null) photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                photo.setMemo(c.getString(6));
+
+                photoList.put(photo.getPath(), photo);
 
             }
             c.close();

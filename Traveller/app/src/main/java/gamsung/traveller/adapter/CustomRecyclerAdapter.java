@@ -133,10 +133,13 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_off));
         }
 
+
         String memo = _items.get(position).getMemo();
         memo = memo == null ? "" : memo;
+
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
         viewHolder.getTxtMemo().setText(memo);
+
     }
 
 
@@ -289,6 +292,10 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             String memo = editText.getText() == null ? "" : editText.getText().toString();
             _items.get(position).setMemo(memo);
+
+            /*viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
+            viewHolder.getTxtMemo().setText(memo);*/
+
 
             Log.d("watcher", position +  " : " + memo);
         }

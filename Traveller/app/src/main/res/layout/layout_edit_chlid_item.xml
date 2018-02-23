@@ -65,6 +65,7 @@
 
     </RelativeLayout>
 
+
     <RelativeLayout
         android:id="@+id/btn_remove_photo_item"
         android:layout_width="60dp"
@@ -75,9 +76,12 @@
 
         <Button
             android:id="@+id/btn_inner_remove_photo_item"
-            android:layout_width="45dp"
-            android:layout_height="30dp"/>
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:text="삭제"
+            android:textSize="12sp"/>
 
     </RelativeLayout>
+
 
 </RelativeLayout>
