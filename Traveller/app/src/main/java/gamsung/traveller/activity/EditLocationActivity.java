@@ -489,12 +489,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
                 picturePath = arguments.getItem().getPath();
-
-                for (int i = 0; i < _recyclerView.getAdapter().getItemCount(); i++) {
-                    picturePath = arguments.getItem().getPath();
-                    _adapter.notifyDataSetChanged();
-                    break;
-                }
+                _adapter.notifyDataSetChanged();
+                break;
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
                 Log.d("present position: ", arguments.getPosition() + "");
