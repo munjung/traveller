@@ -298,5 +298,9 @@ public class ViewByScheduleFragment extends Fragment {
     public String getPlaceName(int placeID){
         return activity.getSearchPlaceFromDB(placeID);
     }
+    public void setOrderChanged(){
+        activity.setOrderChanged(true);
+        activity.setChangeMade(true);
+    }
 }
 
