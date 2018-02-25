@@ -298,7 +298,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         if (editSpotId > 0) {
 
             photoList = _dataManager.getPhotoListToStringWithSpot(editSpotId);
-            _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(photoList.values()), this);
+            ArrayList<Photograph> photographs = new ArrayList<Photograph>(photoList.values());
+            _adapter = new CustomRecyclerAdapter(this, photographs, this);
+            for(int i=0; i<photographs.size(); i++){
+
+                if(this.picturePath.equals(photographs.get(i).getPath()))
+                    _adapter.set_representedImagePosition(i);
+            }
+
         } else {
             _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(), this);
         }
