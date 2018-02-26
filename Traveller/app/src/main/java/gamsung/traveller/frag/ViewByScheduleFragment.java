@@ -151,13 +151,7 @@ public class ViewByScheduleFragment extends Fragment {
         return rootView;
     }
 
-    public List<Integer> getOriginalPos(){
-        return originalPos;
-    }
 
-    public List<Integer> getUpdatedPos(){
-        return updatedPos;
-    }
     View.OnClickListener startScheduling = new View.OnClickListener(){
         @Override
         public void onClick(View view) {

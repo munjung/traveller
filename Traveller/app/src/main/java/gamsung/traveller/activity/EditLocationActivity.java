@@ -351,6 +351,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
         editSpot.setPicture_path(picturePath);
+        editSpot.setPicture_id(photographId);
 
             ArrayList<Photograph> itemList = _adapter.getItems();
 
@@ -391,6 +392,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setSearch_id(searchID);
         newSpot.setCategory_id(CATEGORY_ID);
         newSpot.setPicture_path(picturePath);
+        newSpot.setPicture_id(photographId);
 
         int spot_id = (int) _dataManager.insertSpot(newSpot);
         if (spot_id > 0) {
@@ -496,6 +498,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
                 picturePath = arguments.getItem().getPath();
+                photographId = arguments.getItem().get_id();
                 _adapter.notifyDataSetChanged();
                 break;
 
