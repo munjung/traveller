@@ -404,7 +404,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setCategory_id(CATEGORY_ID);
         newSpot.setPicture_id(photographId);
         newSpot.setPicture_path(picturePath);
-
+        
         int spot_id = (int) _dataManager.insertSpot(newSpot);
         if (spot_id > 0) {
             Intent intent = new Intent(); //

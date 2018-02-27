@@ -193,7 +193,9 @@ public class ViewByPhotosFragment extends Fragment {
             try{
                 spot_id = data.getExtras().getInt("spot_id", -1);
             }catch(NullPointerException e){return;}
+
             if (spot_id == -1) return; //no spot_id returns => edit fails
+
 
             pos = 0;
             for (Spot spot : spotList){ //update DB

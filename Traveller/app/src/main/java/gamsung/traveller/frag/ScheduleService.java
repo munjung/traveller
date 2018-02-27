@@ -238,10 +238,17 @@ public class ScheduleService {
         layoutSchedule.setBackgroundColor(Color.TRANSPARENT);
         return layoutSchedule;
     }
-    public void editSchedule(int view_id){
+    public void editSchedule(int view_id, int spot_id){
         int idx = toListIdx(view_id);
         View editView = listSchedule.get(idx).view;
-        Spot editedSpot = spotList.get(toListIdx(view_id));
+        Spot editedSpot = null; //불안해서 추가
+        for (Spot spot : spotList){
+            if (spot.get_id() == spot_id){
+                editedSpot = spot;
+                break;
+            }
+        }
+        if (editedSpot == null) return;
 
         ((TextView)editView.findViewById(R.id.title_left)).setText(editedSpot.getMission());
         ((TextView)editView.findViewById(R.id.title_right)).setText(editedSpot.getMission());
@@ -391,7 +398,7 @@ public class ScheduleService {
 
     public void setScheduleVisMoved(View view, int idx){ //updated method
         boolean isLeft = getLeftVisbility(idx);
-        int getVis = listSchedule.get(idx).lines[0].getVisibility();
+        int getVis = listSchedule.get(idx).lines[0].getVisibility(); //여기서 죽는경우도 가끔
         if (isLeft){ //left side on, right side off
             if (getVis == View.VISIBLE) return;
             listSchedule.get(idx).lines[0].setVisibility(View.VISIBLE);
@@ -456,13 +463,10 @@ public class ScheduleService {
             int temp = idxA;
             idxA = idxB;
             idxB = temp;
-
         }
         else{
             for (int i = idxA; i < idxB; i++)
                 Collections.swap(spotList, i, i + 1);
-
-
         }
 
         for (int i = idxA; i <= idxB; i++){
@@ -501,6 +505,7 @@ public class ScheduleService {
 
         View createdView = addFilledSchedule(false, spotList.get(0));
         CircleImageView circleImageView = createCircleImage(coordinateInformation.circleX[1], (coordinateInformation.first_margin), spotList.get(0));
+        circleImageView.setId(createdView.getId());
 
         circleImageView.setOnClickListener(editSchedule);
         DrawnLine lineView[] = draw_lines(listSchedule.size());
@@ -509,6 +514,7 @@ public class ScheduleService {
         layoutBase.addView(lineView[1]);
         lineView[0].setVisibility(View.INVISIBLE);
         lineView[1].setVisibility(View.VISIBLE);
+
         layoutBase.addView(circleImageView);
         layoutBase.addView(createdView);
         //circleImageView.setTag(createdView.getId());
@@ -657,9 +663,9 @@ public class ScheduleService {
         }
 
         if (editedSpotID.size() > 0){
-            for (int id : editedSpotID){
-                int view_id = findScheduleIDFromSpotID(id);
-                editSchedule(view_id);
+            for (int spot_id : editedSpotID){
+                int view_id = findScheduleIDFromSpotID(spot_id);
+                editSchedule(view_id, spot_id);
             }
             editedSpotID.clear();
         }
@@ -671,6 +677,10 @@ public class ScheduleService {
         boolean isLeft;
         for (int idx = startIdx; idx < list_total; idx++){
             View circleImage = listSchedule.get(idx).circleImage;
+            if (circleImage == null){
+                Toast.makeText(appContext, "Error: Null circle image detected.", Toast.LENGTH_LONG).show();
+                continue;
+            }
             isLeft = getLeftVisbility(idx);
             circleImage.setX(coordinateInformation.circleX[isLeft ? 0 : 1]);
             circleImage.setY(allocateViewCoordinateY(idx) + coordinateInformation.first_margin);
@@ -703,7 +713,7 @@ public class ScheduleService {
                 ClipData.Item item = new ClipData.Item((CharSequence) Integer.toString(view_id));
                 String[] mimeType = {ClipDescription.MIMETYPE_TEXT_PLAIN};
 
-                ClipData data = new ClipData(view.getTag().toString(), mimeType, item); //pass on the tag of the selected layout
+                ClipData data = new ClipData(Integer.toString(view.getId()), mimeType, item); //pass on the tag of the selected layout
 
                 view.setBackgroundColor(Color.TRANSPARENT);
                 View.DragShadowBuilder dragShadowBuilder = new View.DragShadowBuilder(view);
@@ -741,7 +751,7 @@ public class ScheduleService {
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     //where animation happens
-                    Log.d("Entered", view.getTag().toString());
+                    Log.d("Entered", Integer.toString(view.getId()));
                     return true;
                 case DragEvent.ACTION_DRAG_LOCATION:
                     /*
@@ -771,7 +781,7 @@ public class ScheduleService {
                     String dragData =item.getText().toString();
 
                     //swapSchedules(Integer.parseInt(dragData) - 1, Integer.parseInt(view.getTag().toString()) - 1);
-                    moveSchedule(Integer.parseInt(dragData), (int)view.getTag());
+                    moveSchedule(Integer.parseInt(dragData), (int)view.getId());
                     Log.d("selected data index: ", dragData);
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:

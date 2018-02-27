@@ -160,34 +160,6 @@ public class TravelViewActivity extends AppCompatActivity {
                 finish();
             }
         });
-//
-//        editTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                //hide keyboard and switch views when done
-//                if (i == EditorInfo.IME_ACTION_DONE){
-//                    viewSwitcher.showNext();
-//                    textTitle.setText(editTitle.getText().toString());
-//                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    inputManager.hideSoftInputFromWindow(editTitle.getWindowToken(), inputManager.HIDE_NOT_ALWAYS);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//        editTitle.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-//                //when enter is detected while editing the title
-//                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getAction() == keyEvent.KEYCODE_ENTER){
-//                    viewSwitcher.showNext();
-//                    textTitle.setText(editTitle.getText().toString());
-//                    editTitle.clearFocus();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
 
         //draw and implement events for the tab
         TabLayout tabsTravel = findViewById(R.id.tabsTravelView);
@@ -230,10 +202,6 @@ public class TravelViewActivity extends AppCompatActivity {
 
     }
 
-    public int getFrameHeight(){
-        View view = findViewById(R.id.containerTravelView);
-        return view.getLayoutParams().height;
-    }
     private void updateOrdersToDB(int tabSelected){
         List<Spot> updatedSpotlist;
         if (tabSelected == 0) {
@@ -241,22 +209,18 @@ public class TravelViewActivity extends AppCompatActivity {
         }else{
             updatedSpotlist = viewByScheduleFragment.getSpotListFromSchedule();
         }
-        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
-//        for (Spot spot : updatedSpotlist){
-//            Log.d("Updated spotlist: ", "Spot ID: " + spot.get_id() + ", mission: " + spot.getMission() + "\n");
-//        }
-
+//        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
+        updateSpotlistToDB((ArrayList<Spot>) updatedSpotlist);
     }
 
     /*
      * Activity <-> Fragment
      */
-
+    public void updateSpotlistToDB(ArrayList<Spot> spotList){
+        dataManager.updateSpotList(spotList);
+    }
     public DataManager getDataManager(){
         return dataManager;
-    }
-    public List<Spot> getSpotList(){
-        return spotList;
     }
     public List<Integer> getDeletedSpotID(){
         return deletedSpotID;
@@ -282,15 +246,13 @@ public class TravelViewActivity extends AppCompatActivity {
     public HashMap<Integer, Photograph> getImageListWithSpot(int spot_id){
         return dataManager.getPhotoListWithSpot(spot_id);
     }
-        public List<Spot> refreshSpotList(){
-
+    public List<Spot> refreshSpotList(){
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
-        //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
-//        for (Spot spot : spotList){s
-//            Log.d("SPOTLIST: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
+//        for (Spot spot : spotList){
+//            Log.d("Refreshed SpotList: ", "spot id: " + spot.get_id() + ", spot mission: " + spot.getMission() + "\n");
 //        }
-        return spotList; //temporarily
+        return spotList;
     }
     public void updateSpotFromDB(Spot spot){
         dataManager.updateSpot(spot);

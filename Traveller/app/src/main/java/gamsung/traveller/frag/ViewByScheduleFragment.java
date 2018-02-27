@@ -52,7 +52,8 @@ public class ViewByScheduleFragment extends Fragment {
     private static final int REQUEST_EDIT= 0;
     private static final int REQUEST_ADD = 1;
     private static final int REQUEST_INIT = 2;
-    private static final int RESULT_EDIT = 3;
+    private static final int RESULT_EDIT = 503;
+    private static final int RESULT_CREATE = 502;
     private static final int RESULT_ADD = 4;
     private int route_id;
     private List<Integer> originalPos = new ArrayList<>();
@@ -155,7 +156,7 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener startScheduling = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            Bundle bundle = new Bundle();
+//            Bundle bundle = new Bundle();
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY", "create");
             i.putExtra("route id", route_id);
@@ -181,7 +182,6 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener editSchedule = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            int idx = scheduleService.toListIdx((int)view.getId());
 
             int view_idx = scheduleService.toListIdx((int)view.getId());
 
@@ -190,7 +190,7 @@ public class ViewByScheduleFragment extends Fragment {
             i.putExtra("route id", route_id);
             i.putExtra("spot id", scheduleService.listSchedule.get(view_idx).spot_ID);
             startActivityForResult(i, REQUEST_EDIT);
-
+            Toast.makeText(getContext(), "spot id: " + scheduleService.listSchedule.get(view_idx).spot_ID + ", view id: " + view.getId() + ", view idx: " + view_idx, Toast.LENGTH_SHORT).show();
             activity.setChangeMade(true);
         }
     };
@@ -206,7 +206,6 @@ public class ViewByScheduleFragment extends Fragment {
                     //assumed that the indexes for spotlist and listschedule are synchronized
                     int idx_view = scheduleService.toListIdx(view_id);
                     activity.deleteSpotFromDB(scheduleService.listSchedule.get(idx_view).spot_ID);
-                    //spotList.remove(scheduleService.toListIdx(scheduleService.listSchedule.get(idx_view).spot_ID)); //temporarily manual deletion of list.
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }
@@ -235,17 +234,7 @@ public class ViewByScheduleFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         spotList = activity.refreshSpotList();
         scheduleService.update_spots(spotList);
-        if (requestCode == REQUEST_ADD){
-            //temporary creating spots
-
-            //the difference in the size between schedules and spot are number of items being created.
-            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
-            int num_added = spotList.size() - list_total;
-            scheduleService.isEditing = false;
-            processAdditionalSchedules(num_added, list_total);
-        }
-        else if (requestCode == REQUEST_INIT){
-
+        if (requestCode == REQUEST_INIT && resultCode == RESULT_CREATE){
             if (spotList.size() > 0) {
                 scheduleService.initSchedule();
                 int list_total = scheduleService.listSchedule.size() - 1;
@@ -253,7 +242,15 @@ public class ViewByScheduleFragment extends Fragment {
                 processAdditionalSchedules(num_added, list_total);
             }
         }
-        else if (requestCode == REQUEST_EDIT){
+        else if (resultCode == RESULT_CREATE){
+            //temporary creating spots
+            //the difference in the size between schedules and spot are number of items being created.
+            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
+            int num_added = spotList.size() - list_total;
+            scheduleService.isEditing = false;
+            processAdditionalSchedules(num_added, list_total);
+            }
+        else if (resultCode == RESULT_EDIT){
             int spot_id;
             try {
                 spot_id = data.getExtras().getInt("spot_id", -1);

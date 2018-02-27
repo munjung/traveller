@@ -39,7 +39,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
     private Queue<View> queueCircleAnimated= new LinkedList<>();
     private int startID, endID;
     private boolean isScheduleMoved;
-    private int temp_int = 0;
+
     public ScheduleServiceAnimated(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
                                    RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop, ViewByScheduleFragment fragment) {
         super(rootView, layoutSingle, scrollView, layoutBase, appContext, spotList, isDragDrop, fragment);
