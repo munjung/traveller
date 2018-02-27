@@ -304,8 +304,10 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             _adapter = new CustomRecyclerAdapter(this, photographs, this);
             for(int i=0; i<photographs.size(); i++){
 
-                if(this.picturePath.equals(photographs.get(i).getPath()))
-                    _adapter.set_representedImagePosition(i);
+                if(this.picturePath!=null) {
+                    if(this.picturePath.equals(photographs.get(i).getPath()))
+                        _adapter.set_representedImagePosition(i);
+                }
             }
 
         } else {
@@ -352,8 +354,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
-        editSpot.setPicture_path(picturePath);
-        editSpot.setPicture_id(photographId);
 
             ArrayList<Photograph> itemList = _adapter.getItems();
 
@@ -369,7 +369,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 else
                     _dataManager.insertPhoto(photo);
                 }
+
+                if(photographId == 0) {
+                    picturePath = itemList.get(0).getPath();
+                    photographId = itemList.get(0).get_id();
+                }
             }
+
+        editSpot.setPicture_id(photographId);
+        editSpot.setPicture_path(picturePath);
+
 
         //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
         if(_dataManager.updateSpot(editSpot) > 0){
@@ -393,8 +402,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setMission(memoEdit.getText().toString());
         newSpot.setSearch_id(searchID);
         newSpot.setCategory_id(CATEGORY_ID);
-        newSpot.setPicture_path(picturePath);
         newSpot.setPicture_id(photographId);
+        newSpot.setPicture_path(picturePath);
 
         int spot_id = (int) _dataManager.insertSpot(newSpot);
         if (spot_id > 0) {

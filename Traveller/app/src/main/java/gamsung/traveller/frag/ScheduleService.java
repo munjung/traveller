@@ -215,7 +215,7 @@ public class ScheduleService {
         layoutSchedule.findViewById(R.id.title_left).setVisibility(View.INVISIBLE);
 
         CircleImageView circleImageView = layoutSchedule.findViewById(R.id.circleimageview_left);
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)circleImageView.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)circleImageView.getLayoutParams();
         layoutParams.width = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER);
         layoutParams.height = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER);
         circleImageView.setLayoutParams(layoutParams);
