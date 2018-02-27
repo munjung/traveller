@@ -52,10 +52,7 @@ public class RouteManager {
 
     public boolean deleteRoute(SQLiteDatabase db, Integer id){
 
-        if(!_deleteRoute(db, id))
-            return false;
-
-        return true;
+        return _deleteRoute(db, id);
     }
 
     public long insertRoute(SQLiteDatabase db, Route route){

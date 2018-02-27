@@ -31,10 +31,7 @@ public class SearchPlaceManager {
 
     public boolean deleteSearchPlace(SQLiteDatabase db, Integer id){
 
-        if(!_deleteSearchPlace(db, id))
-            return false;
-
-        return true;
+        return _deleteSearchPlace(db, id);
     }
 
     public long insertSearchPlace(SQLiteDatabase db, SearchPlace searchPlace){

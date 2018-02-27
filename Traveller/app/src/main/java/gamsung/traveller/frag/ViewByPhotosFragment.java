@@ -112,7 +112,7 @@ public class ViewByPhotosFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        timeViewAdapter = new TimeViewAdapter(spotList, null);
+        timeViewAdapter = new TimeViewAdapter(spotList, null, activity.getDataManager());
         timeRecyclerView.setAdapter(timeViewAdapter);
         timeRecyclerView.setLayoutManager(linearLayoutManager);
         timeRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -124,6 +124,9 @@ public class ViewByPhotosFragment extends Fragment {
         timeViewAdapter.setCallback(clickListener);
         return view;
 
+    }
+    public List<Spot> getSpotList(){
+        return  this.spotList;
     }
     TimeViewAdapter.ClickListener clickListener = new TimeViewAdapter.ClickListener() {
         @Override
@@ -141,7 +144,6 @@ public class ViewByPhotosFragment extends Fragment {
                     timeViewAdapter.notifyItemRemoved(pos);
                     timeViewAdapter.notifyItemRangeRemoved(0, spotList.size());
                     activity.setChangeMade(true);
-                    Toast.makeText(getContext(), "Deleted spot ID: " + targetSpot.get_id()+ " route id: " + targetSpot.getRoute_id(), Toast.LENGTH_SHORT).show();
                     //timeViewAdapter.notifyDataSetChanged();
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -188,8 +190,8 @@ public class ViewByPhotosFragment extends Fragment {
         }
 
         @Override
-        public void changeOrder(int oldPos, int newPos) {
-            activity.updateSpotIdx(oldPos, newPos);
+        public String getPlaceName(int searchID) {
+            return activity.getSearchPlaceFromDB(searchID);
         }
     };
 

@@ -173,6 +173,9 @@ public class ScheduleService {
     public void update_spots(List<Spot> spotList){
         this.spotList = spotList;
     }
+    public List<Spot> getSpotList (){
+        return this.spotList;
+    }
     public void load_Spots(){
         int spot_total = spotList.size();
         if (spot_total == 0){
@@ -240,17 +243,15 @@ public class ScheduleService {
         View editView = listSchedule.get(idx).view;
         Spot editedSpot = spotList.get(toListIdx(view_id));
 
-        ((TextView)editView.findViewById(R.id.title_left)).setText("Spot ID: " + editedSpot.get_id());
-        ((TextView)editView.findViewById(R.id.title_right)).setText("Spot ID: " + editedSpot.get_id());
-        ((TextView)editView.findViewById(R.id.contents_left)).setText(editedSpot.getMission());
-        ((TextView)editView.findViewById(R.id.contents_right)).setText(editedSpot.getMission());
+        ((TextView)editView.findViewById(R.id.title_left)).setText(editedSpot.getMission());
+        ((TextView)editView.findViewById(R.id.title_right)).setText(editedSpot.getMission());
+        ((TextView)editView.findViewById(R.id.contents_left)).setText(fragment.getPlaceName(editedSpot.getSearch_id()));
+        ((TextView)editView.findViewById(R.id.contents_right)).setText(fragment.getPlaceName(editedSpot.getSearch_id()));
 
         if(editedSpot.getPicture_path() == "nopath" || editedSpot.getPicture_path() == null) Glide.with(appContext).load(R.drawable.grap_noimage).dontAnimate().into((CircleImageView)listSchedule.get(idx).circleImage);
         else Glide.with(appContext).load(editedSpot.getPicture_path()).dontAnimate().error(R.drawable.grap_noimage).into((CircleImageView)listSchedule.get(idx).circleImage);
 
         //change image
-
-
     }
 
     private View addFilledSchedule(boolean isLeft, Spot newSpot){
@@ -275,12 +276,12 @@ public class ScheduleService {
 
         int viewID = ViewIdGenerator.generateViewId();
 
-        ((TextView)layoutSchedule.findViewById(R.id.title_right)).setText("Spot ID: " + newSpot.get_id());
+        ((TextView)layoutSchedule.findViewById(R.id.title_right)).setText(newSpot.getMission());
         ((TextView)layoutSchedule.findViewById(R.id.title_right)).setTextColor(Color.WHITE);
-        ((TextView)layoutSchedule.findViewById(R.id.title_left)).setText("Spot ID: " + newSpot.get_id());
+        ((TextView)layoutSchedule.findViewById(R.id.title_left)).setText(newSpot.getMission());
         ((TextView)layoutSchedule.findViewById(R.id.title_left)).setTextColor(Color.WHITE);
-        ((TextView)layoutSchedule.findViewById(R.id.contents_right)).setText(newSpot.getMission());
-        ((TextView)layoutSchedule.findViewById(R.id.contents_left)).setText(newSpot.getMission());
+        ((TextView)layoutSchedule.findViewById(R.id.contents_right)).setText(fragment.getPlaceName(newSpot.getSearch_id()));
+        ((TextView)layoutSchedule.findViewById(R.id.contents_left)).setText(fragment.getPlaceName(newSpot.getSearch_id()));
         ((TextView)layoutSchedule.findViewById(R.id.contents_right)).setTextColor(Color.WHITE);
         ((TextView)layoutSchedule.findViewById(R.id.contents_left)).setTextColor(Color.WHITE);
 
@@ -307,37 +308,7 @@ public class ScheduleService {
 
         //spotList.get(photo_id).getPicture_path();
         //circleCopy.setImageResource(R.color.calendar_highlighted_day_bg);
-        int tempSelected;
-        tempSelected = R.drawable.test_1;
-        switch (listSchedule.size() % 10){
-            case 1:
-                tempSelected = R.drawable.test_1;
-                break;
-            case 2:
-                tempSelected = R.drawable.test_2;
-                break;
-            case 3:
-                tempSelected = R.drawable.test_3;
-                break;
-            case 4:
-                tempSelected = R.drawable.test_4;
-                break;
-            case 5:
-                tempSelected = R.drawable.test_5;
-                break;
-            case 6:
-                tempSelected = R.drawable.test_6;
-                break;
-            case 7:
-                tempSelected = R.drawable.test_7;
-                break;
-            case 8:
-                tempSelected = R.drawable.test_8;
-                break;
-            case 9:
-                tempSelected = R.drawable.test_9;
-                break;
-        }
+
 
 //        int photo_id = spot.getPicture_id();
         if (spot.getPicture_path() == "nopath" || spot.getPicture_path() == null)
@@ -386,7 +357,6 @@ public class ScheduleService {
     public void setScheduleVis(View view, int idx){ //updated method
         boolean isLeft = getLeftVisbility(idx);
         if (listSchedule.get(idx).circleImage == null){
-            Toast.makeText(appContext, "Circle NULL", Toast.LENGTH_SHORT).show();
             return;
         }
         if (isLeft){ //left side on, right side off
@@ -478,7 +448,6 @@ public class ScheduleService {
                 listSchedule.get(idxA).lines, listSchedule.get(idxA).spot_ID);
         listSchedule.remove(idxA);
         listSchedule.add(idxB, lsTempA);
-        this.fragment.notifyOrderChanged(idxA, idxB);
 
         if (idxA > idxB){
             for (int i = idxA; i > idxB; i--)
@@ -501,6 +470,7 @@ public class ScheduleService {
         }
 
         updateYCoordinateViews(idxA);
+        fragment.setOrderChanged();
         for (ListSchedule list : listSchedule){
             Log.d("ID pos: ", list.spot_ID + "\n");
         }

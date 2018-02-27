@@ -177,7 +177,6 @@ public class ScheduleServiceAnimated extends ScheduleService {
         int low, high;
         boolean isMoveDown;
         TextsFadeOutAnimationListener textsFadeOutAnimationListener = new TextsFadeOutAnimationListener();
-        Toast.makeText(appContext, "Start: " + (startID) + ", " + "End: " + (endID), Toast.LENGTH_SHORT).show();
         if (startID == - 1 || idxA == idxB) {
             return;
         }

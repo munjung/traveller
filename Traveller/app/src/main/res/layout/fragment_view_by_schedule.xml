@@ -3,15 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll_schedule"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:background="@drawable/tempmg"
         android:fillViewport="true"
         android:layout_gravity="top">
+
+
+            <RelativeLayout
+                android:id="@+id/base_layout_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </RelativeLayout>
+
 
         <!--<RelativeLayout-->
             <!--android:layout_width="wrap_content"-->
@@ -24,12 +32,10 @@
                 <!--android:layout_alignTop="@+id/base_layout_schedule"-->
                 <!--android:layout_alignBottom="@+id/base_layout_schedule"-->
                 <!--android:src="@drawable/schedule_bacground"/>-->
-        <RelativeLayout
-            android:id="@+id/base_layout_schedule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#000000"></RelativeLayout>
+
+
         <!--</RelativeLayout>-->
     </android.support.v4.widget.NestedScrollView>
+
+
 </android.support.design.widget.CoordinatorLayout>

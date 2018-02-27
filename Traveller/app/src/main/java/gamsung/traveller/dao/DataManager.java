@@ -131,6 +131,10 @@ public class DataManager {
 
     public boolean deleteRoute(Integer id){
 
+        if(m_isTransaction){
+            return m_routeManager.deleteRoute(m_db, id);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         boolean result = m_routeManager.deleteRoute(m_db, id);
         m_db.close();
@@ -143,8 +147,12 @@ public class DataManager {
 
     public long insertRoute(Route route){
 
+        if(m_isTransaction){
+            return m_routeManager.insertRoute(m_db, route);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
-        long id = (int)m_routeManager.insertRoute(m_db, route);
+        long id = m_routeManager.insertRoute(m_db, route);
         m_db.close();
         m_db=null;
 
@@ -152,6 +160,10 @@ public class DataManager {
     }
 
     public int updateRoute(Route route){
+
+        if(m_isTransaction){
+            return m_routeManager.updateRoute(m_db, route);
+        }
 
         m_db = m_sqlHelper.getWritableDatabase();
         int count = m_routeManager.updateRoute(m_db, route);
@@ -199,6 +211,10 @@ public class DataManager {
 
     public boolean deleteSpot(Integer id){
 
+        if(m_isTransaction){
+            return m_spotManager.deleteSpot(m_db, id);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         boolean result = m_spotManager.deleteSpot(m_db, id);
         m_db.close();
@@ -208,6 +224,10 @@ public class DataManager {
     }
 
     public long insertSpot(Spot spot){
+
+        if(m_isTransaction){
+            return m_spotManager.insertSpot(m_db, spot);
+        }
 
         m_db = m_sqlHelper.getWritableDatabase();
         long id = m_spotManager.insertSpot(m_db, spot);
@@ -219,6 +239,10 @@ public class DataManager {
 
     public int updateSpot(Spot spot){
 
+        if(m_isTransaction){
+            return m_spotManager.updateSpot(m_db, spot);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         int count = m_spotManager.updateSpot(m_db, spot);
         m_db.close();
@@ -228,6 +252,10 @@ public class DataManager {
     }
 
     public int updateSpotIndex(int spotId, int index){
+
+        if(m_isTransaction){
+            return m_spotManager.updateSpotIndex(m_db, spotId, index);
+        }
 
         m_db = m_sqlHelper.getWritableDatabase();
         int count = m_spotManager.updateSpotIndex(m_db, spotId, index);
@@ -239,14 +267,19 @@ public class DataManager {
 
     public int updateSpotList(ArrayList<Spot> spotList){
 
-        m_db = m_sqlHelper.getWritableDatabase();
-
         int count = 0;
-        for (int i=1; i <= spotList.size(); i++){
+        if(m_isTransaction){
 
-            count += m_spotManager.updateSpot(m_db, spotList.get(i), i);
+            for (int i=0; i < spotList.size(); i++){
+                count += m_spotManager.updateSpot(m_db, spotList.get(i), i);
+            }
+            return count;
         }
 
+        m_db = m_sqlHelper.getWritableDatabase();
+        for (int i=0; i < spotList.size(); i++){
+            count += m_spotManager.updateSpot(m_db, spotList.get(i), i);
+        }
         m_db.close();
         m_db=null;
 
@@ -286,6 +319,10 @@ public class DataManager {
 
     public boolean deletePhoto(Integer id){
 
+        if(m_isTransaction){
+            return m_photoManager.deletePhoto(m_db, id);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         boolean result = m_photoManager.deletePhoto(m_db, id);
         m_db.close();
@@ -295,6 +332,11 @@ public class DataManager {
     }
 
     public long insertPhoto(Photograph photo){
+
+        if(m_isTransaction){
+            return m_photoManager.insertPhoto(m_db, photo);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         long id = m_photoManager.insertPhoto(m_db, photo);
         m_db.close();
@@ -304,6 +346,10 @@ public class DataManager {
     }
 
     public int updatePhoto(Photograph photo){
+
+        if(m_isTransaction){
+            return m_photoManager.updatePhoto(m_db, photo);
+        }
 
         m_db = m_sqlHelper.getWritableDatabase();
         int count = m_photoManager.updatePhoto(m_db, photo);
@@ -321,6 +367,16 @@ public class DataManager {
         m_db=null;
 
         return spotWithCoordinateHashMap;
+    }
+
+    public HashMap<String, Photograph> getPhotoListToStringWithSpot(int spot_id){
+
+        m_db = m_sqlHelper.getWritableDatabase();
+        HashMap<String, Photograph> photographHashMap = m_photoManager.getPhotoListToStringWithSpotID(m_db, spot_id);
+        m_db.close();
+        m_db = null;
+
+        return photographHashMap;
     }
 
     public HashMap<Integer, Photograph> getPhotoListWithRoute(int route_id){
@@ -347,6 +403,10 @@ public class DataManager {
 
     public boolean deleteSearchPlace(Integer id){
 
+        if(m_isTransaction){
+            return m_searchManager.deleteSearchPlace(m_db, id);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         boolean result = m_searchManager.deleteSearchPlace(m_db, id);
         m_db.close();
@@ -357,6 +417,10 @@ public class DataManager {
 
     public long insertSearchPlace(SearchPlace searchPlace){
 
+        if(m_isTransaction){
+            return m_searchManager.insertSearchPlace(m_db, searchPlace);
+        }
+
         m_db = m_sqlHelper.getWritableDatabase();
         long id = m_searchManager.insertSearchPlace(m_db, searchPlace);
         m_db.close();
@@ -366,6 +430,10 @@ public class DataManager {
     }
 
     public int updatePhoto(SearchPlace searchPlace){
+
+        if(m_isTransaction){
+            return m_searchManager.updateSearchPlace(m_db, searchPlace);
+        }
 
         m_db = m_sqlHelper.getWritableDatabase();
         int count = m_searchManager.updateSearchPlace(m_db, searchPlace);

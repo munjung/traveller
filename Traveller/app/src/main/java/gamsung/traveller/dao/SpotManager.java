@@ -38,7 +38,6 @@ public class SpotManager {
     public Spot getLastIndexSpot(SQLiteDatabase db){
         return _getLastIndexSpot(db);
     }
-
         
     public Spot getSpotIDWithIndexID(SQLiteDatabase db, Integer index_id){
         return _getSpotIDWithIndexID(db, index_id);
@@ -47,25 +46,19 @@ public class SpotManager {
     public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(SQLiteDatabase db){
         return _getSpotWithCoordinateListOnRouteID(db);
     }
-
+    
     public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(SQLiteDatabase db, Integer route_id){
         return _getSpotWithCoordinateListOnRouteID(db, route_id);
     }
 
     public boolean deleteSpot(SQLiteDatabase db, Integer id){
 
-        if(!_deleteSpot(db, id))
-            return false;
-
-        return true;
+        return _deleteSpot(db, id);
     }
 
     public boolean deleteSpotWithRouteID(SQLiteDatabase db, Integer route_id){
 
-        if(!_deleteSpotWithRouteID(db, route_id))
-            return false;
-
-        return true;
+        return _deleteSpotWithRouteID(db, route_id);
     }
 
 

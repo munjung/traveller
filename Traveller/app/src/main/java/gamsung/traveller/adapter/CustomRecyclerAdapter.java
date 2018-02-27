@@ -133,10 +133,13 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_off));
         }
 
+
         String memo = _items.get(position).getMemo();
         memo = memo == null ? "" : memo;
+
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
         viewHolder.getTxtMemo().setText(memo);
+
     }
 
 
@@ -218,7 +221,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         private EditText txtMemo;
         private View btnRepresent;
         private CustomTextChangeListener watcher;
-        private Button btnRemoveChild;
+        private ImageButton btnRemoveChild;
 
         public CustomViewHolder(final Context context, View itemView, CustomTextChangeListener watcher) {
             super(itemView);
@@ -227,17 +230,17 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             imageView = (ImageView) itemView.findViewById(R.id.img_viewpager_childimage);
             btnRepresent = itemView.findViewById(R.id.btn_represent_edit_child_item);
-            btnRemoveChild = (Button)itemView.findViewById(R.id.btn_inner_remove_photo_item);
+            btnRemoveChild = (ImageButton)itemView.findViewById(R.id.btn_inner_remove_photo_item);
             txtMemo = (EditText)itemView.findViewById(R.id.txt_memo_edit);
             txtMemo.addTextChangedListener(watcher);
             clickable = (ImageView) itemView.findViewById(R.id.clickableIV);
         }
 
-        public Button getBtnRemoveChild() {
+        public ImageButton getBtnRemoveChild() {
             return btnRemoveChild;
         }
 
-        public void setBtnRemoveChild(Button btnRemoveChild) {
+        public void setBtnRemoveChild(ImageButton btnRemoveChild) {
             this.btnRemoveChild = btnRemoveChild;
         }
         
@@ -289,6 +292,10 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             String memo = editText.getText() == null ? "" : editText.getText().toString();
             _items.get(position).setMemo(memo);
+
+            /*viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
+            viewHolder.getTxtMemo().setText(memo);*/
+
 
             Log.d("watcher", position +  " : " + memo);
         }

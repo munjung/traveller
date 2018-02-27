@@ -3,6 +3,9 @@ package gamsung.traveller.activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -17,10 +20,16 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import org.w3c.dom.Text;
 
@@ -56,6 +65,8 @@ public class TravelViewActivity extends AppCompatActivity {
     private ViewByPhotosFragment viewByPhotosFragment;
     private ViewByScheduleFragment viewByScheduleFragment;
     private android.support.v4.app.Fragment selectedFrag;
+
+    RequestManager mGlideRequestManager;
 
 
     private DataManager dataManager;
@@ -224,7 +235,19 @@ public class TravelViewActivity extends AppCompatActivity {
         return view.getLayoutParams().height;
     }
     private void updateOrdersToDB(int tabSelected){
-        int idx = 0;
+        List<Spot> updatedSpotlist;
+        if (tabSelected == 0) {
+            updatedSpotlist = viewByPhotosFragment.getSpotList();
+        }else{
+            updatedSpotlist = viewByScheduleFragment.getSpotListFromSchedule();
+        }
+        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
+        for (Spot spot : updatedSpotlist){
+            Log.d("Updated spotlist: ", "Spot ID: " + spot.get_id() + ", mission: " + spot.getMission() + "\n");
+        }
+
+
+        /*int idx = 0;
         List<Integer> originalPos, updatedPos;
         if (tabSelected == 0) {
             originalPos = viewByPhotosFragment.getOriginalPos();
@@ -234,25 +257,27 @@ public class TravelViewActivity extends AppCompatActivity {
             originalPos = viewByScheduleFragment.getOriginalPos();
             updatedPos = viewByScheduleFragment.getUpdatedPos();
         }
+
+        int spot_id = 0;
         for (int i : originalPos) {
-            int spot_id = dataManager.getSpotIDWithIndexID(originalPos.get(idx)).get_id();
-            Log.d("At TRAVEL VIEW: ",  "SPOT ID: " + spot_id + " original position id: " + originalPos.get(idx) + " updated position id: " + updatedPos.get(idx) +"\n");
+            spot_id = dataManager.getSpotIDWithIndexID(originalPos.get(idx)).get_id();
             dataManager.updateSpotIndex(spot_id, updatedPos.get(idx++));
+            Log.d("At TRAVEL VIEW: ",  "SPOT ID: " + spot_id + " original position id: " + originalPos.get(idx) + " updated position id: " + updatedPos.get(idx) +"\n");
         }
-
-
-
+*/
 //
-        for (Spot spot : spotList){
-            Log.d("spot idx: ", spot.get_id() + ": " + spot.getIndex_id() + "\n");
-        }
+//        for (Spot spot : spotList){
+//            Log.d("spot idx: ", spot.get_id() + ": " + spot.getIndex_id() + "\n");
+//        }
     }
 
     /*
      * Activity <-> Fragment
      */
 
-
+    public DataManager getDataManager(){
+        return dataManager;
+    }
     public List<Spot> getSpotList(){
         return spotList;
     }
@@ -281,7 +306,7 @@ public class TravelViewActivity extends AppCompatActivity {
         return dataManager.getPhotoListWithSpot(spot_id);
     }
         public List<Spot> refreshSpotList(){
-            Toast.makeText(getApplicationContext(), "Spotlist updated.", Toast.LENGTH_SHORT).show();
+
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
         //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());

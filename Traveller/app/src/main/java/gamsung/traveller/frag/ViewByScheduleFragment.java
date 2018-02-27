@@ -5,18 +5,32 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.ViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,9 +92,21 @@ public class ViewByScheduleFragment extends Fragment {
 
         if (rootView == null) { //if rootview is not loaded, load.
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
-
             layoutBase = rootView.findViewById(R.id.base_layout_schedule);
             scrollView = rootView.findViewById(R.id.scroll_schedule);
+           //ImageView imageView = rootView.findViewById(R.id.imgBack);
+
+
+//            Glide.with(this).load(R.drawable.img_mainbg).asBitmap().centerCrop().into(new SimpleTarget<Bitmap>() {
+//                @Override
+//                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    Drawable drawable = new BitmapDrawable(getResources(), resource);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                        layoutBase.setBackground(drawable);
+//                    }
+//                }
+//            });
+            //Glide.with(this).load(R.drawable.tempmg).centerCrop().into(imageView);
 
             scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true, this);
 
@@ -124,10 +150,6 @@ public class ViewByScheduleFragment extends Fragment {
 
         return rootView;
     }
-    public void notifyOrderChanged(int oldPos, int newPos){
-        int temp = updatedPos.remove(oldPos);
-        updatedPos.add(temp, newPos);
-    }
 
     public List<Integer> getOriginalPos(){
         return originalPos;
@@ -141,7 +163,6 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
             Bundle bundle = new Bundle();
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
-            Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
             i.putExtra("TAG_ACTIVITY", "create");
             i.putExtra("route id", route_id);
             startActivityForResult(i, REQUEST_INIT);
@@ -154,15 +175,12 @@ public class ViewByScheduleFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            //Toast.makeText(rootView.getContext(), "View ID: " + view.getTag(), Toast.LENGTH_SHORT).show();
-
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","create");
             i.putExtra("route id", route_id);
             startActivityForResult(i, REQUEST_ADD);
 
             activity.setChangeMade(true);
-            Toast.makeText(getContext(), activity.getFrameHeight() +".", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -170,7 +188,6 @@ public class ViewByScheduleFragment extends Fragment {
         @Override
         public void onClick(View view) {
             int idx = scheduleService.toListIdx((int)view.getId());
-            Toast.makeText(rootView.getContext(), "Index: " + idx + ", " + spotList.get(idx).getMission(), Toast.LENGTH_SHORT).show();
 
             int view_idx = scheduleService.toListIdx((int)view.getId());
 
@@ -196,7 +213,6 @@ public class ViewByScheduleFragment extends Fragment {
                     int idx_view = scheduleService.toListIdx(view_id);
                     activity.deleteSpotFromDB(scheduleService.listSchedule.get(idx_view).spot_ID);
                     //spotList.remove(scheduleService.toListIdx(scheduleService.listSchedule.get(idx_view).spot_ID)); //temporarily manual deletion of list.
-                    Toast.makeText(getContext(), "Deleted spot ID: " + scheduleService.listSchedule.get(idx_view).spot_ID + " route id: " + route_id, Toast.LENGTH_SHORT).show();
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }
@@ -270,18 +286,15 @@ public class ViewByScheduleFragment extends Fragment {
         }
     }
 
-    public void force_update(){
-        spotList = activity.refreshSpotList();
-        scheduleService.update_spots(spotList);
-        if (scheduleService.listSchedule.size() == 0){
-            scheduleService.load_Spots();
-        }
-        else{
-            int list_total = scheduleService.listSchedule.size() - 1; //minus for the last circle image view
-            int num_added = spotList.size() - list_total;
-            scheduleService.isEditing = false;
-            processAdditionalSchedules(num_added, list_total);
-        }
+    public List<Spot> getSpotListFromSchedule(){
+        return scheduleService.getSpotList();
+    }
+    public String getPlaceName(int placeID){
+        return activity.getSearchPlaceFromDB(placeID);
+    }
+    public void setOrderChanged(){
+        activity.setOrderChanged(true);
+        activity.setChangeMade(true);
     }
 }
 

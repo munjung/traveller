@@ -153,12 +153,15 @@ public class CameraActivity extends AppCompatActivity {
 
                 //set spinner
                 setRouteDropList();
-                setSpotDropList(-1);
 
                 //find nearest spot & set spinner item
                 SpotWithCoordinate spot = findNearestSpot();
                 if(spot != null){
+                    setSpotDropList(spot.getRoute_id());
                     selectNearestSpotItem(spot);
+                }
+                else{
+                    setSpotDropList(-1);
                 }
             }
         });
@@ -288,6 +291,7 @@ public class CameraActivity extends AppCompatActivity {
         if(spotMission != null && spotMission.length() > 0){
             for(int i=0; i<spotSpinner.getAdapter().getCount(); i++){
                 if(spotSpinner.getItemAtPosition(i).toString().equals(spotMission)){
+                    //selection 안먹힘
                     spotSpinner.setSelection(i);
                     break;
                 }
@@ -310,6 +314,8 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                routeName = routeSpinner.getSelectedItem().toString();
+
                 for(Route e : routeHashMap.values()){
                     if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
                         editRouteId = e.get_id();
@@ -317,33 +323,6 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
                 setSpotDropList(editRouteId);
-
-
-//                spotTitleList.clear();
-//                spotTitleList.add(getString(R.string.selectspot));
-//                spotSpinner.setSelection(0);
-//                routeName = routeSpinner.getSelectedItem().toString();
-//
-//                if(!routeSpinner.getSelectedItem().toString().equals(getString(R.string.selectroute))) {
-//
-//                    ArrayList<Route> tempRouteList = new ArrayList<>();
-//                    tempRouteList.addAll(routeList.values());
-//
-//                    int routeId = 0;
-//
-//                    for (Route e : tempRouteList) {
-//                        if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
-//                            routeId = e.get_id();
-//                            editRouteId = routeId;
-//                            tempSpotHashMap = _datamanager.getSpotListWithRouteId(routeId);
-//                            ArrayList<Spot> tempSpotList = new ArrayList<>();
-//                            tempSpotList.addAll(tempSpotHashMap.values());
-//                            for (int i = 0; i < tempSpotList.size(); i++) {
-//                                spotTitleList.add(tempSpotList.get(i).getMission());
-//                            }
-//                        }
-//                    }
-//                }
             }
 
             @Override
@@ -351,6 +330,8 @@ public class CameraActivity extends AppCompatActivity {
 
             }
         });
+
+        routeName = routeSpinner.getSelectedItem().toString();
     }
 
     private void setSpotDropList(int routeId){
@@ -400,6 +381,8 @@ public class CameraActivity extends AppCompatActivity {
             spotSpinner.setAdapter(nAdapter);
             spotSpinner.setSelection(0);
         }
+
+        spotName = spotSpinner.getSelectedItem().toString();
     }
 
 

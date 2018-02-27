@@ -56,9 +56,10 @@
         android:paddingLeft="0dp"
         android:text="The contents goes to here..."
         android:textSize="14dp"
+        android:maxLength="30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toEndOf="@+id/circleimageview_left"
         app:layout_constraintTop_toBottomOf="@+id/title_left"
         app:layout_constraintVertical_bias="0.0" />
@@ -136,9 +137,10 @@
         android:paddingRight="0dp"
         android:text="The contents goes to here"
         android:textSize="14dp"
+        android:maxLength="32"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/circleimageview_right"
-        app:layout_constraintHorizontal_bias="0.92"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_right"
         app:layout_constraintVertical_bias="0.0" />

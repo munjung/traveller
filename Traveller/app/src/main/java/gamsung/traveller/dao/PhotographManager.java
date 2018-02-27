@@ -36,10 +36,7 @@ public class PhotographManager {
 
     public boolean deletePhoto(SQLiteDatabase db, Integer id){
 
-        if(!_deletePhoto(db, id))
-            return false;
-
-        return true;
+        return _deletePhoto(db, id);
     }
 
     public long insertPhoto(SQLiteDatabase db, Photograph photo){
@@ -64,11 +61,13 @@ public class PhotographManager {
         return _getPhotoListWithSpot(db, spot_id);
     }
 
-    public HashMap<Integer, Photograph> getPhotoListWithRoute(SQLiteDatabase db, Integer route_id){
-
-        return _getPhotoListWithRoute(db, route_id);
+    public HashMap<String, Photograph> getPhotoListToStringWithSpotID(SQLiteDatabase db, Integer spot_id){
+        return _getPhotoListToStringWithSpotID(db, spot_id);
     }
 
+    public HashMap<Integer, Photograph> getPhotoListWithRoute(SQLiteDatabase db, Integer route_id){
+        return _getPhotoListWithRoute(db, route_id);
+    }
 
     private HashMap<Integer, Photograph> _getphotoList(SQLiteDatabase db){
 
@@ -194,6 +193,34 @@ public class PhotographManager {
                 photo.setMemo(c.getString(6));
 
                 photoList.put(photo.get_id(), photo);
+            }
+            c.close();
+        }
+
+        return photoList;
+    }
+
+    public HashMap<String, Photograph> _getPhotoListToStringWithSpotID(SQLiteDatabase db, Integer spotID){
+
+        HashMap<String, Photograph> photoList = new HashMap<>();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM " + TABLE_NAME);
+        sb.append(" WHERE " + TableManager.PictureTable.column_spot_id + " = " + spotID);    //이렇게 사용하는게 좋아요
+
+        Cursor c = db.rawQuery(sb.toString(), null);
+        if(c != null){
+            while (c.moveToNext()){
+                Photograph photo = new Photograph();
+                photo.set_id(c.getInt(0));
+                photo.setRoute_id(c.getInt(1));
+                photo.setSpot_id(c.getInt(2));
+                photo.setSearch_id(c.getInt(3));
+                photo.setPath(c.getString(4));
+                if(c.getString(5) != null) photo.setDate(Converter.convertStringToDate(c.getString(5)));
+                photo.setMemo(c.getString(6));
+
+                photoList.put(photo.getPath(), photo);
             }
             c.close();
         }
