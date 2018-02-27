@@ -242,33 +242,10 @@ public class TravelViewActivity extends AppCompatActivity {
             updatedSpotlist = viewByScheduleFragment.getSpotListFromSchedule();
         }
         dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
-        for (Spot spot : updatedSpotlist){
-            Log.d("Updated spotlist: ", "Spot ID: " + spot.get_id() + ", mission: " + spot.getMission() + "\n");
-        }
-
-
-        /*int idx = 0;
-        List<Integer> originalPos, updatedPos;
-        if (tabSelected == 0) {
-            originalPos = viewByPhotosFragment.getOriginalPos();
-            updatedPos = viewByPhotosFragment.getUpdatedPos();
-        }
-        else{
-            originalPos = viewByScheduleFragment.getOriginalPos();
-            updatedPos = viewByScheduleFragment.getUpdatedPos();
-        }
-
-        int spot_id = 0;
-        for (int i : originalPos) {
-            spot_id = dataManager.getSpotIDWithIndexID(originalPos.get(idx)).get_id();
-            dataManager.updateSpotIndex(spot_id, updatedPos.get(idx++));
-            Log.d("At TRAVEL VIEW: ",  "SPOT ID: " + spot_id + " original position id: " + originalPos.get(idx) + " updated position id: " + updatedPos.get(idx) +"\n");
-        }
-*/
-//
-//        for (Spot spot : spotList){
-//            Log.d("spot idx: ", spot.get_id() + ": " + spot.getIndex_id() + "\n");
+//        for (Spot spot : updatedSpotlist){
+//            Log.d("Updated spotlist: ", "Spot ID: " + spot.get_id() + ", mission: " + spot.getMission() + "\n");
 //        }
+
     }
 
     /*
@@ -310,9 +287,9 @@ public class TravelViewActivity extends AppCompatActivity {
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
         //return new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
-        for (Spot spot : spotList){
-            Log.d("SPOTLIST: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
-        }
+//        for (Spot spot : spotList){s
+//            Log.d("SPOTLIST: ", spot.get_id() + ": " + spot.getMission() + ", " + spot.getIndex_id() + "\n");
+//        }
         return spotList; //temporarily
     }
     public void updateSpotFromDB(Spot spot){
@@ -320,14 +297,6 @@ public class TravelViewActivity extends AppCompatActivity {
     }
     public void deleteSpotFromDB(int spot_id){
         dataManager.deleteSpot(spot_id);
-    }
-    public void updateSpotIdx(int oldPos, int newPos){
-        spotList = refreshSpotList();
-        Log.d("Positions: ", "old: " + oldPos + " new: " + newPos);
-        for (Spot spot : spotList) Log.d("Before: ", "ID: " + spot.get_id() + ", indexPos: " + spot.getIndex_id() + "\n");
-        dataManager.updateSpotIndex(oldPos, newPos);
-        spotList = refreshSpotList();
-        for (Spot spot : spotList) Log.d("After: ", "ID: " + spot.get_id() + ", indexPos: " + spot.getIndex_id() + "\n");
     }
     public String getSearchPlaceFromDB(int placeID){
         HashMap<Integer, SearchPlace> placeHashMap = dataManager.getSearchPlaceList();

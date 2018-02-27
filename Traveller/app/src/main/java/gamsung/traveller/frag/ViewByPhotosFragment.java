@@ -36,6 +36,7 @@ import gamsung.traveller.activity.TravelViewActivity;
 import gamsung.traveller.adapter.TimeViewAdapter;
 import gamsung.traveller.dao.DataManager;
 import gamsung.traveller.dao.SpotManager;
+import gamsung.traveller.model.Photograph;
 import gamsung.traveller.model.Spot;
 import gamsung.traveller.util.DebugToast;
 
@@ -125,10 +126,13 @@ public class ViewByPhotosFragment extends Fragment {
         return view;
 
     }
+
     public List<Spot> getSpotList(){
         return  this.spotList;
     }
     TimeViewAdapter.ClickListener clickListener = new TimeViewAdapter.ClickListener() {
+        private ArrayList<Photograph> photoList;
+        private DataManager dataManager;
         @Override
         public void onClickDelete(final int position) {
             final int pos = position;
@@ -165,22 +169,6 @@ public class ViewByPhotosFragment extends Fragment {
             i.putExtra("route id", targetSpot.getRoute_id());
             i.putExtra("spot id", targetSpot.get_id());
             startActivityForResult(i, REQUEST_EDIT);
-//            activity.setChangeMade(true);
-//            spotList.get(position).setMission("Mission edited: " + position);
-//            int spotID = spotList.get(position).get_id();
-//            boolean isExist = false;
-//            activity.updateSpotFromDB(spotList.get(position));
-//            //avoid overlaps
-//            for (int idx : editedSpotID){
-//                if (idx == spotID){
-//                    isExist = true;
-//                    break;
-//                }
-//            }
-//            if (!isExist) editedSpotID.add(spotID);
-//            timeViewAdapter.notifyDataSetChanged();
-//
-//            activity.setChangeMade(true);
         }
 
         @Override
@@ -193,6 +181,7 @@ public class ViewByPhotosFragment extends Fragment {
         public String getPlaceName(int searchID) {
             return activity.getSearchPlaceFromDB(searchID);
         }
+
     };
 
     @Override

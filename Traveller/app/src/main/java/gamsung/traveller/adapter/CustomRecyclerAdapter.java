@@ -89,11 +89,8 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 notifyItemRangeChanged(position, _items.size());
                 notifyDataSetChanged();
                 _clickListener.onClick(view);
-
             }
         });
-
-
 
 
         customViewHolder.getBtnRepresent().setOnClickListener(new View.OnClickListener() {
@@ -109,7 +106,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 //represent button set
                 innerItem = (Button) view.findViewById(R.id.btn_inner_represent_edit_child_item);
                 innerItem.setBackground(_context.getResources().getDrawable(R.drawable.btn_represent_photo_on));
-
             }
         });
 
@@ -139,7 +135,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
         viewHolder.getTxtMemo().setText(memo);
-
     }
 
 
@@ -176,7 +171,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             notifyItemInserted(_items.size()-1);
         }
-
 
         return _items.size();
     }
@@ -292,10 +286,6 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
             String memo = editText.getText() == null ? "" : editText.getText().toString();
             _items.get(position).setMemo(memo);
-
-            /*viewHolder.getTextChangedListener().setUpdatePosition(viewHolder.getAdapterPosition(), viewHolder.getTxtMemo());
-            viewHolder.getTxtMemo().setText(memo);*/
-
 
             Log.d("watcher", position +  " : " + memo);
         }

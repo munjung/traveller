@@ -300,7 +300,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         if (editSpotId > 0) {
 
             photoList = _dataManager.getPhotoListToStringWithSpot(editSpotId);
-            _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(photoList.values()), this);
+            ArrayList<Photograph> photographs = new ArrayList<Photograph>(photoList.values());
+            _adapter = new CustomRecyclerAdapter(this, photographs, this);
+            for(int i=0; i<photographs.size(); i++){
+
+                if(this.picturePath.equals(photographs.get(i).getPath()))
+                    _adapter.set_representedImagePosition(i);
+            }
+
         } else {
             _adapter = new CustomRecyclerAdapter(this, new ArrayList<Photograph>(), this);
         }
@@ -346,6 +353,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
         editSpot.setPicture_path(picturePath);
+        editSpot.setPicture_id(photographId);
 
             ArrayList<Photograph> itemList = _adapter.getItems();
 
@@ -386,6 +394,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setSearch_id(searchID);
         newSpot.setCategory_id(CATEGORY_ID);
         newSpot.setPicture_path(picturePath);
+        newSpot.setPicture_id(photographId);
 
         int spot_id = (int) _dataManager.insertSpot(newSpot);
         if (spot_id > 0) {
@@ -491,12 +500,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
                 picturePath = arguments.getItem().getPath();
-
-                for (int i = 0; i < _recyclerView.getAdapter().getItemCount(); i++) {
-                    picturePath = arguments.getItem().getPath();
-                    _adapter.notifyDataSetChanged();
-                    break;
-                }
+                photographId = arguments.getItem().get_id();
+                _adapter.notifyDataSetChanged();
+                break;
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
                 Log.d("present position: ", arguments.getPosition() + "");
