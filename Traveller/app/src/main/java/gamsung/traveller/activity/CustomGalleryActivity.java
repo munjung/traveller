@@ -52,7 +52,6 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
             fetchGalleryImages();
             setUpGridView();
         }
-
     }
 
     //Init all views
@@ -179,20 +178,17 @@ public class CustomGalleryActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // do your stuff
                 } else {
-                    Toast.makeText(this, "GET_ACCOUNTS Denied",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "permission not granted", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
-                super.onRequestPermissionsResult(requestCode, permissions,
-                        grantResults);
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }

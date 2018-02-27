@@ -196,7 +196,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(this,"실패했다",Toast.LENGTH_SHORT);
+        Toast.makeText(this,"map api connection failed",Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -452,7 +452,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         if (attributedPhoto != null) {
                             // Photo has been loaded, display it.
                             PlacePhoto.setImageBitmap(attributedPhoto.bitmap);
-                            Toast.makeText(getApplicationContext(), attributedPhoto.attribution, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), attributedPhoto.attribution, Toast.LENGTH_SHORT).show();
                             // Display the attribution as HTML content if set.
 
                         }

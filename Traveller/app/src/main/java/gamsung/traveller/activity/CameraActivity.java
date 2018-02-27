@@ -149,19 +149,17 @@ public class CameraActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 changeToSelectMode();
 
-                //set spinner
+                //set default route
                 setRouteDropList();
+                setSpotDropList(-1);
 
                 //find nearest spot & set spinner item
-                SpotWithCoordinate spot = findNearestSpot();
+                SpotWithCoordinate spot = findNearestSpot(-1);
                 if(spot != null){
-                    setSpotDropList(spot.getRoute_id());
-                    selectNearestSpotItem(spot);
-                }
-                else{
-                    setSpotDropList(-1);
+                    selectNearestRouteItem(spot);
                 }
             }
         });
@@ -245,15 +243,18 @@ public class CameraActivity extends AppCompatActivity {
         shadowBackground = (ImageView) findViewById(R.id.shadow_background);
     }
 
-    private SpotWithCoordinate findNearestSpot(){
+    private SpotWithCoordinate findNearestSpot(int routeID){
 
-        HashMap<Integer, SpotWithCoordinate> spotList = _datamanager.getSpotWithCoordinateList();
+        HashMap<Integer, SpotWithCoordinate> spotList = routeID > 0 ? _datamanager.getSpotWithCoordinateListOnRouteID(routeID) : _datamanager.getSpotWithCoordinateList();
         LocationService locationService = LocationService.getInstance(this);
 
         float minDist = Float.MAX_VALUE;
         SpotWithCoordinate nearestSpot = null;    //nearest spot
         Location gpsLocation = locationService.getLocation(); //get current location
         if(!locationService.isAvailable())  //because (turn off GPS and WI-FI) or (no permission)
+            return nearestSpot;
+
+        if(spotList == null)
             return nearestSpot;
 
         for(SpotWithCoordinate spot : spotList.values()){
@@ -272,27 +273,15 @@ public class CameraActivity extends AppCompatActivity {
         return nearestSpot;
     }
 
-    private void selectNearestSpotItem(SpotWithCoordinate spot){
+    private void selectNearestRouteItem(SpotWithCoordinate spot){
 
         int routeId = spot.getRoute_id();
-        String spotMission = spot.getMission();
 
         if(routeId > 0){
             String title = routeHashMap.get(routeId).getTitle();
             for(int i=0; i<routeSpinner.getAdapter().getCount(); i++){
                 if(routeSpinner.getItemAtPosition(i).toString().equals(title)){
                     routeSpinner.setSelection(i);
-                    // *set selection 에서 item selected listener 이벤트가 발생하지 않으면 직접 호출해줘야함
-                    break;
-                }
-            }
-        }
-
-        if(spotMission != null && spotMission.length() > 0){
-            for(int i=0; i<spotSpinner.getAdapter().getCount(); i++){
-                if(spotSpinner.getItemAtPosition(i).toString().equals(spotMission)){
-                    //selection 안먹힘
-                    spotSpinner.setSelection(i);
                     break;
                 }
             }
@@ -314,15 +303,31 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                //set route name
                 routeName = routeSpinner.getSelectedItem().toString();
 
+                //find route spinner's route id
                 for(Route e : routeHashMap.values()){
                     if (e.getTitle().equals(routeSpinner.getSelectedItem().toString())) {
                         editRouteId = e.get_id();
                     }
                 }
 
+                //set spot spinner with route id
                 setSpotDropList(editRouteId);
+
+                //select nearest spot item on spot spinner with route id
+                SpotWithCoordinate spot = findNearestSpot(editRouteId);
+                if(spot != null){
+                    if(spot.getMission() != null && spot.getMission().length() > 0){
+                        for(int i=0; i<spotSpinner.getAdapter().getCount(); i++){
+                            if(spotSpinner.getItemAtPosition(i).toString().equals(spot.getMission())){
+                                spotSpinner.setSelection(i);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             @Override
@@ -346,7 +351,6 @@ public class CameraActivity extends AppCompatActivity {
             }
 
             ArrayAdapter<String> nAdapter = new ArrayAdapter<String>(CameraActivity.this, android.R.layout.simple_spinner_dropdown_item, spotTitleList);
-            //스피너 속성
             spotSpinner = (Spinner) findViewById(R.id.dropDownSpot);
             spotSpinner.setAdapter(nAdapter);
             spotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
