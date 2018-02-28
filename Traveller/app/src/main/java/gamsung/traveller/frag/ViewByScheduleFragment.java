@@ -205,6 +205,7 @@ public class ViewByScheduleFragment extends Fragment {
 
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","create");
+            i.putExtra("spot index", spotList.size());
             i.putExtra("route id", route_id);
             startActivityForResult(i, REQUEST_ADD);
 

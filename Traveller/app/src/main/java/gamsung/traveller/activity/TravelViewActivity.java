@@ -211,6 +211,7 @@ public class TravelViewActivity extends AppCompatActivity {
         }
 //        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
         updateSpotlistToDB((ArrayList<Spot>) updatedSpotlist);
+
     }
 
     /*
@@ -265,7 +266,6 @@ public class TravelViewActivity extends AppCompatActivity {
         SearchPlace searchPlace = placeHashMap.get(placeID);
         return searchPlace.getPlace_address();
     }
-
 }
 class CustomComparator implements Comparator<Spot>{
     @Override

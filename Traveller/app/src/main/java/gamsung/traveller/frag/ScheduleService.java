@@ -398,6 +398,7 @@ public class ScheduleService {
 
     public void setScheduleVisMoved(View view, int idx){ //updated method
         boolean isLeft = getLeftVisbility(idx);
+
         int getVis = listSchedule.get(idx).lines[0].getVisibility(); //여기서 죽는경우도 가끔
         if (isLeft){ //left side on, right side off
             if (getVis == View.VISIBLE) return;

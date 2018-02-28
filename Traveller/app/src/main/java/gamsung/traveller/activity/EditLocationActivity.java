@@ -71,6 +71,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private int editRouteId = -1;
     private String editRotueTitle = "";
     private int editSpotId = -1;
+    private int editSpotIndex = 0;
     public int searchID = -1;
     private int CATEGORY_ID;
     public int photographId;
@@ -100,6 +101,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         if (whatActivity != null) {
             if (whatActivity.equals("create")) {
                 //create spot
+                this.editSpotIndex = intent.getIntExtra("spot index", -1);
                 this.isEdit = false;
             } else if (whatActivity.equals("empty")) {
 
@@ -405,7 +407,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setPicture_id(photographId);
         newSpot.setPicture_path(picturePath);
         
-        int spot_id = (int) _dataManager.insertSpot(newSpot);
+        int spot_id = (int) _dataManager.insertSpot(newSpot, ++editSpotIndex);
         if (spot_id > 0) {
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);
