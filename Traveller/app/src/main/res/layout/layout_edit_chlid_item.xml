@@ -53,8 +53,7 @@
 
     <RelativeLayout android:id="@+id/btn_represent_edit_child_item"
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="5dp">
+        android:layout_height="60dp">
 
         <Button
             android:id="@+id/btn_inner_represent_edit_child_item"
