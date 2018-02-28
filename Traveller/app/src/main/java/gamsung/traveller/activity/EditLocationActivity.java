@@ -115,6 +115,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 //edit spot
                 this.isEdit = true;
                 this.editSpotId = intent.getIntExtra("spot id", -1);
+                this.editSpotIndex = intent.getIntExtra("spot index", -1);
                 if (this.editSpotId < 0) {
                     //error
                     Log.e("edit spot id", "need edit spot id, not -1");
@@ -356,7 +357,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
-
+        editSpot.setIndex_id(editSpotIndex);
             ArrayList<Photograph> itemList = _adapter.getItems();
 
             for (int i = 0; i < itemList.size(); i++) {

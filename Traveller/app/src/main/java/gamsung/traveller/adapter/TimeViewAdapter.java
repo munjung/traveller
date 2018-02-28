@@ -77,6 +77,11 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     public void onViewMoved(int oldPosition, int newPosition) {
 
         Collections.swap(spotList, oldPosition, newPosition);
+        //switch index
+        int temp_idx;
+        temp_idx = spotList.get(oldPosition).getIndex_id();
+        spotList.get(oldPosition).setIndex_id(spotList.get(newPosition).getIndex_id());
+        spotList.get(newPosition).setIndex_id(temp_idx);
         notifyItemMoved(oldPosition, newPosition);
         //notifyDataSetChanged();
         callback.notifyOrderChanged(oldPosition, newPosition);

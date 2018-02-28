@@ -41,8 +41,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
     private boolean isScheduleMoved;
 
     public ScheduleServiceAnimated(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
-                                   RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop, ViewByScheduleFragment fragment) {
-        super(rootView, layoutSingle, scrollView, layoutBase, appContext, spotList, isDragDrop, fragment);
+                                   RelativeLayout layoutBase, Context appContext, boolean isDragDrop, ViewByScheduleFragment fragment) {
+        super(rootView, layoutSingle, scrollView, layoutBase, appContext, isDragDrop, fragment);
         super.dragListener = this.scheduleDragListener;
         clickEditSchedule = null;
         DRAGDROP_ANIMATION_DURATION = 1500;
@@ -243,7 +243,7 @@ public class ScheduleServiceAnimated extends ScheduleService {
 
         for (int idx = 0; idx < listSchedule.size() - 1; idx++){
             View referenceView = listSchedule.get(idx).view;
-            isLeft = getLeftVisbility(idx);
+//            isLeft = getLeftVisbility(idx);
             //listSchedule.get(idx).lines[isLeft ? 1 : 0].setVisibility(View.INVISIBLE);
             if (getLeftVisbility(idx))
                 referenceView.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.GONE);

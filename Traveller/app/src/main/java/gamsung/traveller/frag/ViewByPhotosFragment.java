@@ -54,8 +54,9 @@ public class ViewByPhotosFragment extends Fragment {
     private boolean isOrderChanged;
     private List<Integer> deletedSpotID, editedSpotID;
     private LinearLayoutManager linearLayoutManager;
+    private int last_idx = -1;
     TravelViewActivity activity;
-
+    private static final int RESULT_EDIT = 503;
 
     public List<Integer> getOriginalPos(){
         return originalPos;
@@ -168,13 +169,18 @@ public class ViewByPhotosFragment extends Fragment {
             i.putExtra("TAG_ACTIVITY", "edit");
             i.putExtra("route id", targetSpot.getRoute_id());
             i.putExtra("spot id", targetSpot.get_id());
+            i.putExtra("spot index", targetSpot.getIndex_id());
             startActivityForResult(i, REQUEST_EDIT);
+            last_idx = position;
         }
 
         @Override
         public void notifyOrderChanged(int oldPos, int newPos) {
             activity.setOrderChanged(true);
             activity.setChangeMade(true);
+//            int idx = 0;
+//            for (Spot spot : spotList) spot.setIndex_id(idx++);
+//            timeViewAdapter.refreshSpotlist(spotList);
         }
 
         @Override
@@ -183,13 +189,20 @@ public class ViewByPhotosFragment extends Fragment {
         }
 
     };
-
+    private int getLastSpotIndex(){
+        int idx = 0;
+        for (Spot spot : spotList){
+            if (spot.getIndex_id() > idx) idx = spot.getIndex_id();
+        }
+        return idx;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_EDIT){
+        if (resultCode == RESULT_EDIT){
             spotList = activity.refreshSpotList();
             int spot_id, pos;
+
             try{
                 spot_id = data.getExtras().getInt("spot_id", -1);
             }catch(NullPointerException e){return;}
@@ -197,14 +210,14 @@ public class ViewByPhotosFragment extends Fragment {
             if (spot_id == -1) return; //no spot_id returns => edit fails
 
 
-            pos = 0;
-            for (Spot spot : spotList){ //update DB
-                if (spot.get_id() == spot_id){
-                    activity.updateSpotFromDB(spot);
-                    break;
-                }
-                pos++;
-            }
+//            pos = 0;
+//            for (Spot spot : spotList){ //update DB
+//                if (spot.get_id() == spot_id){
+//                    activity.updateSpotFromDB(spot);
+//                    break;
+//                }
+//                pos++;
+//            }
             boolean isExist = false;
             for (int idx : editedSpotID){ //update editedSpotID, but avoid overlaps
                 if (idx == spot_id){
@@ -216,7 +229,8 @@ public class ViewByPhotosFragment extends Fragment {
 
 //            timeViewAdapter.notifyDataSetChanged();
             timeViewAdapter.refreshSpotlist(spotList);
-            timeViewAdapter.notifyItemChanged(pos);
+//            if (last_idx != -1) timeViewAdapter.notifyItemChanged(last_idx);
+            timeViewAdapter.notifyDataSetChanged();
             activity.setChangeMade(true);
         }
         super.onActivityResult(requestCode, resultCode, data);

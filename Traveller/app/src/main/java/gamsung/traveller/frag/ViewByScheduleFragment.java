@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,7 @@ public class ViewByScheduleFragment extends Fragment {
 //            });
             //
 
-            scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true, this);
+            scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), true, this);
 
             scheduleService.clickEditSchedule = editSchedule;
             scheduleService.clickRemoveSelectedSchedule = clickRemoveSchedule;
@@ -177,7 +178,7 @@ public class ViewByScheduleFragment extends Fragment {
         //
 
         if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
-            scheduleService.update_spots(spotList);
+//            scheduleService.update_spots(spotList);
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
             activity.setOrderChanged(false);
         }
@@ -205,24 +206,29 @@ public class ViewByScheduleFragment extends Fragment {
 
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","create");
-            i.putExtra("spot index", spotList.size());
+            i.putExtra("spot index", getLastSpotIndex() + 1);
             i.putExtra("route id", route_id);
             startActivityForResult(i, REQUEST_ADD);
 
             activity.setChangeMade(true);
         }
     };
-
     View.OnClickListener editSchedule = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
 
             int view_idx = scheduleService.toListIdx((int)view.getId());
-
+            for (Spot spot : spotList){
+                Log.d("Spotlist items: ", "Spot ID: " + spot.get_id());
+            }
+            for (ScheduleService.ListSchedule list : scheduleService.listSchedule){
+                Log.d("List items: ", "List spot ID: " + list.spot_ID + ", view ID: " + list.view.getId());
+            }
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","edit");
             i.putExtra("route id", route_id);
             i.putExtra("spot id", scheduleService.listSchedule.get(view_idx).spot_ID);
+            i.putExtra("spot index", spotList.get(view_idx).getIndex_id());
             startActivityForResult(i, REQUEST_EDIT);
             Toast.makeText(getContext(), "spot id: " + scheduleService.listSchedule.get(view_idx).spot_ID + ", view id: " + view.getId() + ", view idx: " + view_idx, Toast.LENGTH_SHORT).show();
             activity.setChangeMade(true);
@@ -232,14 +238,20 @@ public class ViewByScheduleFragment extends Fragment {
     View.OnClickListener clickRemoveSchedule = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final int view_id = ((View)view.getParent()).getId();
+//            int view_id = ((View)((View)view.getParent())).getId();
+            final View clickedView = (View)view.getParent().getParent();
             AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
             alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     //assumed that the indexes for spotlist and listschedule are synchronized
+//                    int view_id = ((View)(((View)clickedView.getParent()).getId()));
+                    int view_id = clickedView.getId();
                     int idx_view = scheduleService.toListIdx(view_id);
+//                    idx_view = scheduleService.toListIdx((View)((View)clickedView.getParent()).getId());
                     activity.deleteSpotFromDB(scheduleService.listSchedule.get(idx_view).spot_ID);
+                    activity.updateSpotlistToDB((ArrayList<Spot>)spotList);
+//                    spotList.remove(idx_view);
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }
@@ -249,7 +261,7 @@ public class ViewByScheduleFragment extends Fragment {
                         spotList.clear();
                         scheduleService.drawFirstScreen_Coordinator();
                     }
-
+                    spotList = activity.refreshSpotList();
                     activity.setChangeMade(true);
 
                 }
@@ -267,7 +279,7 @@ public class ViewByScheduleFragment extends Fragment {
         @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         spotList = activity.refreshSpotList();
-        scheduleService.update_spots(spotList);
+//        scheduleService.update_spots(spotList);
         if (requestCode == REQUEST_INIT && resultCode == RESULT_CREATE){
             if (spotList.size() > 0) {
                 scheduleService.initSchedule();
@@ -312,7 +324,7 @@ public class ViewByScheduleFragment extends Fragment {
     }
 
     public List<Spot> getSpotListFromSchedule(){
-        return scheduleService.getSpotList();
+        return this.spotList;
     }
     public String getPlaceName(int placeID){
         return activity.getSearchPlaceFromDB(placeID);
@@ -320,6 +332,14 @@ public class ViewByScheduleFragment extends Fragment {
     public void setOrderChanged(){
         activity.setOrderChanged(true);
         activity.setChangeMade(true);
+    }
+
+    private int getLastSpotIndex(){
+        int idx = 0;
+        for (Spot spot : spotList){
+            if (spot.getIndex_id() > idx) idx = spot.getIndex_id();
+        }
+        return idx;
     }
 }
 

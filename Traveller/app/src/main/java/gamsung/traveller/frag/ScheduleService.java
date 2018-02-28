@@ -109,7 +109,7 @@ public class ScheduleService {
     final boolean isDragDrop;
     boolean isEditing;
     private int EMPTY_CIRCLE_BIGGER;
-    private List<Spot> spotList;
+//    public List<Spot> spotList;
     private ViewByScheduleFragment fragment;
 
     ArrayList<ListSchedule> listSchedule = new ArrayList<>();
@@ -123,14 +123,13 @@ public class ScheduleService {
 
 
     public ScheduleService(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
-                           RelativeLayout layoutBase, Context appContext, List<Spot> spotList, boolean isDragDrop, ViewByScheduleFragment fragment) {
+                           RelativeLayout layoutBase, Context appContext, boolean isDragDrop, ViewByScheduleFragment fragment) {
         this.rootView = rootView;
         this.scrollView = scrollView;
         this.layoutSingle = layoutSingle;
         this.layoutBase = layoutBase;
         this.appContext = appContext;
         this.isDragDrop= isDragDrop;
-        this.spotList = spotList;
         //this.longClickedCircle = this.longClickedListener;
         this.dragListener = this.scheduleDragListener;
         BORDER_WIDTH = (int)toDp(appContext, 5);
@@ -170,13 +169,14 @@ public class ScheduleService {
 
         return rtrLine;
     }
-    public void update_spots(List<Spot> spotList){
-        this.spotList = spotList;
-    }
-    public List<Spot> getSpotList (){
-        return this.spotList;
-    }
+//    public void update_spots(List<Spot> spotList){
+//        this.spotList = spotList;
+//    }
+//    public List<Spot> getSpotList (){
+//        return this.spotList;
+//    }
     public void load_Spots(){
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
         int spot_total = spotList.size();
         if (spot_total == 0){
             drawFirstScreen_Coordinator();
@@ -239,6 +239,7 @@ public class ScheduleService {
         return layoutSchedule;
     }
     public void editSchedule(int view_id, int spot_id){
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
         int idx = toListIdx(view_id);
         View editView = listSchedule.get(idx).view;
         Spot editedSpot = null; //불안해서 추가
@@ -449,7 +450,7 @@ public class ScheduleService {
 
     public void moveSchedule(int idxA, int idxB){
         //B 레이아웃을 A로 이동. A + 1 ~ B는 위로 한칸 이동
-
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
         if (idxA == idxB) return; //같을경우 리턴
 
         ListSchedule lsTempA = new ListSchedule(listSchedule.get(idxA).view, listSchedule.get(idxA).circleImage,
@@ -476,8 +477,9 @@ public class ScheduleService {
 
         updateYCoordinateViews(idxA);
         fragment.setOrderChanged();
-        for (ListSchedule list : listSchedule){
-            Log.d("ID pos: ", list.spot_ID + "\n");
+        int index = 0;
+        for (Spot spot : spotList){
+            spot.setIndex_id(index++);
         }
     }
 
@@ -488,6 +490,7 @@ public class ScheduleService {
             if (listSchedule.get(i).view.getId() == unique_ID)
                 return i;
         }
+        Toast.makeText(appContext,"Failed to find the given index.",Toast.LENGTH_SHORT).show();
         return 0; //if failed
     }
 
@@ -498,6 +501,7 @@ public class ScheduleService {
 
     public void initSchedule(){
         //첫 시작화면에서 동그라미 생성. 동그라미 하나는 처음 생성된거 + 빈 동그라미까지
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
         layoutBase.removeAllViews();
 
         CoordinatorLayout.LayoutParams coordParms = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
@@ -617,7 +621,7 @@ public class ScheduleService {
     }
 
     public void updateSchedule(List<Integer> deletedSpotID, List<Integer> editedSpotID, boolean isOrderChanged){
-
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
         if(isOrderChanged){
             int idx = 0;
             for (ListSchedule list: listSchedule){
@@ -636,7 +640,7 @@ public class ScheduleService {
         }
 
         if (deletedSpotID.size() > 0) {
-            int higherIdx = toListIdx(deletedSpotID.get(0));
+            int higherIdx = findScheduleIDFromSpotID(deletedSpotID.get(0));
             for (int id : deletedSpotID) {
                 int view_id = findScheduleIDFromSpotID(id);
                 if (view_id != -1) { //perform removal
