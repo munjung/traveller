@@ -237,6 +237,20 @@ public class DataManager {
         return id;
     }
 
+    public long insertSpot(Spot spot, int index){
+
+        if(m_isTransaction){
+            return m_spotManager.insertSpot(m_db, spot, index);
+        }
+
+        m_db = m_sqlHelper.getWritableDatabase();
+        long id = m_spotManager.insertSpot(m_db, spot, index);
+        m_db.close();
+        m_db=null;
+
+        return id;
+    }
+
     public int updateSpot(Spot spot){
 
         if(m_isTransaction){
@@ -245,20 +259,6 @@ public class DataManager {
 
         m_db = m_sqlHelper.getWritableDatabase();
         int count = m_spotManager.updateSpot(m_db, spot);
-        m_db.close();
-        m_db =null;
-
-        return count;
-    }
-
-    public int updateSpotIndex(int spotId, int index){
-
-        if(m_isTransaction){
-            return m_spotManager.updateSpotIndex(m_db, spotId, index);
-        }
-
-        m_db = m_sqlHelper.getWritableDatabase();
-        int count = m_spotManager.updateSpotIndex(m_db, spotId, index);
         m_db.close();
         m_db =null;
 

@@ -94,13 +94,6 @@ public class SpotManager {
         return count;
     }
 
-    public int updateSpotIndex(SQLiteDatabase db, Integer id, Integer after_index){
-
-        int count = _updateSpotIndex(db, id, after_index);
-
-        return count;
-    }
-
 
 
     private HashMap<Integer, Spot> _getSpotList(SQLiteDatabase db){
@@ -372,21 +365,5 @@ public class SpotManager {
 
         return count;
     }
-
-
-
-
-    private int _updateSpotIndex(SQLiteDatabase db, Integer id, Integer after_index){
-
-        ContentValues values = new ContentValues();
-        values.put(TableManager.SpotTable.column_index_id, after_index);
-
-        String selection = TableManager.SpotTable.column_id + " = " + id;
-        int count = db.update(TABLE_NAME, values, selection, null);
-
-        return count;
-    }
-
-
 }
 
