@@ -95,7 +95,11 @@ public class ViewByScheduleFragment extends Fragment {
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_view_by_schedule, container, false);
             layoutBase = rootView.findViewById(R.id.base_layout_schedule);
             scrollView = rootView.findViewById(R.id.scroll_schedule);
-           //ImageView imageView = rootView.findViewById(R.id.imgBack);
+
+            ImageView imgBack = (ImageView) rootView.findViewById(R.id.img_back);
+            Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
+
+            //ImageView imageView = rootView.findViewById(R.id.imgBack);
 
 
 //            Glide.with(this).load(R.drawable.img_mainbg).asBitmap().centerCrop().into(new SimpleTarget<Bitmap>() {
@@ -107,7 +111,7 @@ public class ViewByScheduleFragment extends Fragment {
 //                    }
 //                }
 //            });
-            //Glide.with(this).load(R.drawable.tempmg).centerCrop().into(imageView);
+            //
 
             scheduleService = new ScheduleServiceAnimated(rootView, R.layout.layout_single_schedule, scrollView, layoutBase, getContext(), spotList, true, this);
 
@@ -140,8 +144,37 @@ public class ViewByScheduleFragment extends Fragment {
                     }
                 }
             });
+
+
             //end of calculation of coordinates.
         }
+
+        else {
+            ImageView imgBack = (ImageView) rootView.findViewById(R.id.img_back);
+            Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
+        }
+
+
+//        Glide.with(this).load(R.drawable.bg_main).asBitmap().into(new SimpleTarget<Bitmap>() {
+//                @Override
+//                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    Drawable drawable = new BitmapDrawable(getResources(), resource);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                        imgBack.setBackground(drawable);
+//                    }
+//                }
+//            });
+
+        //            Glide.with(this).load(R.drawable.img_mainbg).asBitmap().centerCrop().into(new SimpleTarget<Bitmap>() {
+//                @Override
+//                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    Drawable drawable = new BitmapDrawable(getResources(), resource);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                        layoutBase.setBackground(drawable);
+//                    }
+//                }
+//            });
+        //
 
         if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
             scheduleService.update_spots(spotList);
