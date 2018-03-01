@@ -1,8 +1,10 @@
 package gamsung.traveller.activity;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 
@@ -54,6 +56,13 @@ public class HereAppWidget extends AppWidgetProvider {
                 break;
             }
         }
+
+        Intent intent = new Intent(context,CameraActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+
+        views.setOnClickPendingIntent(R.id.widget_camera,pendingIntent);
+
+
         views.setTextViewText(R.id.tvTodowidget,mission);
         views.setTextViewText(R.id.tvTodolocal,place);
         views.setTextViewText(R.id.tvTodonext,nextmisson);

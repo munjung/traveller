@@ -5,11 +5,12 @@
     >
 
     <ImageView
+        android:id="@+id/widget_camera"
         android:layout_width="70dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:src="@drawable/btn_w_camerabg"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_w_camerabg" />
 
     <ImageView
         android:layout_width="37dp"
