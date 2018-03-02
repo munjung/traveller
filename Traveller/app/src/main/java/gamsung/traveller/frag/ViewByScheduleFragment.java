@@ -178,7 +178,7 @@ public class ViewByScheduleFragment extends Fragment {
         //
 
         if (editedSpotID.size() >  0 || deletedSpotID.size() > 0 || isOrderChanged) {
-//            scheduleService.update_spots(spotList);
+            spotList = activity.refreshSpotList();
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
             activity.setOrderChanged(false);
         }

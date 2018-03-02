@@ -165,6 +165,8 @@ public class ViewByPhotosFragment extends Fragment {
         @Override
         public void onClickEdit(int position) {
             Intent i = new Intent(getContext(), EditLocationActivity.class);
+            activity.updateSpotlistToDB((ArrayList<Spot>) spotList);
+
             Spot targetSpot = spotList.get(position);
             i.putExtra("TAG_ACTIVITY", "edit");
             i.putExtra("route id", targetSpot.getRoute_id());

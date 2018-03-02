@@ -640,7 +640,7 @@ public class ScheduleService {
         }
 
         if (deletedSpotID.size() > 0) {
-            int higherIdx = findScheduleIDFromSpotID(deletedSpotID.get(0));
+            int higherIdx = 0;
             for (int id : deletedSpotID) {
                 int view_id = findScheduleIDFromSpotID(id);
                 if (view_id != -1) { //perform removal
