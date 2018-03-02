@@ -383,7 +383,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setPicture_path(picturePath);
 
 
-        //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
         if(_dataManager.updateSpot(editSpot) > 0){
 
                 Intent intent = new Intent();
