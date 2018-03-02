@@ -148,7 +148,7 @@ public class TravelViewActivity extends AppCompatActivity {
         btnGoToPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(TravelViewActivity.this, EditLocationActivity.class);
+                Intent i = new Intent(TravelViewActivity.this, MapClusterActivity.class);
                 startActivity(i);
             }
         });

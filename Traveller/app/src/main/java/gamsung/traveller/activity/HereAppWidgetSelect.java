@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class HereAppWidgetSelect extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.lvwidget);
         listView.setAdapter(widgetAdapter);
         widgetAdapter.addItems(widgetItemArrayList);
+        if(widgetItemArrayList.size()==0){
+            ImageView imageView = findViewById(R.id.ivwno);
+            imageView.setVisibility(View.VISIBLE);
+        }
         final Context context = this;
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -30,8 +30,21 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         />
-    <ListView
-        android:id="@+id/lvwidget"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/lvwidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+
+        <ImageView
+            android:id="@+id/ivwno"
+            android:layout_width="161dp"
+            android:layout_height="162dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/img_nodocument"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 </LinearLayout>
