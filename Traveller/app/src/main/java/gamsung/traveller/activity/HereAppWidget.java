@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 
@@ -27,9 +28,11 @@ import gamsung.traveller.model.Spot;
  * Implementation of App Widget functionality.
  */
 public class HereAppWidget extends AppWidgetProvider {
+    static int routeid=0;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
+
 
         String mission = "미션 정보 없음";
         String place = "위치 정보 없음";
@@ -41,7 +44,7 @@ public class HereAppWidget extends AppWidgetProvider {
 
         Spot curSpot = new Spot();
         HashMap<Integer,Spot> spotlist = new HashMap<>();
-        spotlist = dataManager.getSpotListWithRouteId(1);
+        spotlist = dataManager.getSpotListWithRouteId(routeid);
 
         Iterator it = sortByValue(spotlist).iterator();
         HashMap<Integer,SearchPlace> placelist = dataManager.getSearchPlaceList();
@@ -51,8 +54,10 @@ public class HereAppWidget extends AppWidgetProvider {
             if(dataManager.getPhotoListWithSpot(temp).size()==0) {
                 mission = spotlist.get(temp).getMission();
                 place = placelist.get(spotlist.get(temp).getSearch_id()).getPlace_address();
-                int newtemp = (int)it.next();
-                nextmisson = spotlist.get(newtemp).getMission();
+                if(it.hasNext()) {
+                    int newtemp = (int) it.next();
+                    nextmisson = spotlist.get(newtemp).getMission();
+                }
                 break;
             }
         }
@@ -88,6 +93,13 @@ public class HereAppWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions){
+        routeid = (int)newOptions.get("idsend");
+        updateAppWidget(context, appWidgetManager, appWidgetId);
+    }
+
 
     public static List sortByValue(final Map<Integer,Spot> map){
         List<Integer> list =new ArrayList<>();
