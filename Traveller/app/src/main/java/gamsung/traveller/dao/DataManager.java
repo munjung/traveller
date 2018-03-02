@@ -381,7 +381,7 @@ public class DataManager {
 
     public HashMap<Integer, Photograph> getPhotoListWithRoute(int route_id){
         m_db = m_sqlHelper.getReadableDatabase();
-        HashMap<Integer, Photograph> spotWithCoordinateHashMap = m_photoManager.getPhotoListWithSpot(m_db, route_id);
+        HashMap<Integer, Photograph> spotWithCoordinateHashMap = m_photoManager.getPhotoListWithRoute(m_db, route_id);
         m_db.close();
         m_db=null;
 

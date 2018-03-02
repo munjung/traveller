@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -52,8 +53,20 @@ public class ImageSliderAdapter extends PagerAdapter {
         String item2 = memo.get(position);
 
         if (!TextUtils.isEmpty(item)) {
+            LinearLayout textLinear = (LinearLayout) myImageLayout.findViewById(R.id.linearText);
             Glide.with(context).load(item).into(myImage);
-            memoTextView.setText(item2);
+            if(item2!=null) {
+                if(item2.isEmpty())
+                    textLinear.setVisibility(View.GONE);
+                else {
+                    textLinear.setVisibility(View.VISIBLE);
+                    memoTextView.setText(item2);
+                }
+            }
+        }
+
+        else {
+
         }
 
         view.addView(myImageLayout, 0);

@@ -1,5 +1,6 @@
 package gamsung.traveller.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,13 +37,12 @@ public class MapRecyclerActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(mLayoutmanager);
         mRecyclerView.scrollToPosition(offset);
-        mAdapter = new MapRecyclerAdapter(data);
+        mAdapter = new MapRecyclerAdapter(MapRecyclerActivity.this, data);
         mRecyclerView.setAdapter(mAdapter);
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
 
         data.addAll(photolist);
-
 
     }
 
