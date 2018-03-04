@@ -1,5 +1,6 @@
 package gamsung.traveller.activity;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -277,6 +278,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                         createSpot();
                     }
                     _dataManager.commit();
+
+                    Intent intent = new Intent(EditLocationActivity.this,HereAppWidget.class);
+                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    EditLocationActivity.this.sendBroadcast(intent);
+
                     finish();
                 }
             }
