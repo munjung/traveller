@@ -75,7 +75,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private int editSpotIndex = 0;
     public int searchID = -1;
     private int CATEGORY_ID;
-    public int photographId;
+    public int photographId =-1;
     private String picturePath;
 
     private List<Spot> spotList;
@@ -363,45 +363,48 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
         editSpot.setIndex_id(editSpotIndex);
-            ArrayList<Photograph> itemList = _adapter.getItems();
+        ArrayList<Photograph> itemList = _adapter.getItems();
 
-            for (int i = 0; i < itemList.size(); i++) {
-                Photograph photo = itemList.get(i);
-                photo.setRoute_id(editRouteId);
-                photo.setSpot_id(editSpotId);
-                photo.setSearch_id(searchID);
+        for (int i = 0; i < itemList.size(); i++){
+            Photograph photo = itemList.get(i);
+            photo.setRoute_id(editRouteId);
+            photo.setSpot_id(editSpotId);
+            photo.setSearch_id(searchID);
 
-                if (photoList != null) {
-                    if (photoList.containsKey(photo.getPath()))
-                        _dataManager.updatePhoto(photo);
-                    else {
+            if (photoList != null) {
+                if (photoList.containsKey(photo.getPath()))
+                    _dataManager.updatePhoto(photo);
+                else {
 
-                        _dataManager.insertPhoto(photo);
-                    }
-
-                    if (photographId == 0) {
-                        picturePath = itemList.get(0).getPath();
-                        photographId = itemList.get(0).get_id();
-                    }
-                }
-
-                editSpot.setPicture_id(photographId);
-                editSpot.setPicture_path(picturePath);
-
-
-                if (_dataManager.updateSpot(editSpot) > 0) {
-
-                    Intent intent = new Intent();
-                    intent.putExtra("spot_id", editSpotId);
-                    setResult(EDIT_SPOT, intent);
-                    //finish();
-                    Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
-                } else {
-
-                    Log.e("update spot", "error : not updated");
-                    Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
+                    _dataManager.insertPhoto(photo);
                 }
             }
+        }
+
+        if (_adapter.getItemCount() > 0) {
+            picturePath = itemList.get(0).getPath();
+            photographId = itemList.get(0).get_id();
+        }
+        else{
+            picturePath = "";
+            photographId = -1;
+        }
+
+        editSpot.setPicture_id(photographId);
+        editSpot.setPicture_path(picturePath);
+
+        if (_dataManager.updateSpot(editSpot) > 0) {
+
+            Intent intent = new Intent();
+            intent.putExtra("spot_id", editSpotId);
+            setResult(EDIT_SPOT, intent);
+            //finish();
+            Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
+        } else {
+
+            Log.e("update spot", "error : not updated");
+            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void createSpot() {
@@ -542,13 +545,15 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     View layoutFrame = findViewById(R.id.layout_frame_edit_location);
                     if (layoutFrame.getVisibility() == View.INVISIBLE)
                         layoutFrame.setVisibility(View.VISIBLE);
-                   //_adapter.notifyDataSetChanged();
                 }
 
                 if (_adapter.get_representedImagePosition() == arguments.getPosition()) {
                     _adapter.set_representedImagePosition(-1);
+
+                    photographId = -1;
                     picturePath = "";
                 }
+
                 int photoId = arguments.getItem().get_id();
                 _dataManager.deletePhoto(photoId);
                 _adapter.notifyDataSetChanged();
