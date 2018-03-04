@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import gamsung.traveller.activity.MapRecyclerActivity;
@@ -55,10 +57,11 @@ public class PhotoAdapter extends BaseAdapter {
             view = inf.inflate(layout,null);
         ImageView iv =(ImageView)view.findViewById(R.id.ivphotoplace);
         String imgpath = photoset.get(i);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
-        Bitmap bm = BitmapFactory.decodeFile(imgpath,options);
-        iv.setImageBitmap(bm);
+        Glide.with(context).load(imgpath).into(iv);
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 4;
+//        Bitmap bm = BitmapFactory.decodeFile(imgpath,options);
+//        iv.setImageBitmap(bm);
         final int prepositon = i;
         int width = context.getResources().getDisplayMetrics().widthPixels;
         int celwidth = (width-10)/4;
