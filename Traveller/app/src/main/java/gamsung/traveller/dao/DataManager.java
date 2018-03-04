@@ -65,7 +65,7 @@ public class DataManager {
     }
 
     public void beginTrans(){
-        m_db= m_sqlHelper.beginTrans();
+        m_db = m_sqlHelper.beginTrans();
         m_isTransaction = true;
     }
 
