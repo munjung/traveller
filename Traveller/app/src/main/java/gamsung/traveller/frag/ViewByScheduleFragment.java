@@ -129,10 +129,10 @@ public class ViewByScheduleFragment extends Fragment {
                         numItem = spotList.size();
                         if (numItem == 0) { //draw first screen if data is not available
                             scheduleService.drawFirstScreen_Coordinator();
-                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+                            //layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                         } else { //load if data is available
                             scheduleService.load_Spots();
-                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+                            //layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                         }
                         referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
@@ -141,6 +141,9 @@ public class ViewByScheduleFragment extends Fragment {
 
             //end of calculation of coordinates.
         }
+
+        ImageView imgBack = (ImageView) rootView.findViewById(R.id.img_back);
+        Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
 
         if (editedSpotID.size() > 0 || deletedSpotID.size() > 0 || isOrderChanged) {
             spotList = activity.refreshSpotList();
@@ -152,24 +155,35 @@ public class ViewByScheduleFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
-    }
-
-    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        public void onGlobalLayout() {
-
-            setBackgroundByHeight(layoutBase.getHeight(),rootView.getHeight());
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                layoutBase.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
-            } else {
-                layoutBase.getViewTreeObserver().removeGlobalOnLayoutListener(mGlobalLayoutListener);
-            }
-        }
-    };
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if(rootView!=null)
+//            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+//    }
+//
+//    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+//        public void onGlobalLayout() {
+//
+//            setBackgroundByHeight(layoutBase.getHeight(),rootView.getHeight());
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                layoutBase.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+//            } else {
+//                layoutBase.getViewTreeObserver().removeGlobalOnLayoutListener(mGlobalLayoutListener);
+//            }
+//        }
+//    };
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            layoutBase.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+//        } else {
+//            layoutBase.getViewTreeObserver().removeGlobalOnLayoutListener(mGlobalLayoutListener);
+//        }
+//    }
 
     @Override
     public void onDestroy() {
@@ -248,7 +262,7 @@ public class ViewByScheduleFragment extends Fragment {
                         scheduleService.listSchedule.clear();
                         spotList.clear();
                         scheduleService.drawFirstScreen_Coordinator();
-                        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+//                        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                     }
                     spotList = activity.refreshSpotList();
                     activity.setChangeMade(true);

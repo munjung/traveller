@@ -141,6 +141,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
             public void onClick(View view) {
                 Intent intent = new Intent();
                 SearchPlace searchPlace = new SearchPlace();
+                searchPlace.setPlace_name(bufferplace.getPlace_name());
                 searchPlace.setPlace_address(bufferplace.getPlace_address());
                 searchPlace.setLat(bufferplace.getLat());
                 searchPlace.setLon(bufferplace.getLon());
@@ -229,17 +230,30 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     // 주소 받아오기
                     kaddress = geokoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1);
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
-                    String locality = kaddress.get(0).getLocality();
-                    if(locality==null){
-                        locality="";
+                    Address realaddress = kaddress.get(0);
+                    String Country = "";
+                    if(realaddress.getCountryName()!=null) {
+                        Country = realaddress.getCountryName();
                     }
-                    else{
-                        locality=", "+locality;
+                    String Locality ="";
+                    if(realaddress.getLocality()!=null){
+                        Locality = " "+realaddress.getLocality();
                     }
-                    currentLocationName = kaddress.get(0).getCountryName()+locality;
+                    String Thoroughfare = "";
+                    if(realaddress.getThoroughfare()!=null) {
+                        Thoroughfare = " "+realaddress.getThoroughfare();
+                    }
+                    String SubThorouhfare = "";
+                    if(realaddress.getSubThoroughfare()!=null) {
+                        SubThorouhfare = " "+realaddress.getSubThoroughfare();
+                    }
+
+                    currentLocationName = Country+Locality+Thoroughfare+SubThorouhfare;
+                    bufferplace.setPlace_name(currentLocationName);
                     bufferplace.setPlace_address(currentLocationAddress);
                     bufferplace.setLat(marker.getPosition().latitude);
                     bufferplace.setLon(marker.getPosition().longitude);
+
                 }
             }
         }catch (IOException e) {
@@ -297,6 +311,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     }
 
                     currentLocationName = Country+Locality+Thoroughfare+SubThorouhfare;
+                    bufferplace.setPlace_name(currentLocationName);
                     bufferplace.setPlace_address(currentLocationAddress);
                     bufferplace.setLat(latLng.latitude);
                     bufferplace.setLon(latLng.longitude);
@@ -482,6 +497,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
                         Intent intent = new Intent();
                         SearchPlace nameplace = new SearchPlace();
+                        nameplace.setPlace_name(mPlace.getName().toString());
                         nameplace.setPlace_address(mPlace.getAddress().toString());
                         nameplace.setLat(mPlace.getLatLng().latitude);
                         nameplace.setLon(mPlace.getLatLng().longitude);
