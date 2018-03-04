@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -331,7 +332,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             btnNextPlan.setVisibility(View.VISIBLE);
             memoEdit.requestFocus();
         } else {
-            if (_adapter.getImgPathList().size() > 0) {
+
+           if (_adapter.getImgPathList().size() > 0) {
 
                 Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
                 if (btnAdd.getVisibility() == View.INVISIBLE)
@@ -495,6 +497,14 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == event.KEYCODE_BACK){
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void onClick(View view) {
 
         CustomRecyclerAdapter.ViewHolderClickListenerArguments arguments = _adapter.getViewHolderClickListenerArgs();
@@ -517,14 +527,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
                 Log.d("present position: ", arguments.getPosition() + "");
+
+
                 if (_adapter.get_representedImagePosition() == arguments.getPosition()) {
                     _adapter.set_representedImagePosition(-1);
                     picturePath = "";
                 }
-
                 int photoId = arguments.getItem().get_id();
                 _dataManager.deletePhoto(photoId);
                 _adapter.notifyDataSetChanged();
+
                 break;
         }
     }
