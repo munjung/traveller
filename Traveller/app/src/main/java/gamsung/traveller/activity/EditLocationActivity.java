@@ -91,6 +91,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
 
         _dataManager = DataManager.getInstance(this);
+        _dataManager.beginTrans();
         mbundle = savedInstanceState;
 
         this.registerListener();
@@ -251,8 +252,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
+//                finish();
+                onBackPressed();
+             }
         });
 
         btnSave = (ImageButton) findViewById(R.id.btn_save_edit_location);
@@ -274,7 +276,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     } else {
                         createSpot();
                     }
-
+                    _dataManager.commit();
                     finish();
                 }
             }
@@ -298,6 +300,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         });
     }
+
 
     private void registerRecyclerView() {
 
@@ -368,34 +371,36 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 photo.setSpot_id(editSpotId);
                 photo.setSearch_id(searchID);
 
-            if(photoList != null){
-                if(photoList.containsKey(photo.getPath()))
-                    _dataManager.updatePhoto(photo);
-                else
-                    _dataManager.insertPhoto(photo);
+                if (photoList != null) {
+                    if (photoList.containsKey(photo.getPath()))
+                        _dataManager.updatePhoto(photo);
+                    else {
+
+                        _dataManager.insertPhoto(photo);
+                    }
+
+                    if (photographId == 0) {
+                        picturePath = itemList.get(0).getPath();
+                        photographId = itemList.get(0).get_id();
+                    }
                 }
 
-                if(photographId == 0) {
-                    picturePath = itemList.get(0).getPath();
-                    photographId = itemList.get(0).get_id();
+                editSpot.setPicture_id(photographId);
+                editSpot.setPicture_path(picturePath);
+
+
+                if (_dataManager.updateSpot(editSpot) > 0) {
+
+                    Intent intent = new Intent();
+                    intent.putExtra("spot_id", editSpotId);
+                    setResult(EDIT_SPOT, intent);
+                    //finish();
+                    Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
+                } else {
+
+                    Log.e("update spot", "error : not updated");
+                    Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
                 }
-            }
-
-        editSpot.setPicture_id(photographId);
-        editSpot.setPicture_path(picturePath);
-
-
-        if(_dataManager.updateSpot(editSpot) > 0){
-
-                Intent intent = new Intent();
-                intent.putExtra("spot_id", editSpotId);
-                setResult(EDIT_SPOT, intent);
-                //finish();
-                Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
-            } else {
-
-                Log.e("update spot", "error : not updated");
-                Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
             }
     }
 
@@ -498,10 +503,15 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == event.KEYCODE_BACK){
+        if (keyCode == event.KEYCODE_BACK) {
 
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void onBackPressed() {
+        _dataManager.rollback();
+        finish();
     }
 
     @Override
