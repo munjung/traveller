@@ -538,6 +538,12 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
                 Log.d("present position: ", arguments.getPosition() + "");
 
+                if(_adapter.getItemCount()==0){
+                    View layoutFrame = findViewById(R.id.layout_frame_edit_location);
+                    if (layoutFrame.getVisibility() == View.INVISIBLE)
+                        layoutFrame.setVisibility(View.VISIBLE);
+                   //_adapter.notifyDataSetChanged();
+                }
 
                 if (_adapter.get_representedImagePosition() == arguments.getPosition()) {
                     _adapter.set_representedImagePosition(-1);
