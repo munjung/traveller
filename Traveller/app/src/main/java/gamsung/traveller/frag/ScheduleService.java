@@ -565,6 +565,7 @@ public class ScheduleService {
 
         layoutBase.addView(emptyCircle);
         emptyCircle.setOnClickListener(startScheduling);
+        layoutBase.setGravity(RelativeLayout.CENTER_IN_PARENT);
 
         TextView textView = new TextView(appContext);
         textView.setText("첫 일정을\n등록해 주세요!");
