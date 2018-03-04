@@ -141,6 +141,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
             public void onClick(View view) {
                 Intent intent = new Intent();
                 SearchPlace searchPlace = new SearchPlace();
+                searchPlace.setPlace_name(bufferplace.getPlace_name());
                 searchPlace.setPlace_address(bufferplace.getPlace_address());
                 searchPlace.setLat(bufferplace.getLat());
                 searchPlace.setLon(bufferplace.getLon());
@@ -496,6 +497,7 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
                         Intent intent = new Intent();
                         SearchPlace nameplace = new SearchPlace();
+                        nameplace.setPlace_name(mPlace.getName().toString());
                         nameplace.setPlace_address(mPlace.getAddress().toString());
                         nameplace.setLat(mPlace.getLatLng().latitude);
                         nameplace.setLon(mPlace.getLatLng().longitude);
