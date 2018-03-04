@@ -24,19 +24,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
-                <RelativeLayout
+                <ImageView
+                    android:src = "@drawable/btn_home"
                     android:id="@+id/btn_home_travle_view"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp">
-
-                    <Button
-                        android:layout_width="24dp"
-                        android:layout_height="22dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/btn_home" />
-                </RelativeLayout>
+                    android:layout_width="22dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="15dp"/>
 
                 <TextView
                     android:id="@+id/txt_title_travel_view"
@@ -49,21 +43,14 @@
                     android:textColor="#5d5d5d"
                     android:textSize="15.2sp" />
 
-                <RelativeLayout
+                <ImageView
                     android:id="@+id/btn_goto_picture_travle_view"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="20dp">
-
-                    <Button
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/a_btn" />
-
-                </RelativeLayout>
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="14dp"
+                    android:src="@drawable/a_btn" />
 
             </RelativeLayout>
 

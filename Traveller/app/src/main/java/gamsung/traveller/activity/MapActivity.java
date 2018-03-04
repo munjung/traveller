@@ -148,11 +148,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                 intent.putExtra("placeID",searchPlace.get_id());
                 setResult(MAP_SELECTED,intent);
                 finish();
-                /**
-                 * 지원님 여기에요
-                 *
-                 *
-                 */
             }
         });
         bt.setOnClickListener(new Button.OnClickListener() {
@@ -266,6 +261,9 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
         mMap.clear();
         List<Address> address;
         List<Address> kaddress;
+
+
+
         TextView tvname = findViewById(R.id.tvselname);
         String currentLocationAddress = "주소 정보 없음";
         String currentLocationName = "장소 정보 없음";
@@ -280,14 +278,25 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                     // 주소 받아오기
                     kaddress = geokoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();
-                    String locality = kaddress.get(0).getLocality();
-                    if(locality==null){
-                        locality="";
+                    Address realaddress = kaddress.get(0);
+                    String Country = "";
+                    if(realaddress.getCountryName()!=null) {
+                        Country = realaddress.getCountryName();
                     }
-                    else{
-                        locality=", "+locality;
+                    String Locality ="";
+                    if(realaddress.getLocality()!=null){
+                        Locality = " "+realaddress.getLocality();
                     }
-                    currentLocationName = kaddress.get(0).getCountryName()+locality;
+                    String Thoroughfare = "";
+                    if(realaddress.getThoroughfare()!=null) {
+                        Thoroughfare = " "+realaddress.getThoroughfare();
+                    }
+                    String SubThorouhfare = "";
+                    if(realaddress.getSubThoroughfare()!=null) {
+                        SubThorouhfare = " "+realaddress.getSubThoroughfare();
+                    }
+
+                    currentLocationName = Country+Locality+Thoroughfare+SubThorouhfare;
                     bufferplace.setPlace_address(currentLocationAddress);
                     bufferplace.setLat(latLng.latitude);
                     bufferplace.setLon(latLng.longitude);
@@ -298,7 +307,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
 
             e.printStackTrace();
         }
-
         Marker lcmarker = mMap.addMarker(new MarkerOptions().position(latLng));
         TextView tvlongclick = findViewById(R.id.tvSelectAddress);
         tvlongclick.setText(currentLocationAddress);
@@ -481,11 +489,6 @@ public class MapActivity extends BaseMapActivity implements OnMapReadyCallback, 
                         intent.putExtra("placeID",nameplace.get_id());
                         setResult(MAP_SELECTED,intent);
                         finish();
-                        /**
-                         * 지원님 여기에요
-                         *
-                         *
-                          */
 
 
                     }

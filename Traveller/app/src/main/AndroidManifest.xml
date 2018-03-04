@@ -51,9 +51,12 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.CameraActivity"
-            android:screenOrientation="sensor" />
+        <activity android:name=".activity.CameraActivity">
+            android:screenOrientation="sensor"
+            <intent-filter>
+                <action android:name="android.intent.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.EmptyTravelActivity" />
         <activity android:name=".activity.MapRecyclerActivity" />
         <activity android:name=".activity.GridInClusterActivity" />
@@ -61,12 +64,19 @@
         <receiver android:name=".activity.HereAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="gamsung.traveller.andriod.appwidget.CLICK" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/here_app_widget_info" />
         </receiver>
+
+        <activity android:name=".activity.HereAppWidgetSelect">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

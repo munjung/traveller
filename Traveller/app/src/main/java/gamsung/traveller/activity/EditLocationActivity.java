@@ -71,6 +71,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private int editRouteId = -1;
     private String editRotueTitle = "";
     private int editSpotId = -1;
+    private int editSpotIndex = 0;
     public int searchID = -1;
     private int CATEGORY_ID;
     public int photographId;
@@ -100,6 +101,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         if (whatActivity != null) {
             if (whatActivity.equals("create")) {
                 //create spot
+                this.editSpotIndex = intent.getIntExtra("spot index", -1);
                 this.isEdit = false;
             } else if (whatActivity.equals("empty")) {
 
@@ -113,6 +115,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 //edit spot
                 this.isEdit = true;
                 this.editSpotId = intent.getIntExtra("spot id", -1);
+                this.editSpotIndex = intent.getIntExtra("spot index", -1);
                 if (this.editSpotId < 0) {
                     //error
                     Log.e("edit spot id", "need edit spot id, not -1");
@@ -354,7 +357,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setMission(memoEdit.getText().toString());
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
-
+        editSpot.setIndex_id(editSpotIndex);
             ArrayList<Photograph> itemList = _adapter.getItems();
 
             for (int i = 0; i < itemList.size(); i++) {
@@ -380,7 +383,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setPicture_path(picturePath);
 
 
-        //여기 if문으로 현재 들어갈 수가 없다 너무 슬퍼
         if(_dataManager.updateSpot(editSpot) > 0){
 
                 Intent intent = new Intent();
@@ -405,7 +407,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         newSpot.setPicture_id(photographId);
         newSpot.setPicture_path(picturePath);
         
-        int spot_id = (int) _dataManager.insertSpot(newSpot);
+        int spot_id = (int) _dataManager.insertSpot(newSpot, ++editSpotIndex);
         if (spot_id > 0) {
             Intent intent = new Intent(); //
             intent.putExtra("spot_id", spot_id);

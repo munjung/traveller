@@ -1,7 +1,9 @@
 package gamsung.traveller.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +33,7 @@ import gamsung.traveller.R;
 import gamsung.traveller.activity.CustomGalleryActivity;
 import gamsung.traveller.activity.ImageSliderActivity;
 import gamsung.traveller.model.Photograph;
+import gamsung.traveller.model.Spot;
 
 /**
  * Created by jekan on 2018-02-10.
@@ -79,16 +82,32 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         //사진 삭제 버튼을 눌렀을 때
         customViewHolder.getBtnRemoveChild().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                int position = customViewHolder.getAdapterPosition();
-                _args.setPosition(position);
-                _args.setItem(_items.get(position));
-                _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE);
-                _items.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, _items.size());
-                notifyDataSetChanged();
-                _clickListener.onClick(view);
+            public void onClick(final View view) {
+
+                AlertDialog.Builder alert_delete = new AlertDialog.Builder(_context);
+                alert_delete.setMessage("사진을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        int position = customViewHolder.getAdapterPosition();
+                        _args.setPosition(position);
+                        _args.setItem(_items.get(position));
+                        _args.setReturnType(ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE);
+                        _items.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, _items.size());
+                        notifyDataSetChanged();
+                        _clickListener.onClick(view);
+
+                    }
+                }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                AlertDialog alert = alert_delete.create();
+                alert.show();
             }
         });
 
@@ -237,7 +256,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         public void setBtnRemoveChild(ImageButton btnRemoveChild) {
             this.btnRemoveChild = btnRemoveChild;
         }
-        
+
 
         public ImageView getImageView(){
             return imageView;
@@ -328,6 +347,5 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
         }
     }
 }
-
 
 

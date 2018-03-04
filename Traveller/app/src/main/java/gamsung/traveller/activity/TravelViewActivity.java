@@ -148,7 +148,7 @@ public class TravelViewActivity extends AppCompatActivity {
         btnGoToPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(TravelViewActivity.this, EditLocationActivity.class);
+                Intent i = new Intent(TravelViewActivity.this, MapClusterActivity.class);
                 startActivity(i);
             }
         });
@@ -211,6 +211,7 @@ public class TravelViewActivity extends AppCompatActivity {
         }
 //        dataManager.updateSpotList((ArrayList<Spot>) updatedSpotlist);
         updateSpotlistToDB((ArrayList<Spot>) updatedSpotlist);
+
     }
 
     /*
@@ -265,7 +266,6 @@ public class TravelViewActivity extends AppCompatActivity {
         SearchPlace searchPlace = placeHashMap.get(placeID);
         return searchPlace.getPlace_address();
     }
-
 }
 class CustomComparator implements Comparator<Spot>{
     @Override

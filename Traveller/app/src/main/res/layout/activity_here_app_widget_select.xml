@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="gamsung.traveller.activity.HereAppWidgetSelect">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+        <ImageView
+            android:src="@drawable/btn_w_cancle"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="27dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="위젯설정"
+            android:textColor="#212121"
+            android:textSize="15.2sp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    
+    <ImageView
+        android:src="@drawable/w_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/lvwidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+
+        <ImageView
+            android:id="@+id/ivwno"
+            android:layout_width="161dp"
+            android:layout_height="162dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/img_nodocument"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>
