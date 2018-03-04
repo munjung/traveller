@@ -36,7 +36,7 @@ public class HereAppWidget extends AppWidgetProvider {
 
         String mission = "미션 정보 없음";
         String place = "위치 정보 없음";
-        String nextmisson = "다음 장소 정보 없음";
+        String nextmisson = "다음 미션 정보 없음";
         DataManager dataManager = DataManager.getInstance(context);
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object

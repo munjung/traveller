@@ -52,6 +52,14 @@ public class CalendarFragment extends Fragment {
     }
 
     public void setSelectedDates(Date goDate, Date backDate){
+
+        Date today = new Date();
+        if(goDate.getTime() < today.getTime()) {
+
+            Calendar nextYear = Calendar.getInstance();
+            nextYear.add(Calendar.YEAR, 1);
+            calendar.init(goDate, nextYear.getTime()).inMode(CalendarPickerView.SelectionMode.RANGE);
+        }
         calendar.selectDate(goDate);
         calendar.selectDate(backDate);
     }
