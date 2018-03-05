@@ -62,7 +62,6 @@ public class ViewByScheduleFragment extends Fragment {
     private static final int RESULT_EDIT = 503;
     private static final int RESULT_CREATE = 502;
 
-    private static final int RESULT_ADD = 4;
     private int route_id;
     private List<Integer> originalPos = new ArrayList<>();
     private List<Integer> updatedPos = new ArrayList<>();
@@ -139,9 +138,7 @@ public class ViewByScheduleFragment extends Fragment {
                     }
                 }
             });
-
             //end of calculation of coordinates.
-
         }
 
         ImageView imgBack = (ImageView) rootView.findViewById(R.id.img_back);
@@ -211,19 +208,19 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
 
             int view_idx = scheduleService.toListIdx((int)view.getId());
-            for (Spot spot : spotList){
-                Log.d("Spotlist items: ", "Spot ID: " + spot.get_id());
-            }
-            for (ScheduleService.ListSchedule list : scheduleService.listSchedule){
-                Log.d("List items: ", "List spot ID: " + list.spot_ID + ", view ID: " + list.view.getId());
-            }
+//            for (Spot spot : spotList){
+//                Log.d("Spotlist items: ", "Spot ID: " + spot.get_id());
+//            }
+//            for (ScheduleService.ListSchedule list : scheduleService.listSchedule){
+//                Log.d("List items: ", "List spot ID: " + list.spot_ID + ", view ID: " + list.view.getId());
+//            }
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","edit");
             i.putExtra("route id", route_id);
             i.putExtra("spot id", scheduleService.listSchedule.get(view_idx).spot_ID);
             i.putExtra("spot index", spotList.get(view_idx).getIndex_id());
             startActivityForResult(i, REQUEST_EDIT);
-            Toast.makeText(getContext(), "spot id: " + scheduleService.listSchedule.get(view_idx).spot_ID + ", view id: " + view.getId() + ", view idx: " + view_idx, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "spot id: " + scheduleService.listSchedule.get(view_idx).spot_ID + ", view id: " + view.getId() + ", view idx: " + view_idx, Toast.LENGTH_SHORT).show();
             activity.setChangeMade(true);
         }
     };
@@ -249,14 +246,15 @@ public class ViewByScheduleFragment extends Fragment {
                         scheduleService.removeSchedule(view_id);
                     }
                     else{
-                        layoutBase.removeAllViews();
-                        scheduleService.listSchedule.clear();
-                        spotList.clear();
-//                        scheduleService.drawFirstScreen_Coordinator();
-                        activity.destroyPhotosFragment();
-                        activity.destroyScheduleFragment();
-                        activity.showEmptyTravelActivity();
-                        rootView = null;
+                        activity.restartActivity();
+//                        layoutBase.removeAllViews();
+//                        scheduleService.listSchedule.clear();
+//                        spotList.clear();
+////                        scheduleService.drawFirstScreen_Coordinator();
+//                        activity.destroyPhotosFragment();
+//                        activity.destroyScheduleFragment();
+//                        activity.showEmptyTravelActivity();
+//                        rootView = null;
 //                        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                     }
                     spotList = activity.refreshSpotList();

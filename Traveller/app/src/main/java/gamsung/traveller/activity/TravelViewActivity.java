@@ -1,26 +1,11 @@
 package gamsung.traveller.activity;
 
-import android.app.Fragment;
-import android.content.Context;
+
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.DragEvent;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,6 +35,7 @@ import gamsung.traveller.model.SearchPlace;
 import gamsung.traveller.model.Spot;
 
 import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID;
+import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE;
 
 public class TravelViewActivity extends AppCompatActivity {
 
@@ -60,6 +46,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_TO_EMPTY_ITEM = 101;
     private static final int REQUEST_CODE_TO_CAMERA = 102;
+    private static final int EDIT_CANCELED = 501;
 
     private View btnGoToPicture, btnHome;
     private ImageButton btnCamera;
@@ -86,15 +73,12 @@ public class TravelViewActivity extends AppCompatActivity {
                 //isChangeMade = true;
                 //viewByScheduleFragment.force_update();
                 implementEvents();
-                if (last_tab_pos == 0) getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
-                else getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByPhotosFragment).commit();
-                if(resultCode == RESULT_OK){
-                    //준규가 마법을 부릴 edit Location 리턴 결과
-        //            add item (refresh)
-        //            viewByScheduleFragment
-        //            viewByPhotosFragment
+
+                if(resultCode != RESULT_CANCELED){
+                    if (last_tab_pos == 0) getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
+                    else getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByPhotosFragment).commit();
                 }
-                else
+                else finish();
                 break;
             case REQUEST_CODE_TO_CAMERA:
                 viewByPhotosFragment.forceUpdate();
@@ -102,14 +86,15 @@ public class TravelViewActivity extends AppCompatActivity {
         }
     }
 
-    public void destroyScheduleFragment(){
-        getSupportFragmentManager().beginTransaction().remove(viewByScheduleFragment).commit();
-    }
-    public void destroyPhotosFragment(){
-        getSupportFragmentManager().beginTransaction().remove(viewByPhotosFragment).commit();
-    }
 
-
+    public void restartActivity(){
+        finish();
+//        onDestroy();
+        Intent intent = new Intent(this, TravelViewActivity.class);
+        intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route_id);
+        intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route_title);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +106,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         route_id = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
-        route_title = intent.getStringExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
+        route_title = intent.getStringExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
         spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
 
         findViews();
@@ -267,10 +252,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         return spotList;
     }
-    public void removeRootviewFromScheduleFragment(){
-        viewByScheduleFragment = null;
-        viewByScheduleFragment = new ViewByScheduleFragment();
-    }
+
     public void updateSpotFromDB(Spot spot){
         dataManager.updateSpot(spot);
     }

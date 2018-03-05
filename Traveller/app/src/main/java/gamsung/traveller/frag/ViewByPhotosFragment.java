@@ -154,10 +154,7 @@ public class ViewByPhotosFragment extends Fragment {
                     timeViewAdapter.notifyItemRangeRemoved(0, spotList.size());
                     activity.setChangeMade(true);
                     if (spotList.size() == 0) {
-                        activity.removeRootviewFromScheduleFragment();
-                        activity.destroyScheduleFragment();
-                        activity.destroyPhotosFragment();
-                        activity.showEmptyTravelActivity();
+                        activity.restartActivity();
                     }
                     //timeViewAdapter.notifyDataSetChanged();
                 }
@@ -190,9 +187,6 @@ public class ViewByPhotosFragment extends Fragment {
         public void notifyOrderChanged(int oldPos, int newPos) {
             activity.setOrderChanged(true);
             activity.setChangeMade(true);
-//            int idx = 0;
-//            for (Spot spot : spotList) spot.setIndex_id(idx++);
-//            timeViewAdapter.refreshSpotlist(spotList);
         }
 
         @Override

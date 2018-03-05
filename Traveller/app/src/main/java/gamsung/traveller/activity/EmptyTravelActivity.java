@@ -43,11 +43,6 @@ public class EmptyTravelActivity extends AppCompatActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                Intent i = new Intent(EmptyTravelActivity.this, EditLocationActivity.class);
-//                i.putExtra("TAG_ACTIVITY", "create");
-//                i.putExtra("route id", routeId);
-//                startActivity(i);
                 setResult(RESULT_OK);
                 finish();
             }

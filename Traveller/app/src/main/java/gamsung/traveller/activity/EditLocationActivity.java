@@ -79,7 +79,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     public int photographId =-1;
     private String picturePath;
 
-    private List<Spot> spotList;
     private HashMap<String, Photograph> photoList;
     private DataManager _dataManager;
 
@@ -90,6 +89,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
+
+        setResult(RESULT_CANCELED);
 
         _dataManager = DataManager.getInstance(this);
         _dataManager.beginTrans();
@@ -143,6 +144,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         this.visibleOperationForEditMode();
 
     }
+
+
 
     private void registerListener() {
 
@@ -506,6 +509,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
         if (requestCode == REQUEST_CODE_EMPTY && resultCode == RESULT_CANCELED) {
             //empty에서 취소
+            _dataManager.rollback();
             finish();
         }
     }

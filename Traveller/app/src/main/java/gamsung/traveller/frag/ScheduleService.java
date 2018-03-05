@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatImageView;
@@ -21,7 +20,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -490,7 +488,7 @@ public class ScheduleService {
             if (listSchedule.get(i).view.getId() == unique_ID)
                 return i;
         }
-        Toast.makeText(appContext,"Failed to find the given index.",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(appContext,"Failed to find the given index.",Toast.LENGTH_SHORT).show();
         return 0; //if failed
     }
 
@@ -684,7 +682,7 @@ public class ScheduleService {
         for (int idx = startIdx; idx < list_total; idx++){
             View circleImage = listSchedule.get(idx).circleImage;
             if (circleImage == null){
-                Toast.makeText(appContext, "Error: Null circle image detected.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(appContext, "Error: Null circle image detected.", Toast.LENGTH_LONG).show();
                 continue;
             }
             isLeft = getLeftVisbility(idx);
