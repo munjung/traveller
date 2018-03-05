@@ -53,11 +53,13 @@ import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE
 
 public class TravelViewActivity extends AppCompatActivity {
 
+
     /**
      * 준규가 다 만들어줄 9,13화면
      */
 
     private static final int REQUEST_CODE_TO_EMPTY_ITEM = 101;
+    private static final int REQUEST_CODE_TO_CAMERA = 102;
 
     private View btnGoToPicture, btnHome;
     private ImageButton btnCamera;
@@ -66,13 +68,11 @@ public class TravelViewActivity extends AppCompatActivity {
     private ViewByScheduleFragment viewByScheduleFragment;
     private android.support.v4.app.Fragment selectedFrag;
 
-    RequestManager mGlideRequestManager;
-
 
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged = false, isChangeMade = false;
-    private int route_id;
+    private int route_id, last_tab_pos = 0;
     private String route_title;
     private List<Spot> spotList;
 
@@ -86,7 +86,8 @@ public class TravelViewActivity extends AppCompatActivity {
                 //isChangeMade = true;
                 //viewByScheduleFragment.force_update();
                 implementEvents();
-                getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
+                if (last_tab_pos == 0) getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
+                else getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByPhotosFragment).commit();
                 if(resultCode == RESULT_OK){
                     //준규가 마법을 부릴 edit Location 리턴 결과
         //            add item (refresh)
@@ -95,8 +96,20 @@ public class TravelViewActivity extends AppCompatActivity {
                 }
                 else
                 break;
+            case REQUEST_CODE_TO_CAMERA:
+                viewByPhotosFragment.forceUpdate();
+                break;
         }
     }
+
+    public void destroyScheduleFragment(){
+        getSupportFragmentManager().beginTransaction().remove(viewByScheduleFragment).commit();
+    }
+    public void destroyPhotosFragment(){
+        getSupportFragmentManager().beginTransaction().remove(viewByPhotosFragment).commit();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,11 +128,7 @@ public class TravelViewActivity extends AppCompatActivity {
 
         if(spotList.size() == 0){
             //등록된 일정이 없는 경우, edit location으로 직행
-            Intent editLocationIntent = new Intent(this, EditLocationActivity.class);
-            editLocationIntent.putExtra("route id", route_id);
-            editLocationIntent.putExtra("route title", route_title);
-            editLocationIntent.putExtra("TAG_ACTIVITY", "empty");
-            startActivityForResult(editLocationIntent, REQUEST_CODE_TO_EMPTY_ITEM);
+            showEmptyTravelActivity();
         }
         else{
             implementEvents();
@@ -129,11 +138,16 @@ public class TravelViewActivity extends AppCompatActivity {
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
 
-        //findViews();
-//        implementEvents();
-
-//        getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit(); //set the schedule_fragment as the default
     }
+
+    public void showEmptyTravelActivity(){
+        Intent editLocationIntent = new Intent(this, EditLocationActivity.class);
+        editLocationIntent.putExtra("route id", route_id);
+        editLocationIntent.putExtra("route title", route_title);
+        editLocationIntent.putExtra("TAG_ACTIVITY", "empty");
+        startActivityForResult(editLocationIntent, REQUEST_CODE_TO_EMPTY_ITEM);
+    }
+
 
     private void findViews(){ //find friends
         btnGoToPicture = findViewById(R.id.btn_goto_picture_travle_view);
@@ -167,14 +181,14 @@ public class TravelViewActivity extends AppCompatActivity {
         tabsTravel.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int pos = tab.getPosition();
+                last_tab_pos = tab.getPosition();
 
-                if (pos == 0)
+                if (last_tab_pos  == 0)
                     selectedFrag = viewByScheduleFragment;
-                else if (pos == 1)
+                else if (last_tab_pos  == 1)
                     selectedFrag = viewByPhotosFragment;
 
-                if (isOrderChanged) updateOrdersToDB(pos);
+                if (isOrderChanged) updateOrdersToDB(last_tab_pos);
                 getSupportFragmentManager().beginTransaction().replace(R.id.containerTravelView, selectedFrag).commit();
                 getSupportFragmentManager().beginTransaction().addToBackStack(null);
 
@@ -196,7 +210,7 @@ public class TravelViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(TravelViewActivity.this, CameraActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE_TO_CAMERA);
             }
         });
 
@@ -250,10 +264,12 @@ public class TravelViewActivity extends AppCompatActivity {
     public List<Spot> refreshSpotList(){
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
-//        for (Spot spot : spotList){
-//            Log.d("Refreshed SpotList: ", "spot id: " + spot.get_id() + ", spot mission: " + spot.getMission() + "\n");
-//        }
+
         return spotList;
+    }
+    public void removeRootviewFromScheduleFragment(){
+        viewByScheduleFragment = null;
+        viewByScheduleFragment = new ViewByScheduleFragment();
     }
     public void updateSpotFromDB(Spot spot){
         dataManager.updateSpot(spot);
@@ -264,7 +280,7 @@ public class TravelViewActivity extends AppCompatActivity {
     public String getSearchPlaceFromDB(int placeID){
         HashMap<Integer, SearchPlace> placeHashMap = dataManager.getSearchPlaceList();
         SearchPlace searchPlace = placeHashMap.get(placeID);
-        return searchPlace.getPlace_address();
+        return searchPlace.getPlace_name();
     }
 }
 class CustomComparator implements Comparator<Spot>{

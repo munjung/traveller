@@ -66,7 +66,7 @@ public class ViewByScheduleFragment extends Fragment {
     private int route_id;
     private List<Integer> originalPos = new ArrayList<>();
     private List<Integer> updatedPos = new ArrayList<>();
-    ViewGroup rootView;
+    public ViewGroup rootView;
     NestedScrollView scrollView;
     RelativeLayout layoutBase; //layout where lists are being drawn on
     ScheduleServiceAnimated scheduleService;
@@ -115,31 +115,34 @@ public class ViewByScheduleFragment extends Fragment {
             scheduleService.createNewSchedule = createNewSchedule;
 
             //draw referenceView for coordinate information
-            LayoutInflater layoutInflater = (LayoutInflater) rootView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layoutSchedule = layoutInflater.inflate(R.layout.layout_single_schedule, null);
-            layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-            layoutBase.addView(layoutSchedule);
-            referenceView = layoutSchedule;
-            referenceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() { //some unnecessary calls are made here
-                    int numItem;
-                    if (scheduleService.initCoordInformation(referenceView)) {
-                        layoutBase.removeView(referenceView);
-                        numItem = spotList.size();
-                        if (numItem == 0) { //draw first screen if data is not available
-                            scheduleService.drawFirstScreen_Coordinator();
-                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
-                        } else { //load if data is available
-                            scheduleService.load_Spots();
-                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+
+                LayoutInflater layoutInflater = (LayoutInflater) rootView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View layoutSchedule = layoutInflater.inflate(R.layout.layout_single_schedule, null);
+                layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                layoutBase.addView(layoutSchedule);
+                referenceView = layoutSchedule;
+                referenceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() { //some unnecessary calls are made here
+                        int numItem;
+                        if (scheduleService.initCoordInformation(referenceView)) {
+                            layoutBase.removeView(referenceView);
+                            numItem = spotList.size();
+                            if (numItem == 0) { //draw first screen if data is not available
+                                scheduleService.drawFirstScreen_Coordinator();
+                                layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+                            } else { //load if data is available
+                                scheduleService.load_Spots();
+                                layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+                            }
+                            referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         }
-                        referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
-                }
-            });
+                });
 
             //end of calculation of coordinates.
+
+
         }
 
         if (editedSpotID.size() > 0 || deletedSpotID.size() > 0 || isOrderChanged) {
@@ -173,6 +176,7 @@ public class ViewByScheduleFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        activity.updateSpotlistToDB((ArrayList<Spot>) spotList);
         super.onDestroy();
     }
 
@@ -228,7 +232,7 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
 //            int view_id = ((View)((View)view.getParent())).getId();
             final View clickedView = (View)view.getParent().getParent();
-            AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
+            final AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
             alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -247,8 +251,12 @@ public class ViewByScheduleFragment extends Fragment {
                         layoutBase.removeAllViews();
                         scheduleService.listSchedule.clear();
                         spotList.clear();
-                        scheduleService.drawFirstScreen_Coordinator();
-                        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+//                        scheduleService.drawFirstScreen_Coordinator();
+                        activity.destroyPhotosFragment();
+                        activity.destroyScheduleFragment();
+                        activity.showEmptyTravelActivity();
+                        rootView = null;
+//                        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                     }
                     spotList = activity.refreshSpotList();
                     activity.setChangeMade(true);

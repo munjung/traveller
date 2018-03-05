@@ -71,15 +71,19 @@ public class ViewByPhotosFragment extends Fragment {
             }
             updatedPos.add(originalPos.get(idx));
         }
-//        for (int temp : updatedPos) Log.d("AT getUPDATEDPOS: ", "UPDATED POS: " + te);\
-        for (int idx = 0; idx < originalPos.size(); idx++){
-            Log.d("AT getUPDATEDPOS: ", "ORIGINAL POS: " + originalPos.get(idx) + ", UPDATED POS: " + updatedPos.get(idx));
-        }
+////        for (int temp : updatedPos) Log.d("AT getUPDATEDPOS: ", "UPDATED POS: " + te);\
+//        for (int idx = 0; idx < originalPos.size(); idx++){
+//            Log.d("AT getUPDATEDPOS: ", "ORIGINAL POS: " + originalPos.get(idx) + ", UPDATED POS: " + updatedPos.get(idx));
+//        }
         return updatedPos;
     }
 
 
-
+    @Override
+    public void onDestroy() { //update order when being destoryed
+        activity.updateSpotlistToDB((ArrayList<Spot>) spotList);
+        super.onDestroy();
+    }
 
     private void updateLists(){
         spotList = activity.refreshSpotList();
@@ -138,7 +142,7 @@ public class ViewByPhotosFragment extends Fragment {
         public void onClickDelete(final int position) {
             final int pos = position;
             final Spot targetSpot = spotList.get(pos);
-            AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
+            final AlertDialog.Builder alert_delete = new AlertDialog.Builder(getContext());
             alert_delete.setMessage("일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -149,6 +153,12 @@ public class ViewByPhotosFragment extends Fragment {
                     timeViewAdapter.notifyItemRemoved(pos);
                     timeViewAdapter.notifyItemRangeRemoved(0, spotList.size());
                     activity.setChangeMade(true);
+                    if (spotList.size() == 0) {
+                        activity.removeRootviewFromScheduleFragment();
+                        activity.destroyScheduleFragment();
+                        activity.destroyPhotosFragment();
+                        activity.showEmptyTravelActivity();
+                    }
                     //timeViewAdapter.notifyDataSetChanged();
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -191,19 +201,13 @@ public class ViewByPhotosFragment extends Fragment {
         }
 
     };
-    private int getLastSpotIndex(){
-        int idx = 0;
-        for (Spot spot : spotList){
-            if (spot.getIndex_id() > idx) idx = spot.getIndex_id();
-        }
-        return idx;
-    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == RESULT_EDIT){
             spotList = activity.refreshSpotList();
-            int spot_id, pos;
+            int spot_id;
 
             try{
                 spot_id = data.getExtras().getInt("spot_id", -1);
@@ -212,14 +216,6 @@ public class ViewByPhotosFragment extends Fragment {
             if (spot_id == -1) return; //no spot_id returns => edit fails
 
 
-//            pos = 0;
-//            for (Spot spot : spotList){ //update DB
-//                if (spot.get_id() == spot_id){
-//                    activity.updateSpotFromDB(spot);
-//                    break;
-//                }
-//                pos++;
-//            }
             boolean isExist = false;
             for (int idx : editedSpotID){ //update editedSpotID, but avoid overlaps
                 if (idx == spot_id){
@@ -236,6 +232,12 @@ public class ViewByPhotosFragment extends Fragment {
             activity.setChangeMade(true);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void forceUpdate(){
+        spotList = activity.refreshSpotList();
+        timeViewAdapter.refreshSpotlist(spotList);
+        timeViewAdapter.notifyDataSetChanged();
     }
 }
 

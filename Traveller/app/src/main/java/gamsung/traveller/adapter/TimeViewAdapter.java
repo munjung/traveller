@@ -127,6 +127,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         /*Load images */
         ArrayList<Photograph> photoList = new ArrayList<>(dataManager.getPhotoListWithSpot(spotList.get(position).get_id()).values());
         int photoTotal = photoList.size();
+        if (photoTotal > 10) photoTotal = 10;
         for (int idx = 0; idx < photoTotal; idx++){//if saved photos exist, load.d
             String pic_path = photoList.get(idx).getPath();
 //            if (photoList.get(idx).get_id() == spotList.get(position).getPicture_id())
