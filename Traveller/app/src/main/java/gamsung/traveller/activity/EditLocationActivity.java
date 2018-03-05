@@ -1,5 +1,6 @@
 package gamsung.traveller.activity;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -74,7 +76,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     private int editSpotIndex = 0;
     public int searchID = -1;
     private int CATEGORY_ID;
-    public int photographId;
+    public int photographId =-1;
     private String picturePath;
 
     private List<Spot> spotList;
@@ -90,6 +92,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
 
         _dataManager = DataManager.getInstance(this);
+        _dataManager.beginTrans();
         mbundle = savedInstanceState;
 
         this.registerListener();
@@ -250,8 +253,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
+//                finish();
+                onBackPressed();
+             }
         });
 
         btnSave = (ImageButton) findViewById(R.id.btn_save_edit_location);
@@ -273,6 +277,11 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                     } else {
                         createSpot();
                     }
+                    _dataManager.commit();
+
+                    Intent intent = new Intent(EditLocationActivity.this,HereAppWidget.class);
+                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    EditLocationActivity.this.sendBroadcast(intent);
 
                     finish();
                 }
@@ -297,6 +306,7 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         });
     }
+
 
     private void registerRecyclerView() {
 
@@ -331,7 +341,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             btnNextPlan.setVisibility(View.VISIBLE);
             memoEdit.requestFocus();
         } else {
-            if (_adapter.getImgPathList().size() > 0) {
+
+           if (_adapter.getImgPathList().size() > 0) {
 
                 Button btnAdd = findViewById(R.id.btn_add_photo_edit_location);
                 if (btnAdd.getVisibility() == View.INVISIBLE)
@@ -358,43 +369,48 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         editSpot.setSearch_id(searchID);
         editSpot.setCategory_id(CATEGORY_ID);
         editSpot.setIndex_id(editSpotIndex);
-            ArrayList<Photograph> itemList = _adapter.getItems();
+        ArrayList<Photograph> itemList = _adapter.getItems();
 
-            for (int i = 0; i < itemList.size(); i++) {
-                Photograph photo = itemList.get(i);
-                photo.setRoute_id(editRouteId);
-                photo.setSpot_id(editSpotId);
-                photo.setSearch_id(searchID);
+        for (int i = 0; i < itemList.size(); i++){
+            Photograph photo = itemList.get(i);
+            photo.setRoute_id(editRouteId);
+            photo.setSpot_id(editSpotId);
+            photo.setSearch_id(searchID);
 
-            if(photoList != null){
-                if(photoList.containsKey(photo.getPath()))
+            if (photoList != null) {
+                if (photoList.containsKey(photo.getPath()))
                     _dataManager.updatePhoto(photo);
-                else
+                else {
+
                     _dataManager.insertPhoto(photo);
                 }
-
-                if(photographId == 0) {
-                    picturePath = itemList.get(0).getPath();
-                    photographId = itemList.get(0).get_id();
-                }
             }
+        }
+
+        if (_adapter.getItemCount() > 0) {
+            picturePath = itemList.get(0).getPath();
+            photographId = itemList.get(0).get_id();
+        }
+        else{
+            picturePath = "";
+            photographId = -1;
+        }
 
         editSpot.setPicture_id(photographId);
         editSpot.setPicture_path(picturePath);
 
+        if (_dataManager.updateSpot(editSpot) > 0) {
 
-        if(_dataManager.updateSpot(editSpot) > 0){
+            Intent intent = new Intent();
+            intent.putExtra("spot_id", editSpotId);
+            setResult(EDIT_SPOT, intent);
+            //finish();
+            Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
+        } else {
 
-                Intent intent = new Intent();
-                intent.putExtra("spot_id", editSpotId);
-                setResult(EDIT_SPOT, intent);
-                //finish();
-                Toast.makeText(EditLocationActivity.this, "변경되었습니다.", Toast.LENGTH_LONG).show();
-            } else {
-
-                Log.e("update spot", "error : not updated");
-                Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
-            }
+            Log.e("update spot", "error : not updated");
+            Toast.makeText(EditLocationActivity.this, "error: not updated", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void createSpot() {
@@ -495,6 +511,19 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_BACK) {
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void onBackPressed() {
+        _dataManager.rollback();
+        finish();
+    }
+
+    @Override
     public void onClick(View view) {
 
         CustomRecyclerAdapter.ViewHolderClickListenerArguments arguments = _adapter.getViewHolderClickListenerArgs();
@@ -517,14 +546,24 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REMOVE:
                 Log.d("present position: ", arguments.getPosition() + "");
+
+                if(_adapter.getItemCount()==0){
+                    View layoutFrame = findViewById(R.id.layout_frame_edit_location);
+                    if (layoutFrame.getVisibility() == View.INVISIBLE)
+                        layoutFrame.setVisibility(View.VISIBLE);
+                }
+
                 if (_adapter.get_representedImagePosition() == arguments.getPosition()) {
                     _adapter.set_representedImagePosition(-1);
+
+                    photographId = -1;
                     picturePath = "";
                 }
 
                 int photoId = arguments.getItem().get_id();
                 _dataManager.deletePhoto(photoId);
                 _adapter.notifyDataSetChanged();
+
                 break;
         }
     }

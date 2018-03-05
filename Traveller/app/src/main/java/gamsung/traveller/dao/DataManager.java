@@ -65,7 +65,7 @@ public class DataManager {
     }
 
     public void beginTrans(){
-        m_db= m_sqlHelper.beginTrans();
+        m_db = m_sqlHelper.beginTrans();
         m_isTransaction = true;
     }
 
@@ -90,6 +90,10 @@ public class DataManager {
     //route data interface
     public HashMap<Integer, Route> getRouteList(){
 
+        if(m_isTransaction){
+            return m_routeManager.getRouteList(m_db);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Route> routeHashMap = m_routeManager.getRouteList(m_db);
         m_db.close();
@@ -99,6 +103,10 @@ public class DataManager {
     }
 
     public Route getRouteWithID(int id){
+
+        if(m_isTransaction){
+            return m_routeManager.getRouteWithID(m_db, id);
+        }
 
         m_db = m_sqlHelper.getReadableDatabase();
         Route route = m_routeManager.getRouteWithID(m_db, id);
@@ -110,6 +118,10 @@ public class DataManager {
 
     public HashMap<Integer, Route> getRouteHasToday(){
 
+        if(m_isTransaction){
+            return m_routeManager.getRouteHasToday(m_db);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Route> routeHashMap = m_routeManager.getRouteHasToday(m_db);
         m_db.close();
@@ -120,6 +132,10 @@ public class DataManager {
 
     //검색 글자 포함한 route반환
     public HashMap<Integer, Route> getRouteWithSearch(String search_word){
+
+        if(m_isTransaction){
+            return m_routeManager.getRouteWithSearch(m_db, search_word);
+        }
 
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Route> routeHashMap = m_routeManager.getRouteWithSearch(m_db, search_word);
@@ -178,6 +194,10 @@ public class DataManager {
 
     public HashMap<Integer, Spot> getSpotList(){
 
+        if(m_isTransaction){
+            return m_spotManager.getSpotList(m_db);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Spot> spotHashMap = m_spotManager.getSpotList(m_db);
         m_db.close();
@@ -189,6 +209,10 @@ public class DataManager {
 
     public HashMap<Integer, Spot> getSpotListWithRouteId(int routeId){
 
+        if(m_isTransaction){
+            return m_spotManager.getSpotListWithRouteId(m_db, routeId);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Spot> spotHashMap = m_spotManager.getSpotListWithRouteId(m_db, routeId);
         m_db.close();
@@ -199,6 +223,10 @@ public class DataManager {
 
 
     public Spot getSpotIDWithIndexID(int index_id){
+
+        if(m_isTransaction){
+            return m_spotManager.getSpotIDWithIndexID(m_db, index_id);
+        }
 
         m_db = m_sqlHelper.getReadableDatabase();
         Spot spot = m_spotManager.getSpotIDWithIndexID(m_db, index_id);
@@ -289,6 +317,10 @@ public class DataManager {
 
     public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateList(){
 
+        if(m_isTransaction){
+            return m_spotManager.getSpotWithCoordinateList(m_db);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, SpotWithCoordinate> spotWithCoordinateHashMap = m_spotManager.getSpotWithCoordinateList(m_db);
         m_db.close();
@@ -298,6 +330,10 @@ public class DataManager {
     }
 
     public HashMap<Integer, SpotWithCoordinate> getSpotWithCoordinateListOnRouteID(int routeId){
+
+        if(m_isTransaction){
+            return m_spotManager.getSpotWithCoordinateListOnRouteID(m_db, routeId);
+        }
 
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, SpotWithCoordinate> spotWithCoordinateHashMap = m_spotManager.getSpotWithCoordinateListOnRouteID(m_db, routeId);
@@ -309,6 +345,11 @@ public class DataManager {
 
     //photograph data interface
     public HashMap<Integer, Photograph> getPhotoList(){
+
+        if(m_isTransaction){
+            return m_photoManager.getPhotoList(m_db);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Photograph> photographHashMap = m_photoManager.getPhotoList(m_db);
         m_db.close();
@@ -361,6 +402,9 @@ public class DataManager {
 
     public HashMap<Integer, Photograph> getPhotoListWithSpot(int spot_id){
 
+        if(m_isTransaction){
+            return m_photoManager.getPhotoListWithSpot(m_db, spot_id);
+        }
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Photograph> spotWithCoordinateHashMap = m_photoManager.getPhotoListWithSpot(m_db, spot_id);
         m_db.close();
@@ -371,6 +415,9 @@ public class DataManager {
 
     public HashMap<String, Photograph> getPhotoListToStringWithSpot(int spot_id){
 
+        if(m_isTransaction){
+            return m_photoManager.getPhotoListToStringWithSpotID(m_db, spot_id);
+        }
         m_db = m_sqlHelper.getWritableDatabase();
         HashMap<String, Photograph> photographHashMap = m_photoManager.getPhotoListToStringWithSpotID(m_db, spot_id);
         m_db.close();
@@ -380,6 +427,11 @@ public class DataManager {
     }
 
     public HashMap<Integer, Photograph> getPhotoListWithRoute(int route_id){
+
+        if(m_isTransaction){
+            return m_photoManager._getPhotoListWithRoute(m_db, route_id);
+        }
+
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, Photograph> spotWithCoordinateHashMap = m_photoManager.getPhotoListWithRoute(m_db, route_id);
         m_db.close();
@@ -392,6 +444,10 @@ public class DataManager {
     //search place data interface
 
     public HashMap<Integer, SearchPlace> getSearchPlaceList(){
+
+        if(m_isTransaction){
+            return m_searchManager.getSearchPlaceList(m_db);
+        }
 
         m_db = m_sqlHelper.getReadableDatabase();
         HashMap<Integer, SearchPlace> searchPlaceHashMap = m_searchManager.getSearchPlaceList(m_db);

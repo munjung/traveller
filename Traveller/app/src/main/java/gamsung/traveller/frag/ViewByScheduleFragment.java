@@ -116,35 +116,36 @@ public class ViewByScheduleFragment extends Fragment {
 
             //draw referenceView for coordinate information
 
-                LayoutInflater layoutInflater = (LayoutInflater) rootView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layoutSchedule = layoutInflater.inflate(R.layout.layout_single_schedule, null);
-                layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                layoutBase.addView(layoutSchedule);
-                referenceView = layoutSchedule;
-                referenceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() { //some unnecessary calls are made here
-                        int numItem;
-                        if (scheduleService.initCoordInformation(referenceView)) {
-                            layoutBase.removeView(referenceView);
-                            numItem = spotList.size();
-                            if (numItem == 0) { //draw first screen if data is not available
-                                scheduleService.drawFirstScreen_Coordinator();
-                                layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
-                            } else { //load if data is available
-                                scheduleService.load_Spots();
-                                layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
-                            }
-                            referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            LayoutInflater layoutInflater = (LayoutInflater) rootView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layoutSchedule = layoutInflater.inflate(R.layout.layout_single_schedule, null);
+            layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            layoutBase.addView(layoutSchedule);
+            referenceView = layoutSchedule;
+            referenceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() { //some unnecessary calls are made here
+                    int numItem;
+                    if (scheduleService.initCoordInformation(referenceView)) {
+                        layoutBase.removeView(referenceView);
+                        numItem = spotList.size();
+                        if (numItem == 0) { //draw first screen if data is not available
+                            scheduleService.drawFirstScreen_Coordinator();
+//                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+                        } else { //load if data is available
+                            scheduleService.load_Spots();
+    //                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                         }
+                        referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
-                });
+                }
+            });
 
             //end of calculation of coordinates.
 
-
         }
 
+        ImageView imgBack = (ImageView) rootView.findViewById(R.id.img_back);
+        Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
         if (editedSpotID.size() > 0 || deletedSpotID.size() > 0 || isOrderChanged) {
             spotList = activity.refreshSpotList();
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
@@ -155,24 +156,24 @@ public class ViewByScheduleFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
-    }
-
-    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        public void onGlobalLayout() {
-
-            setBackgroundByHeight(layoutBase.getHeight(),rootView.getHeight());
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                layoutBase.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
-            } else {
-                layoutBase.getViewTreeObserver().removeGlobalOnLayoutListener(mGlobalLayoutListener);
-            }
-        }
-    };
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+//    }
+////
+////    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+////        public void onGlobalLayout() {
+////
+////            setBackgroundByHeight(layoutBase.getHeight(),rootView.getHeight());
+////
+////            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+////                layoutBase.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+////            } else {
+////                layoutBase.getViewTreeObserver().removeGlobalOnLayoutListener(mGlobalLayoutListener);
+////            }
+////        }
+////    };
 
     @Override
     public void onDestroy() {
@@ -267,12 +268,12 @@ public class ViewByScheduleFragment extends Fragment {
 
                 }
             });
-        AlertDialog alert = alert_delete.create();
-        alert.show();
+            AlertDialog alert = alert_delete.create();
+            alert.show();
         }
     };
 
-        @Override
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         spotList = activity.refreshSpotList();
 //        scheduleService.update_spots(spotList);
@@ -291,7 +292,7 @@ public class ViewByScheduleFragment extends Fragment {
             int num_added = spotList.size() - list_total;
             scheduleService.isEditing = false;
             processAdditionalSchedules(num_added, list_total);
-            }
+        }
         else if (resultCode == RESULT_EDIT){
             int spot_id;
             try {
@@ -337,36 +338,36 @@ public class ViewByScheduleFragment extends Fragment {
         }
         return idx;
     }
-
-    public void setBackgroundByHeight(int height, int rootHeight) {
-
-        TopCropImageView imgBack = rootView.findViewById(R.id.img_back);
-        ViewGroup.LayoutParams imgParams = imgBack.getLayoutParams();
-
-        if(rootHeight  < fragmentMatchParentSize)
-            rootHeight = fragmentMatchParentSize;
-
-        if (spotList.size() > 0) {
-            if (height > rootHeight) {
-                imgParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                imgParams.height = height;
-            } else {
-                imgParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                imgParams.height = rootHeight;
-            }
-
-            imgBack.setLayoutParams(imgParams);
-            imgBack.setScaleType(ImageView.ScaleType.MATRIX);
-
-            imgBack.setVisibility(View.VISIBLE);
-            Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
-        }
-
-        else {
-            imgBack.setVisibility(View.GONE);
-        }
-
-    }
+//
+//    public void setBackgroundByHeight(int height, int rootHeight) {
+//
+//        TopCropImageView imgBack = rootView.findViewById(R.id.img_back);
+//        ViewGroup.LayoutParams imgParams = imgBack.getLayoutParams();
+//
+//        if(rootHeight  < fragmentMatchParentSize)
+//            rootHeight = fragmentMatchParentSize;
+//
+//        if (spotList.size() > 0) {
+//            if (height > rootHeight) {
+//                imgParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//                imgParams.height = height;
+//            } else {
+//                imgParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//                imgParams.height = rootHeight;
+//            }
+//
+//            imgBack.setLayoutParams(imgParams);
+//            imgBack.setScaleType(ImageView.ScaleType.MATRIX);
+//
+//            imgBack.setVisibility(View.VISIBLE);
+//            Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
+//        }
+//
+//        else {
+//            imgBack.setVisibility(View.GONE);
+//        }
+//
+//    }
 
 }
 

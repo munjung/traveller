@@ -484,6 +484,16 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             //change image delete button
             viewHolder.getBtnDeleteImage().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete));
         }
+        else{
+            Glide.with(_context).load("").into(viewHolder.imageView);
+
+            //show picture button
+            viewHolder.getBtnGoToPicture().setVisibility(View.INVISIBLE);
+            //show shadow image
+            viewHolder.getLayoutShadow().setVisibility(View.INVISIBLE);
+            //change image delete button
+            viewHolder.getBtnDeleteImage().setBackground(_context.getResources().getDrawable(R.drawable.btn_delete_2));
+        }
     }
 
     @Override
