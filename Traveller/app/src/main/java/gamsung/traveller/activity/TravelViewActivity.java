@@ -2,10 +2,12 @@ package gamsung.traveller.activity;
 
 
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -54,7 +56,7 @@ public class TravelViewActivity extends AppCompatActivity {
     private ViewByPhotosFragment viewByPhotosFragment;
     private ViewByScheduleFragment viewByScheduleFragment;
     private android.support.v4.app.Fragment selectedFrag;
-
+    private View layoutFrame;
 
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
@@ -62,7 +64,7 @@ public class TravelViewActivity extends AppCompatActivity {
     private int route_id, last_tab_pos = 0;
     private String route_title;
     private List<Spot> spotList;
-
+    private int frameHeight;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -139,8 +141,11 @@ public class TravelViewActivity extends AppCompatActivity {
         btnHome = findViewById(R.id.btn_home_travle_view);
         textTitle = findViewById(R.id.txt_title_travel_view);
 
+        layoutFrame = findViewById(R.id.containerTravelView);
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
+
+        layoutFrame.getViewTreeObserver().addOnGlobalLayoutListener(frameLayoutListener);
     }
 
     private void implementEvents(){
@@ -213,9 +218,22 @@ public class TravelViewActivity extends AppCompatActivity {
 
     }
 
+    private ViewTreeObserver.OnGlobalLayoutListener frameLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            frameHeight = layoutFrame.getHeight();
+
+            layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListener);
+
+        }
+    };
+
     /*
      * Activity <-> Fragment
      */
+    public int getFrameHeight(){
+        return frameHeight;
+    }
     public void updateSpotlistToDB(ArrayList<Spot> spotList){
         dataManager.updateSpotList(spotList);
     }
@@ -249,8 +267,8 @@ public class TravelViewActivity extends AppCompatActivity {
     public List<Spot> refreshSpotList(){
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
-
         return spotList;
+
     }
 
     public void updateSpotFromDB(Spot spot){

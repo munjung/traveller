@@ -74,7 +74,8 @@ public class ViewByScheduleFragment extends Fragment {
     private List<Integer> deletedSpotID, editedSpotID;
     private boolean isOrderChanged;
     private TravelViewActivity activity;
-    private int fragmentMatchParentSize;
+    private TopCropImageView imgBack;
+
 
 
     private void updateLists(){
@@ -95,7 +96,6 @@ public class ViewByScheduleFragment extends Fragment {
         editedSpotID = activity.getEditedSpotID();
         isOrderChanged = activity.isOrderChanged();
         route_id = activity.getRoute_id();
-        fragmentMatchParentSize = -1;
 
         if (activity.getChangeMade() || spotList == null) updateLists();
         activity.setChangeMade(false);
@@ -127,12 +127,11 @@ public class ViewByScheduleFragment extends Fragment {
                     if (scheduleService.initCoordInformation(referenceView)) {
                         layoutBase.removeView(referenceView);
                         numItem = spotList.size();
+                        scheduleService.initBackground(activity.getFrameHeight(), imgBack);
                         if (numItem == 0) { //draw first screen if data is not available
                             scheduleService.drawFirstScreen_Coordinator();
-//                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                         } else { //load if data is available
                             scheduleService.load_Spots();
-    //                            layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                         }
                         referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
@@ -141,7 +140,7 @@ public class ViewByScheduleFragment extends Fragment {
             //end of calculation of coordinates.
         }
 
-        ImageView imgBack = (ImageView) rootView.findViewById(R.id.img_back);
+        imgBack = rootView.findViewById(R.id.img_back);
         Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
         if (editedSpotID.size() > 0 || deletedSpotID.size() > 0 || isOrderChanged) {
             spotList = activity.refreshSpotList();
@@ -208,12 +207,8 @@ public class ViewByScheduleFragment extends Fragment {
         public void onClick(View view) {
 
             int view_idx = scheduleService.toListIdx((int)view.getId());
-//            for (Spot spot : spotList){
-//                Log.d("Spotlist items: ", "Spot ID: " + spot.get_id());
-//            }
-//            for (ScheduleService.ListSchedule list : scheduleService.listSchedule){
-//                Log.d("List items: ", "List spot ID: " + list.spot_ID + ", view ID: " + list.view.getId());
-//            }
+
+
             Intent i = new Intent(rootView.getContext(),EditLocationActivity.class);
             i.putExtra("TAG_ACTIVITY","edit");
             i.putExtra("route id", route_id);
@@ -235,29 +230,21 @@ public class ViewByScheduleFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     //assumed that the indexes for spotlist and listschedule are synchronized
-//                    int view_id = ((View)(((View)clickedView.getParent()).getId()));
+
                     int view_id = clickedView.getId();
                     int idx_view = scheduleService.toListIdx(view_id);
-//                    idx_view = scheduleService.toListIdx((View)((View)clickedView.getParent()).getId());
+
                     activity.deleteSpotFromDB(scheduleService.listSchedule.get(idx_view).spot_ID);
                     activity.updateSpotlistToDB((ArrayList<Spot>)spotList);
-//                    spotList.remove(idx_view);
+
                     if (scheduleService.listSchedule.size() > 2){
                         scheduleService.removeSchedule(view_id);
                     }
                     else{
                         activity.restartActivity();
-//                        layoutBase.removeAllViews();
-//                        scheduleService.listSchedule.clear();
-//                        spotList.clear();
-////                        scheduleService.drawFirstScreen_Coordinator();
-//                        activity.destroyPhotosFragment();
-//                        activity.destroyScheduleFragment();
-//                        activity.showEmptyTravelActivity();
-//                        rootView = null;
-//                        layoutBase.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
                     }
                     spotList = activity.refreshSpotList();
+//                    scheduleService.updateBackground(spotList.size());
                     activity.setChangeMade(true);
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -282,6 +269,7 @@ public class ViewByScheduleFragment extends Fragment {
                 int num_added = spotList.size() - list_total;
                 processAdditionalSchedules(num_added, list_total);
             }
+            scheduleService.updateBackground(spotList.size());
         }
         else if (resultCode == RESULT_CREATE){
             //temporary creating spots
@@ -290,6 +278,7 @@ public class ViewByScheduleFragment extends Fragment {
             int num_added = spotList.size() - list_total;
             scheduleService.isEditing = false;
             processAdditionalSchedules(num_added, list_total);
+            scheduleService.updateBackground(spotList.size());
         }
         else if (resultCode == RESULT_EDIT){
             int spot_id;
@@ -317,7 +306,9 @@ public class ViewByScheduleFragment extends Fragment {
             scheduleService.addSchedule(newSpot);
         }
     }
-
+    public int getSpotlistSize(){
+        return spotList.size();
+    }
     public List<Spot> getSpotListFromSchedule(){
         return this.spotList;
     }
@@ -336,6 +327,7 @@ public class ViewByScheduleFragment extends Fragment {
         }
         return idx;
     }
+
 //
 //    public void setBackgroundByHeight(int height, int rootHeight) {
 //

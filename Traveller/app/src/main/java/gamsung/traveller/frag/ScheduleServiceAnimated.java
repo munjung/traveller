@@ -405,6 +405,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
                 }
                 listSchedule.get(total - 1).lines[getLeftVisbility(total - 1) ? 0 : 1].setVisibility(View.INVISIBLE);
                 listSchedule.get(total).lines[1].setVisibility(View.VISIBLE);
+                
+                updateBackground(fragment.getSpotlistSize());
             }
         }
 

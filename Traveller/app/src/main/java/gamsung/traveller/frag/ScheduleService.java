@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
+import gamsung.traveller.activity.TopCropImageView;
 import gamsung.traveller.model.Spot;
 
 class ViewIdGenerator {
@@ -108,7 +110,7 @@ public class ScheduleService {
     boolean isEditing;
     private int EMPTY_CIRCLE_BIGGER;
 //    public List<Spot> spotList;
-    private ViewByScheduleFragment fragment;
+    ViewByScheduleFragment fragment;
 
     ArrayList<ListSchedule> listSchedule = new ArrayList<>();
     ViewGroup rootView;
@@ -117,8 +119,8 @@ public class ScheduleService {
     RelativeLayout layoutBase;
     View.OnDragListener dragListener;
     View.OnClickListener clickRemoveSelectedSchedule, startScheduling, createNewSchedule, editSchedule;
-    int layoutSingle;
-
+    private int layoutSingle, frameHeight;
+    private TopCropImageView imgBack;
 
     public ScheduleService(ViewGroup rootView, @LayoutRes int layoutSingle, NestedScrollView scrollView,
                            RelativeLayout layoutBase, Context appContext, boolean isDragDrop, ViewByScheduleFragment fragment) {
@@ -178,6 +180,36 @@ public class ScheduleService {
         return rtrLine;
     }
 
+    public void updateBackground(int numSpots){
+        int spotHeight = coordinateInformation.layout_height * (numSpots + 1) + coordinateInformation.end_margin + coordinateInformation.first_margin;
+        //plus one includes the space for empty dotted circle.
+
+        ViewGroup.LayoutParams imgParms = imgBack.getLayoutParams();
+
+        if (spotHeight < frameHeight){
+            imgParms.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imgParms.height = frameHeight;
+        }
+        else{
+            imgParms.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imgParms.height = spotHeight;
+        }
+        imgBack.setLayoutParams(imgParms);
+        imgBack.setScaleType(ImageView.ScaleType.MATRIX);
+
+    }
+
+    public void initBackground(int frameHeight, TopCropImageView imgBack){
+        this.frameHeight = frameHeight;
+        this.imgBack = imgBack;
+
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
+        Glide.with(appContext).load(R.drawable.bg_main).asBitmap().into(imgBack);
+
+        updateBackground(spotList.size());
+
+
+    }
     public void load_Spots(){
         List<Spot> spotList = fragment.getSpotListFromSchedule();
         int spot_total = spotList.size();
@@ -658,6 +690,8 @@ public class ScheduleService {
             if (idx > 0) listSchedule.get(idx - 1).lines[1].setVisibility(View.INVISIBLE);
         }
 
+        if (deletedSpotID.size() > 0 || editedSpotID.size() > 0) updateBackground(spotList.size()); //height needs to be updated when a spot is deleted/added.
+
         if (deletedSpotID.size() > 0) {
             int higherIdx = 0;
             for (int id : deletedSpotID) {
@@ -684,6 +718,7 @@ public class ScheduleService {
                 drawFirstScreen_Coordinator();
                 return;
             }
+
         }
 
         if (editedSpotID.size() > 0){
