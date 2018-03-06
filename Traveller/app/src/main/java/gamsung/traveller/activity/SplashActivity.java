@@ -63,7 +63,7 @@ public class SplashActivity extends AppCompatActivity {
 
             //spash start
             Handler handler = new Handler();
-            handler.postDelayed(new SplashHandler(), 500);
+            handler.postDelayed(new SplashHandler(), 2000);
 
         } else {
             ActivityCompat.requestPermissions(this, new String[]{

@@ -137,10 +137,12 @@ public class ScheduleServiceAnimated extends ScheduleService {
         Higher than the selected index
         -Move STRAIGHT UP and replace the selected index.*/
         int delete_idx = toListIdx(view_id);
-        int listSize = listSchedule.size() - 1;
+        int listSize = listSchedule.size();
         for (int idx = 0; idx < listSize; idx++){
             boolean isLeft = getLeftVisbility(idx);
-            listSchedule.get(idx).lines[isLeft ? 0 : 1].setVisibility(View.INVISIBLE);
+            if (idx == listSize - 1) listSchedule.get(idx).lines[1].setVisibility(View.INVISIBLE);
+            else listSchedule.get(idx).lines[isLeft ? 0 : 1].setVisibility(View.INVISIBLE);
+
             if (idx < delete_idx){ //circle to side way
                 listSchedule.get(idx).circleImage.animate().x(coordinateInformation.circleX[isLeft ? 1 : 0]).setDuration(DRAGDROP_ANIMATION_DURATION);
                 listSchedule.get(idx).view.animate().alpha(0).setDuration(DRAGDROP_ANIMATION_DURATION/2);
@@ -401,6 +403,8 @@ public class ScheduleServiceAnimated extends ScheduleService {
                     boolean isLeft = getLeftVisbility(idx);
                     listSchedule.get(idx).lines[isLeft ? 0 : 1].setVisibility(View.VISIBLE);
                 }
+                listSchedule.get(total - 1).lines[getLeftVisbility(total - 1) ? 0 : 1].setVisibility(View.INVISIBLE);
+                listSchedule.get(total).lines[1].setVisibility(View.VISIBLE);
             }
         }
 
