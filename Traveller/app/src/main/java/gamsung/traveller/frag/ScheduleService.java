@@ -655,6 +655,7 @@ public class ScheduleService {
             updateCircleCoordinate(0);
             for (idx = 0; idx < listSchedule.size() - 1; idx++)
                 setScheduleVisMoved(listSchedule.get(idx).view, idx);
+            if (idx > 0) listSchedule.get(idx - 1).lines[1].setVisibility(View.INVISIBLE);
         }
 
         if (deletedSpotID.size() > 0) {
