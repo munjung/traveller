@@ -229,6 +229,7 @@ public class ViewByPhotosFragment extends Fragment {
     }
 
     public void forceUpdate(){
+        if (activity == null) return;
         spotList = activity.refreshSpotList();
         timeViewAdapter.refreshSpotlist(spotList);
         timeViewAdapter.notifyDataSetChanged();

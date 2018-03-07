@@ -221,7 +221,7 @@ public class ScheduleService {
             for (int idx = 1; idx < spot_total; idx++){
                 addSchedule(spotList.get(idx));
             }
-
+            setAllScheduleVis();
         }
 
     }
@@ -392,12 +392,20 @@ public class ScheduleService {
 
         updateYCoordinateViews(listSchedule.size() - 2);
         //update view
-        for (int i = 0; i < listSchedule.size(); i++) {
-            setScheduleVis(listSchedule.get(i).view, i);
-        }
+//        for (int i = 0; i < listSchedule.size(); i++) {
+//            setScheduleVis(listSchedule.get(i).view, i);
+//        }
 
     }
-
+    public void setAllScheduleVis(){
+        int idx = 0;
+        int totalList = listSchedule.size();
+        for (ListSchedule list : listSchedule) {
+            if (idx == totalList) break;
+            setScheduleVis(list.view, idx++);
+        }
+        listSchedule.get(totalList - 2).lines[1].setVisibility(View.INVISIBLE);
+    }
     public void setScheduleVis(View view, int idx){ //updated method
         boolean isLeft = getLeftVisbility(idx);
 
@@ -447,9 +455,9 @@ public class ScheduleService {
 
         int getVis = listSchedule.get(idx).lines[0].getVisibility(); //여기서 죽는경우도 가끔
         if (isLeft){ //left side on, right side off
-            if (getVis == View.VISIBLE) return;
             listSchedule.get(idx).lines[0].setVisibility(View.VISIBLE);
             listSchedule.get(idx).lines[1].setVisibility(View.INVISIBLE);
+            if (getVis == View.VISIBLE) return;
 
             view.findViewById(R.id.title_left).setVisibility(View.VISIBLE);
             view.findViewById(R.id.contents_left).setVisibility(View.VISIBLE);
@@ -457,9 +465,9 @@ public class ScheduleService {
             view.findViewById(R.id.title_right).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.contents_right).setVisibility(View.INVISIBLE);
         }else{
-            if (getVis != View.VISIBLE) return;
             listSchedule.get(idx).lines[1].setVisibility(View.VISIBLE);
             listSchedule.get(idx).lines[0].setVisibility(View.INVISIBLE);
+            if (getVis != View.VISIBLE) return;
 
             view.findViewById(R.id.title_right).setVisibility(View.VISIBLE);
             view.findViewById(R.id.contents_right).setVisibility(View.VISIBLE);
@@ -472,6 +480,7 @@ public class ScheduleService {
             view.findViewById(R.id.btn_delete_schedule_left).setVisibility(View.GONE);
             view.findViewById(R.id.btn_delete_schedule_right).setVisibility(View.GONE);
         }
+
     }
 
 
@@ -518,14 +527,21 @@ public class ScheduleService {
 
         for (int i = idxA; i <= idxB; i++){
             setScheduleVisMoved(listSchedule.get(i).view, i);
+            spotList.get(i).setIndex_id(i + 1);
         }
+
+        if (idxB == listSchedule.size() - 2){ //hide line at the end and restore the visibility of the hidden line
+            listSchedule.get(idxA).lines[getLeftVisbility(idxA) ? 0 : 1].setVisibility(View.VISIBLE);
+            listSchedule.get(idxB).lines[1].setVisibility(View.INVISIBLE);
+        }
+
 
         updateYCoordinateViews(idxA);
         fragment.setOrderChanged();
-        int index = 0;
-        for (Spot spot : spotList){
-            spot.setIndex_id(index++);
-        }
+//        int index = 0;
+//        for (Spot spot : spotList){
+//            spot.setIndex_id(index++);
+//        }
     }
 
     public int toListIdx(int unique_ID){
@@ -687,6 +703,12 @@ public class ScheduleService {
             updateCircleCoordinate(0);
             for (idx = 0; idx < listSchedule.size() - 1; idx++)
                 setScheduleVisMoved(listSchedule.get(idx).view, idx);
+
+//            if (idx == listSchedule.size() - 2) listSchedule.get(idx).lines[1].setVisibility(View.INVISIBLE);
+//            if (idx == listSchedule.size() - 2){ //hide line at the end and restore the visibility of the hidden line
+//                //listSchedule.get(idxA).lines[getLeftVisbility(idxA) ? 0 : 1].setVisibility(View.VISIBLE);
+//                listSchedule.get(idx).lines[1].setVisibility(View.INVISIBLE);
+//            }
             if (idx > 0) listSchedule.get(idx - 1).lines[1].setVisibility(View.INVISIBLE);
         }
 
@@ -710,6 +732,9 @@ public class ScheduleService {
             updateCircleCoordinate(0);
             for (int idx = 0; idx < higherIdx; idx++)
                 setScheduleVis(listSchedule.get(idx).view, idx);
+//            if (higherIdx == listSchedule.size() - 2) listSchedule.get(higherIdx).lines[1].setVisibility(View.INVISIBLE);
+            listSchedule.get(listSchedule.size() - 2).lines[1].setVisibility(View.INVISIBLE);
+
             heightUpdate();
             deletedSpotID.clear();
             if (listSchedule.size() <= 1) {

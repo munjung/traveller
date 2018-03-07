@@ -305,6 +305,7 @@ public class ViewByScheduleFragment extends Fragment {
             Spot newSpot = spotList.get(list_total + idx);
             scheduleService.addSchedule(newSpot);
         }
+        scheduleService.setAllScheduleVis();
     }
     public int getSpotlistSize(){
         return spotList.size();
