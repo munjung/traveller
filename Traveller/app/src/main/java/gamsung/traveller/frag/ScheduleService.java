@@ -130,8 +130,8 @@ public class ScheduleService {
         this.layoutBase = layoutBase;
         this.appContext = appContext;
         this.isDragDrop= isDragDrop;
-        //this.longClickedCircle = this.longClickedListener;
         this.dragListener = this.scheduleDragListener;
+
         BORDER_WIDTH = (int)toDp(appContext, 5);
         IMAGE_SIZE = 110;
         FIRST_CIRCLE_BIGGER = 40;
@@ -142,7 +142,7 @@ public class ScheduleService {
     }
 
     public DrawnLine[] draw_lines(int idx){
-        int EXTRA_X_FOR_LAST = 0;
+        int EXTRA_X_FOR_LAST;
         DrawnLine rtrLine[] = new DrawnLine[2];
         if (idx == -1){
             EXTRA_X_FOR_LAST = 100;
@@ -152,8 +152,6 @@ public class ScheduleService {
         else EXTRA_X_FOR_LAST = 0;
 
 
-
-//        private static int EXTRA_Y_FOR_LAST
         for (int i = 0; i < 2; i++){
             if (i == 0) {
                 rtrLine[0] =  new DrawnLine(appContext, 0, 0, coordinateInformation.circleX[1] - coordinateInformation.circleX[0] + DrawnLine.WIDTH_EXTRA,
@@ -168,12 +166,10 @@ public class ScheduleService {
 
             if (idx > 0) {
                 if (idx == 1) rtrLine[i].setY((coordinateInformation.first_margin + dipToPixels(appContext, this.IMAGE_SIZE)) * idx);
-                    //else imageView.setY(((coordinateInformation.first_margin + coordinateInformation.end_margin) + dipToPixels(appContext, this.IMAGE_SIZE)) * idx - coordinateInformation.first_margin);
                 else rtrLine[i].setY(listSchedule.get(idx).view.getY() - coordinateInformation.end_margin);
             }
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(coordinateInformation.circleX[1] - coordinateInformation.circleX[0] + DrawnLine.WIDTH_EXTRA,
                     coordinateInformation.first_margin + coordinateInformation.end_margin + DrawnLine.HEIGHT_EXTRA);
-            //rtrLine[i].setBackgroundColor(Color.BLACK);
             rtrLine[i].setLayoutParams(layoutParams);
         }
 
@@ -712,7 +708,7 @@ public class ScheduleService {
             if (idx > 0) listSchedule.get(idx - 1).lines[1].setVisibility(View.INVISIBLE);
         }
 
-        if (deletedSpotID.size() > 0 || editedSpotID.size() > 0) updateBackground(spotList.size()); //height needs to be updated when a spot is deleted/added.
+        if (deletedSpotID.size() > 0) updateBackground(spotList.size()); //height needs to be updated when a spot is deleted/added.
 
         if (deletedSpotID.size() > 0) {
             int higherIdx = 0;
@@ -732,7 +728,7 @@ public class ScheduleService {
             updateCircleCoordinate(0);
             for (int idx = 0; idx < higherIdx; idx++)
                 setScheduleVis(listSchedule.get(idx).view, idx);
-//            if (higherIdx == listSchedule.size() - 2) listSchedule.get(higherIdx).lines[1].setVisibility(View.INVISIBLE);
+
             listSchedule.get(listSchedule.size() - 2).lines[1].setVisibility(View.INVISIBLE);
 
             heightUpdate();

@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<String> tempPhotoList;
     private int temp_id;
-
+    private boolean isDeleteViewAttached = false;
 
     @Override
     public void onBackPressed() {
@@ -349,7 +349,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
     private View.OnClickListener _clickListener;
     private RouteItemClickListenerArguments _clickListenerArgs;
-
+    private boolean isDeleteViewAttached;
     public RecyclerViewAdapter(Context context, List<Route> routeList, View.OnClickListener clickListener) {
 
         if (routeList == null) {
@@ -362,6 +362,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
 
         this._clickListener = clickListener;
         this._clickListenerArgs = new RouteItemClickListenerArguments();
+        this.isDeleteViewAttached = false;
     }
 
     @Override
@@ -411,11 +412,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Route
             public void onClick(View view) {
 
                 //click delete button
-                if(_deleteView == null) {
+                if(true) {
 
-                    //attach delete view
-                    ViewGroup inflateViewGroup = ((MainActivity)_context).findViewById(R.id.layout_main_inflate);
-                    _deleteView = LayoutInflater.from(_context).inflate(R.layout.layout_main_delete, inflateViewGroup);
+                    //attach delete view just once
+                    if (!isDeleteViewAttached) {
+                        ViewGroup inflateViewGroup = ((MainActivity) _context).findViewById(R.id.layout_main_inflate);
+                        _deleteView = LayoutInflater.from(_context).inflate(R.layout.layout_main_delete, inflateViewGroup);
+                        isDeleteViewAttached = true;
+                    }
 
                     //delete item
                     TextView textView = (TextView)_deleteView.findViewById(R.id.txt_main_delete);

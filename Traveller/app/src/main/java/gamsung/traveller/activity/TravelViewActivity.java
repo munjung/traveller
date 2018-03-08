@@ -56,7 +56,7 @@ public class TravelViewActivity extends AppCompatActivity {
     private ViewByPhotosFragment viewByPhotosFragment;
     private ViewByScheduleFragment viewByScheduleFragment;
     private android.support.v4.app.Fragment selectedFrag;
-    private View layoutFrame;
+    public View layoutFrame;
 
     private DataManager dataManager;
     private List<Integer> deletedSpotID, editedSpotID;
@@ -72,13 +72,12 @@ public class TravelViewActivity extends AppCompatActivity {
 
         switch (requestCode){
             case REQUEST_CODE_TO_EMPTY_ITEM:
-                //isChangeMade = true;
-                //viewByScheduleFragment.force_update();
                 implementEvents();
 
                 if(resultCode != RESULT_CANCELED){
-                    if (last_tab_pos == 0) getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
-                    else getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByPhotosFragment).commit();
+//                    if (last_tab_pos == 0) getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
+//                    else getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByPhotosFragment).commit();
+                    restartActivity();
                 }
                 else finish();
                 break;
@@ -91,7 +90,6 @@ public class TravelViewActivity extends AppCompatActivity {
 
     public void restartActivity(){
         finish();
-//        onDestroy();
         Intent intent = new Intent(this, TravelViewActivity.class);
         intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route_id);
         intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route_title);
@@ -222,9 +220,7 @@ public class TravelViewActivity extends AppCompatActivity {
         @Override
         public void onGlobalLayout() {
             frameHeight = layoutFrame.getHeight();
-
-            layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListener);
-
+            //layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListener);
         }
     };
 
@@ -268,7 +264,6 @@ public class TravelViewActivity extends AppCompatActivity {
         spotList = new ArrayList<>(dataManager.getSpotListWithRouteId(route_id).values());
         Collections.sort(spotList, new CustomComparator());
         return spotList;
-
     }
 
     public void updateSpotFromDB(Spot spot){

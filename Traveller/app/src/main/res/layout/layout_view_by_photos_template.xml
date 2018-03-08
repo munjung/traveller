@@ -42,9 +42,10 @@
             android:textSize="18dp"
             android:textColor="#212121"
             android:layout_alignParentLeft="true"
-            android:layout_toRightOf="@+id/btn_edit_view_by_photos"
+            android:layout_toLeftOf="@+id/btn_edit_view_by_photos"
             android:gravity="center|left"
-            android:text="misson"/>
+            android:text="misson"
+            android:maxLines="3"/>
         <TextView
             android:id="@+id/txt_mission_by_photos"
             android:layout_width="wrap_content"

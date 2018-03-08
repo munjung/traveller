@@ -15,17 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.Circle;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import gamsung.traveller.R;
 import gamsung.traveller.model.Spot;
 
@@ -59,9 +52,6 @@ public class ScheduleServiceAnimated extends ScheduleService {
             int diff = (int)(view.getBottom() - (scrollView.getHeight() + scrollView.getY()));
             if (scrollView.getY() == 0) y_coordinate = scrollView.getScrollY();
             Log.d("Test", y_coordinate + ".");
-            //if (temp_int++ % 2 == 0) listSchedule.get(0).circleImage.animate().x(300);
-            //else listSchedule.get(0).circleImage.animate().x(0);
-
         }
     };
 

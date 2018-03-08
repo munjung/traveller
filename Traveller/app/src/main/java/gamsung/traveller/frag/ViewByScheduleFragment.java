@@ -120,23 +120,8 @@ public class ViewByScheduleFragment extends Fragment {
             layoutSchedule.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
             layoutBase.addView(layoutSchedule);
             referenceView = layoutSchedule;
-            referenceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() { //some unnecessary calls are made here
-                    int numItem;
-                    if (scheduleService.initCoordInformation(referenceView)) {
-                        layoutBase.removeView(referenceView);
-                        numItem = spotList.size();
-                        scheduleService.initBackground(activity.getFrameHeight(), imgBack);
-                        if (numItem == 0) { //draw first screen if data is not available
-                            scheduleService.drawFirstScreen_Coordinator();
-                        } else { //load if data is available
-                            scheduleService.load_Spots();
-                        }
-                        referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                }
-            });
+            referenceView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+
             //end of calculation of coordinates.
         }
 
@@ -151,6 +136,27 @@ public class ViewByScheduleFragment extends Fragment {
         return rootView;
 
     }
+//maybe can be solved by drawing eariler
+    /*calculate heights before being drawn on the layout*/ //may be need to draw first!
+    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            int numItem;
+            if (scheduleService.initCoordInformation(referenceView)) {
+                layoutBase.removeView(referenceView);
+                numItem = spotList.size(); //repetition
+                scheduleService.initBackground(activity.getFrameHeight(), imgBack);
+                if (numItem == 0) { //draw first screen if data is not available
+                    scheduleService.drawFirstScreen_Coordinator();
+                } else { //load if data is available
+                    scheduleService.load_Spots();
+                }
+                referenceView.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+            }
+
+        }
+    };
+
 
 //    @Override
 //    public void onResume() {
@@ -244,7 +250,6 @@ public class ViewByScheduleFragment extends Fragment {
                         activity.restartActivity();
                     }
                     spotList = activity.refreshSpotList();
-//                    scheduleService.updateBackground(spotList.size());
                     activity.setChangeMade(true);
                 }
             }).setNegativeButton("취소", new DialogInterface.OnClickListener() {

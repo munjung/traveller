@@ -71,10 +71,7 @@ public class ViewByPhotosFragment extends Fragment {
             }
             updatedPos.add(originalPos.get(idx));
         }
-////        for (int temp : updatedPos) Log.d("AT getUPDATEDPOS: ", "UPDATED POS: " + te);\
-//        for (int idx = 0; idx < originalPos.size(); idx++){
-//            Log.d("AT getUPDATEDPOS: ", "ORIGINAL POS: " + originalPos.get(idx) + ", UPDATED POS: " + updatedPos.get(idx));
-//        }
+
         return updatedPos;
     }
 

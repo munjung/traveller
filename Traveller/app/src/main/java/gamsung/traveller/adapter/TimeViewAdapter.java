@@ -45,6 +45,9 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     final static private int START_TIMELINE_COLOR_B = 0x80;
     final static private int END_TIMELINE_COLOR_B = 0xff;
     final static private int BOOKMARK_LEFT_MARGIN = 12;
+    final static private int TITLE_TEXT_SIZE = 18;
+    final static private int START_TIMELINE_HEIGHT = 185;
+    final static private int TIMELINE_HEIGHT = 210;
 
     private int GAB_COLOR_R;
     private int GAB_COLOR_G;
@@ -115,14 +118,13 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
     }
 
     @Override
-    public void onBindViewHolder(TimeViewAdapter.TimeViewHolder holder, int position) {
-        RelativeLayout.LayoutParams layoutParams;
+    public void onBindViewHolder(final TimeViewAdapter.TimeViewHolder holder, int position) {
+        final RelativeLayout.LayoutParams layoutParams;
         holder.txtTitle.setText(spotList.get(position).getMission());
         holder.callback = callback;
         holder.txtMission.setText(callback.getPlaceName(spotList.get(position).getSearch_id()));
         layoutParams = (RelativeLayout.LayoutParams)holder.imageTimeLine.getLayoutParams();
-
-
+        
 
         /*Load images */
         ArrayList<Photograph> photoList = new ArrayList<>(dataManager.getPhotoListWithSpot(spotList.get(position).get_id()).values());
@@ -130,27 +132,38 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
         if (photoTotal > 10) photoTotal = 10;
         for (int idx = 0; idx < photoTotal; idx++){//if saved photos exist, load.d
             String pic_path = photoList.get(idx).getPath();
-//            if (photoList.get(idx).get_id() == spotList.get(position).getPicture_id())
-//                adjustBookmark(holder, idx);
+
             if (pic_path.equals(spotList.get(position).getPicture_path())) adjustBookmark(holder, idx);
             Glide.with(holder.images[idx].getContext()).load(photoList.get(idx).getPath()).centerCrop().into(holder.images[idx]);
         }
         if (photoTotal == 0){
             for (int i = 0; i < MAX_NUM_IMAGES; i++) Glide.with(holder.images[i].getContext()).load(R.drawable.grap_noimage).centerCrop().into(holder.images[i]);
         }
-//        adjustBookmark(holder, position);
+
 
 
         /*Draw a gradient line to the left*/
+        holder.txtTitle.post(new Runnable() { //adjust the height of a gradient line.
+            @Override
+            public void run() {
+                int numLines = holder.txtTitle.getLineCount();
+                if (numLines > 1){
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)holder.imageTimeLine.getLayoutParams();
+                    layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), START_TIMELINE_HEIGHT + ((numLines) * TITLE_TEXT_SIZE));
+                    holder.imageTimeLine.setLayoutParams(layoutParams);
+                }
+            }
+        });
+
         if (position == 0){
             layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 35), 0, 0);
-            layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 185);
+            layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), START_TIMELINE_HEIGHT);
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
         }
         else{
             layoutParams.setMargins(0, (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 0), 0, 0);
-            layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), 210);
+            layoutParams.height = (int)ScheduleService.toDp(holder.imageTimeLine.getContext(), TIMELINE_HEIGHT);
             holder.imageTimeLine.setLayoutParams(layoutParams);
             holder.imageTimeLine.setBackground(setGradientTimeLine(position));
         }
