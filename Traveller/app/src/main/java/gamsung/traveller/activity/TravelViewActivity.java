@@ -38,6 +38,7 @@ import gamsung.traveller.model.Spot;
 
 import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID;
 import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_TITLE;
+import static gamsung.traveller.activity.MainActivity.KEY_SEND_TO_TRAVEL_STARTED_FROM_EMPTY;
 
 public class TravelViewActivity extends AppCompatActivity {
 
@@ -65,7 +66,7 @@ public class TravelViewActivity extends AppCompatActivity {
     private String route_title;
     private List<Spot> spotList;
     private int frameHeight;
-
+    private boolean isStartedFromEmpty;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -89,15 +90,18 @@ public class TravelViewActivity extends AppCompatActivity {
 
 
     public void restartActivity(){
-        finish();
-        Intent intent = new Intent(this, TravelViewActivity.class);
-        intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route_id);
-        intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route_title);
-        startActivity(intent);
+//        this.finish();
+//        Intent intent = new Intent(this, TravelViewActivity.class);
+//        intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route_id);
+//        intent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route_title);
+//        startActivity(intent);
+        setResult(RESULT_OK);
+        this.finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setResult(RESULT_CANCELED);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_view);
@@ -107,10 +111,11 @@ public class TravelViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         route_id = intent.getIntExtra(MainActivity.KEY_SEND_TO_ACTIVITY_ROUTE_ID, 0);
         route_title = intent.getStringExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE);
+        isStartedFromEmpty = intent.getBooleanExtra(KEY_SEND_TO_TRAVEL_STARTED_FROM_EMPTY, false);
         spotList = new ArrayList<Spot>(dataManager.getSpotListWithRouteId(route_id).values());
 
         findViews();
-
+        frameHeight = 0;
         if(spotList.size() == 0){
             //등록된 일정이 없는 경우, edit location으로 직행
             showEmptyTravelActivity();
@@ -120,10 +125,16 @@ public class TravelViewActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.containerTravelView, viewByScheduleFragment).commit();
         }
 
+
+        if (isStartedFromEmpty) layoutFrame.getViewTreeObserver().addOnGlobalLayoutListener(frameLayoutListenerStartedFromEmpty);
+        else layoutFrame.getViewTreeObserver().addOnGlobalLayoutListener(frameLayoutListener);
+
+
         deletedSpotID = new ArrayList<>();
         editedSpotID = new ArrayList<>();
 
     }
+
 
     public void showEmptyTravelActivity(){
         Intent editLocationIntent = new Intent(this, EditLocationActivity.class);
@@ -143,7 +154,7 @@ public class TravelViewActivity extends AppCompatActivity {
         viewByPhotosFragment = new ViewByPhotosFragment();
         viewByScheduleFragment = new ViewByScheduleFragment();
 
-        layoutFrame.getViewTreeObserver().addOnGlobalLayoutListener(frameLayoutListener);
+
     }
 
     private void implementEvents(){
@@ -220,7 +231,24 @@ public class TravelViewActivity extends AppCompatActivity {
         @Override
         public void onGlobalLayout() {
             frameHeight = layoutFrame.getHeight();
-            //layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListener);
+            layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListener);
+        }
+    };
+
+    private ViewTreeObserver.OnGlobalLayoutListener frameLayoutListenerStartedFromEmpty = new ViewTreeObserver.OnGlobalLayoutListener() {
+        int cnt = 0;
+        @Override
+        public void onGlobalLayout() {//being called three times. toolbar, tab, frame
+            if (cnt++ >= 4) layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListenerStartedFromEmpty);
+
+            if (frameHeight == 0) frameHeight = layoutFrame.getHeight();
+            else{
+                if (frameHeight < layoutFrame.getHeight()){
+                    frameHeight = layoutFrame.getHeight();
+                    viewByScheduleFragment.notifyFrameHeightChanged();
+                }
+            }
+//            layoutFrame.getViewTreeObserver().removeOnGlobalLayoutListener(frameLayoutListener);
         }
     };
 

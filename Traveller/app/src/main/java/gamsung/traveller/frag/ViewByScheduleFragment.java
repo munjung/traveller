@@ -122,10 +122,10 @@ public class ViewByScheduleFragment extends Fragment {
             referenceView = layoutSchedule;
             referenceView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
 
-        imgBack = rootView.findViewById(R.id.img_back);
+            imgBack = rootView.findViewById(R.id.img_back);
             //end of calculation of coordinates.
         }
-        Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
+//        Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
 
         if (editedSpotID.size() > 0 || deletedSpotID.size() > 0 || isOrderChanged) {
             spotList = activity.refreshSpotList();
@@ -326,7 +326,9 @@ public class ViewByScheduleFragment extends Fragment {
         activity.setOrderChanged(true);
         activity.setChangeMade(true);
     }
-
+    public void notifyFrameHeightChanged(){
+        scheduleService.notifyBackgroundHeightChanged(activity.getFrameHeight());
+    }
     private int getLastSpotIndex(){
         int idx = 0;
         for (Spot spot : spotList){

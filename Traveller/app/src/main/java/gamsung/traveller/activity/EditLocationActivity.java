@@ -384,7 +384,6 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 if (photoList.containsKey(photo.getPath()))
                     _dataManager.updatePhoto(photo);
                 else {
-
                     _dataManager.insertPhoto(photo);
                 }
             }

@@ -135,7 +135,7 @@ public class ScheduleService {
         BORDER_WIDTH = (int)toDp(appContext, 5);
         IMAGE_SIZE = 110;
         FIRST_CIRCLE_BIGGER = 40;
-        EMPTY_CIRCLE_BIGGER = 20;
+        EMPTY_CIRCLE_BIGGER = 24;
         coordinateInformation.layout_height = 0; //initalized to zero
         isEditing = false;
         this.fragment = fragment;
@@ -206,6 +206,14 @@ public class ScheduleService {
 
 
     }
+
+    public void notifyBackgroundHeightChanged(int frameHeight){
+        if (imgBack == null) return;
+
+        this.frameHeight = frameHeight;
+        List<Spot> spotList = fragment.getSpotListFromSchedule();
+        updateBackground(spotList.size());
+    }
     public void load_Spots(){
         List<Spot> spotList = fragment.getSpotListFromSchedule();
         int spot_total = spotList.size();
@@ -250,11 +258,11 @@ public class ScheduleService {
         CircleImageView circleImageView = layoutSchedule.findViewById(R.id.circleimageview_left);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)circleImageView.getLayoutParams();
         layoutParams.width = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER );
-        layoutParams.height = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER );
+        layoutParams.height = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER);
 
         circleImageView.setLayoutParams(layoutParams);
 
-        Glide.with(appContext).load(R.drawable.ghost_btn_add_new_travel).into(circleImageView);
+        Glide.with(appContext).load(R.drawable.ghost_btn_add_new_travel).fitCenter().into(circleImageView);
 //        circleImageView.setBackgroundColor(Color.BLACK);
 //        circleImageView.setBackgroundResource(R.drawable.schedule_dotted_border);
 //        circleImageView.setImageResource(R.drawable.ghost_btn_add_new_travel);

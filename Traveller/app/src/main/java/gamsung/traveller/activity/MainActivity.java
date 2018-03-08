@@ -57,10 +57,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public final static String KEY_SEND_TO_ACTIVITY_ROUTE_TITLE = "routeTitle";
     public final static String KEY_SEND_TO_ACTIVITY_POSITION = "position";
 
+    public final static String KEY_SEND_TO_TRAVEL_STARTED_FROM_EMPTY = "started_empty";
     //Activity Result Request Code
     private final static int REQUEST_CODE_GO_SET_TRAVEL = 1;
     private final static int REQUEST_CODE_GO_MAP_PICTURE = 2;
     private final static int REQUEST_CODE_GO_EDIT_LOCATION = 3;
+    private final static int REQEUST_CODE_GO_TRAVEL_VIEW = 4;
 
     private ImageView _imageViewEmpty;
 
@@ -99,9 +101,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case REQUEST_CODE_GO_EDIT_LOCATION:
                 this.receiveFromEditLocation(requestCode, data);
                 break;
+            case REQEUST_CODE_GO_TRAVEL_VIEW:
+                this.receiveFromTravelView(resultCode, data);
+                break;
         }
     }
+    private void receiveFromTravelView(int resultCode, Intent data){
+        int position = _recyclerAdapter.get_clickListenerArgs().getItem_position();
+        Route route = _recyclerAdapter.getItem(position);
 
+        if (resultCode == RESULT_OK){
+            Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
+            imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
+            imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route.getTitle());
+            imgClickIntent.putExtra(KEY_SEND_TO_TRAVEL_STARTED_FROM_EMPTY, true);
+            startActivityForResult(imgClickIntent, REQEUST_CODE_GO_TRAVEL_VIEW);
+        }
+    }
     private void receiveFromSetTravel(int resultCode, Intent data){
 
         if(resultCode < 10)
@@ -315,7 +331,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent imgClickIntent = new Intent(this, TravelViewActivity.class);
                 imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_ID, route.get_id());
                 imgClickIntent.putExtra(KEY_SEND_TO_ACTIVITY_ROUTE_TITLE, route.getTitle());
-                startActivity(imgClickIntent);
+                imgClickIntent.putExtra(KEY_SEND_TO_TRAVEL_STARTED_FROM_EMPTY, false);
+                startActivityForResult(imgClickIntent, REQEUST_CODE_GO_TRAVEL_VIEW);
                 break;
 
             case RouteItemClickListenerArguments.GOTO_PICTURE_CLICK:
