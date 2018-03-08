@@ -258,7 +258,7 @@ public class CameraActivity extends AppCompatActivity {
             return nearestSpot;
 
         for(SpotWithCoordinate spot : spotList.values()){
-
+            if (_datamanager.getRouteWithID(spot.getRoute_id()).getTitle() == null) continue; // spot with no available route is ignored. possibly deleted.
             Location spotLocation = new Location("");
             spotLocation.setLatitude(spot.getLat());
             spotLocation.setLongitude(spot.getLon());
