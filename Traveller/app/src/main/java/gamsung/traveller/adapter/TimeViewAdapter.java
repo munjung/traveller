@@ -135,6 +135,7 @@ public class TimeViewAdapter extends RecyclerView.Adapter<TimeViewAdapter.TimeVi
 
             if (pic_path.equals(spotList.get(position).getPicture_path())) adjustBookmark(holder, idx);
             Glide.with(holder.images[idx].getContext()).load(photoList.get(idx).getPath()).centerCrop().into(holder.images[idx]);
+            Log.d("Picture path:", "Item number " + idx + ": " + photoList.get(idx).getPath());
         }
         if (photoTotal == 0){
             for (int i = 0; i < MAX_NUM_IMAGES; i++) Glide.with(holder.images[i].getContext()).load(R.drawable.grap_noimage).centerCrop().into(holder.images[i]);

@@ -122,11 +122,11 @@ public class ViewByScheduleFragment extends Fragment {
             referenceView = layoutSchedule;
             referenceView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
 
+        imgBack = rootView.findViewById(R.id.img_back);
             //end of calculation of coordinates.
         }
-
-        imgBack = rootView.findViewById(R.id.img_back);
         Glide.with(this).load(R.drawable.bg_main).asBitmap().into(imgBack);
+
         if (editedSpotID.size() > 0 || deletedSpotID.size() > 0 || isOrderChanged) {
             spotList = activity.refreshSpotList();
             scheduleService.updateSchedule(deletedSpotID, editedSpotID, isOrderChanged);
@@ -136,13 +136,14 @@ public class ViewByScheduleFragment extends Fragment {
         return rootView;
 
     }
-//maybe can be solved by drawing eariler
-    /*calculate heights before being drawn on the layout*/ //may be need to draw first!
+
+
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
             int numItem;
             if (scheduleService.initCoordInformation(referenceView)) {
+//                imgBack = rootView.findViewById(R.id.img_back);
                 layoutBase.removeView(referenceView);
                 numItem = spotList.size(); //repetition
                 scheduleService.initBackground(activity.getFrameHeight(), imgBack);

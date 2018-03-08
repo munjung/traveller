@@ -391,8 +391,8 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
         }
 
         if (_adapter.getItemCount() > 0) {
-            picturePath = itemList.get(0).getPath();
-            photographId = itemList.get(0).get_id();
+//            picturePath = itemList.get(0).getPath();
+//            photographId = itemList.get(0).get_id();
         }
         else{
             picturePath = "";

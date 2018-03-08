@@ -145,7 +145,7 @@ public class ScheduleService {
         int EXTRA_X_FOR_LAST;
         DrawnLine rtrLine[] = new DrawnLine[2];
         if (idx == -1){
-            EXTRA_X_FOR_LAST = 100;
+            EXTRA_X_FOR_LAST = 80;
             if (listSchedule.size() == 0) idx = 0;
             else idx = listSchedule.size() - 1;
         }
@@ -249,8 +249,8 @@ public class ScheduleService {
 
         CircleImageView circleImageView = layoutSchedule.findViewById(R.id.circleimageview_left);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)circleImageView.getLayoutParams();
-        layoutParams.width = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER + 20);
-        layoutParams.height = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER + 20);
+        layoutParams.width = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER );
+        layoutParams.height = (int)toDp(appContext, IMAGE_SIZE + EMPTY_CIRCLE_BIGGER );
 
         circleImageView.setLayoutParams(layoutParams);
 
