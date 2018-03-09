@@ -389,9 +389,16 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
+        CustomRecyclerAdapter.ViewHolderClickListenerArguments arguments = _adapter.getViewHolderClickListenerArgs();
         if (_adapter.getItemCount() > 0) {
-//            picturePath = itemList.get(0).getPath();
-//            photographId = itemList.get(0).get_id();
+            if(_adapter.get_representedImagePosition()==-1){
+                picturePath = itemList.get(0).getPath();
+                photographId = itemList.get(0).get_id();
+            }
+            else{
+                picturePath = arguments.getItem().getPath();
+                photographId = arguments.getItem().get_id();
+            }
         }
         else{
             picturePath = "";
@@ -542,8 +549,9 @@ public class EditLocationActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case CustomRecyclerAdapter.ViewHolderClickListenerArguments.RETURN_TYPE_CLICK_REPRESENT:
-                picturePath = arguments.getItem().getPath();
-                photographId = arguments.getItem().get_id();
+                _adapter.set_representedImagePosition(arguments.getPosition());
+                /*picturePath = arguments.getItem().getPath();
+                photographId = arguments.getItem().get_id();*/
                 _adapter.notifyDataSetChanged();
                 break;
 
