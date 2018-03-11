@@ -59,6 +59,7 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
     private boolean isEditMode = false;
     private int editPosition = -1;
     private int editRouteId = -1;
+    private String representPicturePath = "";
 
 
     @Override
@@ -123,7 +124,8 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
                 Date goDate = selectedDates.get(0);
                 Date backDate = selectedDates.get(selectedDates.size()-1);
-                String picturePath = (String)imageRepresent.getTag();
+//                String picturePath = (String)imageRepresent.getTag();
+
 
                 Intent intent = new Intent();
                 intent.putExtra("position", editPosition);
@@ -131,7 +133,7 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
                 intent.putExtra("title", travelName);
                 intent.putExtra("goDate", goDate.getTime());
                 intent.putExtra("backDate", backDate.getTime());
-                intent.putExtra("picturePath", picturePath);
+                intent.putExtra("picturePath", representPicturePath);
 
                 if(isEditMode) {
                     setResult(RESULT_CODE_EDIT, intent);
@@ -221,8 +223,9 @@ public class SetTravelActivity extends AppCompatActivity implements CalendarPick
 
         if(path != null && path.length() > 0) {
             Glide.with(this).load(path).into(imageRepresent);
-            imageRepresent.setTag(path);
+//            imageRepresent.setTag(path);
 
+            representPicturePath = path;
             imageEmpty.setVisibility(View.INVISIBLE);
         }
     }
